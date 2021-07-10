@@ -1,0 +1,10 @@
+{
+    "HOST": "0.0.0.0",
+    "PORT": "3132",
+    "HTTPS": "YES",
+    "LOGTYPE": "stdout",
+    "USER": "admin@admin.com",
+    "PASSWD": "password",
+    "JWT_SECRET": "BGyeoì29358nnDuIS193845hn@!",
+    "KEY_ID":  "jwtliving070920"
+}

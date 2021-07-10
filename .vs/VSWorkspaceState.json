@@ -1,7 +1,12 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\lib",
+    "\\lib\\src",
+    "\\src",
+    "\\src\\services",
+    "\\src\\__test__"
   ],
-  "SelectedNode": "\\package.json",
+  "SelectedNode": "\\src\\services\\convergence.ts",
   "PreviewInSolutionExplorer": false
 }
