@@ -16,7 +16,6 @@ import { PassportAuthenticator, Server } from 'typescript-rest';
 import bodyParser from 'body-parser';
 import _ from 'lodash'
 import log4js from 'log4js'
-import { MockService } from './services/mock';
 
 export class ApiServer {
     public PORT: number = Number(process.env.PORT) || 3132;
@@ -68,6 +67,7 @@ export class ApiServer {
         this.LOGFILE = opts.LOGFILE
         this.APIUSER = opts.USER
         this.APIPWD = opts.PASSWD
+        this.KEY_ID = opts.KEY_ID
 
         // Build logger
         const logFile = __dirname + "/logs/" + this.LOGFILE
@@ -99,7 +99,7 @@ export class ApiServer {
         // Assign to locals
         this.app.locals.GAGENTUSER = this.APIUSER
         this.app.locals.GAGENTPWD = this.APIPWD
-        this.app.locals.JWT_SECRET = this.JWT_SECRET
+        this.app.locals.KEY_ID = this.KEY_ID
         this.app.locals.PORT = this.PORT
         this.app.locals.HOST = this.HOST
         this.app.locals.HTTPS = this.HTTPS
@@ -228,10 +228,18 @@ export class ApiServer {
     }
 
     private configureAuthenticator() {
-        
+        const confpath = path.join(__dirname, '/conf/pkliving.key')
+        var privateKey: Buffer | undefined
+        try {
+            privateKey = fs.readFileSync(confpath)
+        } catch (error) {
+            this._logger.error(error)
+            console.log(error)
+        }
+
         const jwtConfig: StrategyOptions = {
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: Buffer.from(this.JWT_SECRET, 'base64'),
+            secretOrKey: privateKey,
         };
 
         interface JwtUser {
@@ -241,7 +249,7 @@ export class ApiServer {
         }
 
         interface JwtUserPayload {
-            sub: string;
+            email: string;
             auth: string;
         }
 
@@ -249,12 +257,16 @@ export class ApiServer {
             const user: JwtUser = {
                 roles: payload.auth.split(','),
                 strategy: 'default',
-                username: payload.sub
+                username: payload.email
             };
             done(null, user);
         });
 
         Server.registerAuthenticator(new PassportAuthenticator(strategy, {
+            authOptions: {
+                successRedirect: '/living/v1/convergence/home',
+                failureRedirect: '/living/v1/convergence/login'
+            },
             deserializeUser: (user: string) => JSON.parse(user),
             serializeUser: (user: JwtUser) => {
                 return JSON.stringify(user);

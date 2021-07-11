@@ -14,9 +14,10 @@ import { ServiceContext } from "typescript-rest";
  ***********************************************/
 export declare class ConvergenceService {
     context: ServiceContext;
-    constructor(opts?: any);
+    private dbname;
     private generateJwt;
-    getServer(): Promise<any>;
+    getLogin(): Promise<any>;
+    getHome(): Promise<any>;
     /**
      * **API call:**<p>
      * Type: POST<p>
@@ -31,5 +32,6 @@ export declare class ConvergenceService {
      *	}
      */
     login(email: string, password: string): Promise<any>;
+    logout(_tp_token: string): Promise<any>;
 }
 //# sourceMappingURL=convergence.d.ts.map

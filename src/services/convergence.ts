@@ -9,7 +9,12 @@
  */
 
 
-import { Path, GET, POST, FormParam, Context, ServiceContext } from "typescript-rest";
+import { Path, GET, POST, FormParam, Context, Security, Return, ServiceContext } from "typescript-rest";
+import { LivingUserController } from "../controllers/usersControl";
+
+const fs = require("fs")
+const path = require("path")
+
 
 
 /***********************************************
@@ -19,20 +24,17 @@ import { Path, GET, POST, FormParam, Context, ServiceContext } from "typescript-
  ***********************************************/
 
 
-// *** AGENT SERVICE CLASS ***
+// *** CONVERGE SERVICE CLASS ***
 @Path("/living/v1/convergence")
 //@Security()
 export class ConvergenceService {
     @Context
     context!: ServiceContext;
 
-    
+    private dbname = "livingdb.db"
+   
 
-    constructor(opts?: any) {
-        
-    }
-
-    private generateJwt(user: string): string {
+    private generateJwt(user: string, keyId: string,role ="ROLE_USER"): string {
         const fs = require('fs')
         const JwtGenerator = require('@convergence/jwt-util')
         const path = require('path')
@@ -45,22 +47,38 @@ export class ConvergenceService {
             console.log(error)
         }
 
-        const keyId = ""
-
         const gen = new JwtGenerator(keyId, privateKey)
 
-        const token = gen.generate(user)
+        const claims = {
+            auth: role,
+            email: user
+        }
+
+        const token = gen.generate(user,claims)
 
         return token
     }
 
     @GET
-    getServer(): Promise<any> {
+    @Path("login")
+    getLogin(): Promise<any> {
         return new Promise((resolve, reject) => {
-            const agres = { result: "", body: "" }
-            agres.result = 'OK'
-            agres.body = "convergence"
-            resolve(agres);
+            this.context.response.append("Content-Type", "text/html; charset=UTF-8")
+            const confpath = path.join(__dirname, "/../www/login.html")
+            const login =  fs.readFileSync(confpath, "utf8")
+            resolve(login);
+        });
+    }
+
+    @GET
+    @Path("home")
+    @Security("ROLE_USER")
+    getHome(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.context.response.append("Content-Type", "text/html; charset=UTF-8")
+            const confpath = path.join(__dirname, "/../www/home.html")
+            const home = fs.readFileSync(confpath, "utf8")
+            resolve(home);
         });
     }
 
@@ -79,15 +97,37 @@ export class ConvergenceService {
      */
     @POST
     @Path("login")
-    login(@FormParam("email") email: string, @FormParam("password") password: string ): Promise<any> {
+    login(@FormParam("email") email: string, @FormParam("password") password: string): Promise<any> {
+
+        return new Promise(async (resolve, reject) => {
+            const confpath = path.join(__dirname, "/../data/", this.dbname)
+            const luser = await new LivingUserController(confpath)
+            this.context.response.append("Content-Type", "text/html; charset=UTF-8")
+            luser.getUserLogin(email, password)
+                .then((usrpass: any) => {
+                    const authorization = 'Bearer ' + this.generateJwt(email, this.context.request.app.locals.KEY_ID);
+                    this.context.response.append("authorization", authorization)
+                    const confpath = path.join(__dirname, "/../www/home.html")
+                    const home = fs.readFileSync(confpath, "utf8")
+                    resolve(home);
+                })
+                .catch((err: any) => {
+                    const confpath = path.join(__dirname, "/../www/login.html")
+                    const login = fs.readFileSync(confpath, "utf8")
+                    resolve(login);
+                })
+        });
+    }
+
+    @POST
+    @Path("logout")
+    logout(@FormParam("_token") _tp_token: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (email != this.context.request.app.locals.GAGENTUSER || password != this.context.request.app.locals.GAGENTPWD)
-                reject("Bad userid or password")
-            // add token to response hader
-            const authorization = 'Bearer ' + this.generateJwt(email);
-            //console.log(this.context.response)
-            this.context.response.append("authorization", authorization)
-            resolve("Logged in ")
+            this.context.request.logout()
+            this.context.response.append("Content-Type", "text/html; charset=UTF-8")
+            const confpath = path.join(__dirname, "/../www/login.html")
+            const login = fs.readFileSync(confpath, "utf8")
+            resolve(login);
         });
     }
 

@@ -1,0 +1,1 @@
+{"version":3,"file":"usersControl.d.ts","sourceRoot":"","sources":["../../../src/controllers/usersControl.ts"],"names":[],"mappings":"AAEA,qBAAa,oBAAoB;IAC7B,OAAO,CAAC,SAAS,CAA6B;gBAElC,gBAAgB,EAAE,MAAM;YAItB,IAAI;IAIX,YAAY,CAAC,KAAK,EAAE,MAAM,EAAE,QAAQ,EAAC,MAAM;CAoBrD"}

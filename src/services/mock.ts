@@ -19,7 +19,7 @@ import { Path, GET, POST, QueryParam, Context, ServiceContext } from "typescript
  ***********************************************/
 
 
-// *** AGENT SERVICE CLASS ***
+// *** MOCK SERVICE CLASS ***
 @Path("/living/v1/mock")
 export class MockService {
     @Context
