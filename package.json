@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:unit": "jest",
     "build": "tsc && npm run copy",
-    "copy": "npx ncp src/conf lib/src/conf && npx ncp src/data lib/src/data && ncp src/www lib/src/www",
+    "copy": "npx ncp src/conf lib/src/conf && npx ncp src/data lib/src/data && ncp src/www lib/src/www && ncp src/public lib/src/public",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "eslint \"src/**\"",
     "prepare": "npm run build",

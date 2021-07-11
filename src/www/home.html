@@ -11,6 +11,8 @@
 
     <!-- Scripts -->
     <script src="https://beta.livingnet.eu/js/app.js" defer></script>
+    <!-- Scripts Test Convergence -->
+    <script src="https://127.0.0.1:3132/script/script.js" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -18,7 +20,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Styles -->
     <link href="https://beta.livingnet.eu/css/app.css" rel="stylesheet">
-    </head>
+</head>
 <body>
         <div id="app">
         <div id="waiting-screen">
@@ -110,7 +112,7 @@
   <div class="list-group list-group-flush">
     
       
-        <a href="#collabrate" class="list-group-item list-group-item-action bg-light">Collaborate</a>
+        <a href="javascript:convTest('jumbotron_id')" class="list-group-item list-group-item-action bg-light">Collaborate</a>
         <a href="#chat" class="list-group-item list-group-item-action bg-light">Chat</a>
       
               <a href="#test" class="list-group-item list-group-item-action bg-light">My Tests</a>
@@ -138,7 +140,7 @@
                         </div>
                                         <div class="container-fluid pt-4 pb-4 overflow-auto">
                                                 
-  <div class="jumbotron">
+  <div class="jumbotron" id="jumbotron_id">
     <h1 class="display-4">Hi</h1>
     <p class="lead">We are very happy you joined our team! You are now able to start your first test.</p>
     <p class="lead">
