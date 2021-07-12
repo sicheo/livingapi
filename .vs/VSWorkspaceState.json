@@ -3,9 +3,12 @@
     "",
     "\\lib",
     "\\lib\\src",
+    "\\lib\\src\\public",
+    "\\lib\\src\\public\\script",
     "\\src",
-    "\\src\\services",
-    "\\src\\__test__"
+    "\\src\\public",
+    "\\src\\public\\script"
   ],
+  "SelectedNode": "\\src\\public\\script\\script.js",
   "PreviewInSolutionExplorer": false
 }

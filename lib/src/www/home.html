@@ -58,44 +58,57 @@
           <!-- Right Side Of Navbar -->
           <ul class="navbar-nav ml-auto">
               <!-- Authentication Links -->
-                              <li class="nav-item dropdown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                                    <img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/storage/public/avatars/hrh0tLRDBjBCMvG9QJNQMjh4gh7ar4G6925Tyvkg.jpeg" alt="">
-                         Hi, Amministratore <span class="caret"></span>
-                    </a>
+              <li class="nav-item dropdown">
+                  <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                      <img class="mr-2" style="width: 18px" src="https://127.0.0.1:3132/img/circlegreen.png" alt="" id="imgpresence">
+                      Presence <span class="caret"></span>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                      <a href="javascript:fnChangePresence('available')" class="dropdown-item">Available</a>
+                      <a href="javascript:fnChangePresence('away')" class="dropdown-item">Away</a>
+                      <a href="javascript:fnChangePresence('ndisturb')" class="dropdown-item">Not disturb</a>
+                  </div>
+              </li>
+              <li class="nav-item dropdown">
 
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        
-                          
+                  <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                      <img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/storage/public/avatars/hrh0tLRDBjBCMvG9QJNQMjh4gh7ar4G6925Tyvkg.jpeg" alt="">
+                      Hi, Amministratore <span class="caret"></span>
+                  </a>
+
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
 
-                        
-                            <a href="#managetest" class="dropdown-item">Manage Tests</a>
-                            <a href="#manageusers" class="dropdown-item">Manage Users</a>
-                  
-                        
 
 
-                        <a class="dropdown-item" href="https://127.0.0.1:3132/living/v1/convergence/logout"
-                             onclick="event.preventDefault();
+
+                      <a href="#managetest" class="dropdown-item">Manage Tests</a>
+                      <a href="#manageusers" class="dropdown-item">Manage Users</a>
+
+
+
+
+                      <a class="dropdown-item" href="https://127.0.0.1:3132/living/v1/convergence/logout"
+                         onclick="event.preventDefault();
                                            document.getElementById('logout-form').submit();">
-                              Logout
-                        </a>
-                        <form id="logout-form" action="https://127.0.0.1:3132/living/v1/convergence/logout" method="POST" style="display: none;">
-                            <input type="hidden" name="_token" value="27kS2bZBbhWdKOSfkZvMfD1CgJv0vqkcwuwyvZ7D">                        </form>
-                      </div>
-                  </li>
-                  
-                            <li class="nav-item dropdown">
+                          Logout
+                      </a>
+                      <form id="logout-form" action="https://127.0.0.1:3132/living/v1/convergence/logout" method="POST" style="display: none;">
+                          <input type="hidden" name="_token" value="27kS2bZBbhWdKOSfkZvMfD1CgJv0vqkcwuwyvZ7D">
+                      </form>
+                  </div>
+              </li>
 
-                                        <a id="languageDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre><img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/img/en.png" alt=""> <span class="d-none d-md-inline">English</span></a>
-                    
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown">
-                        <a class="dropdown-item" href="#english"><img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/img/en.png" alt=""> English</a>
-                        <a class="dropdown-item" href="#italiano"><img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/img/it.png" alt=""> Italiano</a>
-                </div>
-                
-          </li>
+              <li class="nav-item dropdown">
+
+                  <a id="languageDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre><img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/img/en.png" alt=""> <span class="d-none d-md-inline">English</span></a>
+
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown">
+                      <a class="dropdown-item" href="#english"><img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/img/en.png" alt=""> English</a>
+                      <a class="dropdown-item" href="#italiano"><img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/img/it.png" alt=""> Italiano</a>
+                  </div>
+
+              </li>
           </ul>
 
           
