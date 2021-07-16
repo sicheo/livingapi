@@ -1,0 +1,41 @@
+.coll-evts {
+    border: 1px solid darkgray;
+    padding: 4px;
+    background: white;
+}
+.buddies {
+    padding: 0;
+    background: white;
+    list-style-type: none;
+}
+
+.buddy-list-header {
+    border: 1px solid darkgray;
+    padding: 4px;
+    text-align: center;
+    background: #e3f2fd;
+    color: black;
+    font-size: 14px;
+}
+
+.buddies li.offline {
+    color: #6d6c6c;
+    font-style: italic;
+}
+
+.buddies li.online .indicator.available {
+    background-color: #4dc465;
+}
+
+.buddies li.online .indicator.away {
+    background-color: #ffcf46;
+}
+
+.buddies li.online .indicator.dnd {
+    background-color: #C70F16;
+}
+
+.buddies img.buddy-presence {
+    width: 18px; 
+    padding-right: 5px;
+}

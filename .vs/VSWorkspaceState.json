@@ -3,12 +3,16 @@
     "",
     "\\lib",
     "\\lib\\src",
-    "\\lib\\src\\public",
-    "\\lib\\src\\public\\script",
+    "\\lib\\src\\services",
     "\\src",
+    "\\src\\conf",
     "\\src\\public",
-    "\\src\\public\\script"
+    "\\src\\public\\script",
+    "\\src\\services",
+    "\\src\\utility",
+    "\\src\\www",
+    "\\src\\__test__"
   ],
-  "SelectedNode": "\\src\\public\\script\\script.js",
+  "SelectedNode": "\\src\\public\\script\\brouser.ts",
   "PreviewInSolutionExplorer": false
 }

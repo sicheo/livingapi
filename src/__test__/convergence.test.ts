@@ -7,12 +7,19 @@ let server: Express
 let token = ''
 
 
+
 beforeAll(async () => {
-    process.env.HOST = "127.0.0.1"
-    process.env.HTTPS = 'NO'
-    process.env.PORT = '3132'
-    const apiserver = await new ApiServer(["convergence","mock"])
-    server = apiserver.getApp() as Express
+    try {
+        const path = require("path")
+        const fs = require("fs")
+        process.env.HOST = "127.0.0.1"
+        process.env.HTTPS = 'NO'
+        process.env.PORT = '3132'
+        const apiserver = await new ApiServer(["convergence", "mock"])
+        server = apiserver.getApp() as Express
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 describe('UNIT-TEST', () => {
@@ -23,32 +30,23 @@ describe('UNIT-TEST', () => {
         expect(response.statusCode).toBe(200)
     })
 
-    it('should return 200', async () => {
-        const response = await request(server)
-            .get(`/living/v1/convergence`)
-        expect(response.statusCode).toBe(200)
-    })
-
-    it('should return 500', async () => {
-        const params = {
-            username: "username",
-            password: "password"
-        };
-        const response = await request(server)
-            .post(`/living/v1/convergence/login`)
-            .send(params)
-        expect(response.statusCode).toBe(500)
-    })
 
     it('should return 200', async () => {
         const params = {
-            email: "admin",
+            email: "giulio.stumpo@gmail.com",
             password: "password"
         };
         const response = await request(server)
             .post(`/living/v1/convergence/login`)
             .send(params)
         token = response.headers['authorization']
+        expect(response.statusCode).toBe(200)
+    })
+
+    it('should return 200', async () => {
+        const response = await request(server)
+            .get(`/living/v1/convergence/buddies/giulio.stumpo@gmail.com`)
+            .auth(token.split(" ")[1], { type: 'bearer' })
         expect(response.statusCode).toBe(200)
     })
 

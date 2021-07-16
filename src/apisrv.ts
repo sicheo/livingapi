@@ -20,6 +20,8 @@ import log4js from 'log4js'
 export class ApiServer {
     public PORT: number = Number(process.env.PORT) || 3132;
     public HOST: string = process.env.HOST || "0.0.0.0";
+    public CONVPORT: number = Number(process.env.PORT) || 80;
+    public CONVHOST: string = process.env.HOST || "127.0.0.1";
     public HTTPS: string = process.env.HTTPS || "NO";
     public LOGLEVEL: string = process.env.LOGLEVEL || "error";
     public LOGFILE: string = process.env.LOGFILE || "apisrv.log";
@@ -42,6 +44,8 @@ export class ApiServer {
         let opts = {
             HOST: "0.0.0.0",
             PORT: "3132",
+            CONVHOST: "127.0.0.1",
+            CONVPORT: "80",
             HTTPS: "NO",
             LOGTYPE: "file",
             USER: "admin",
@@ -62,6 +66,8 @@ export class ApiServer {
         
         this.PORT = Number(opts.PORT)
         this.HOST = opts.HOST
+        this.CONVPORT = Number(opts.CONVPORT)
+        this.CONVHOST = opts.CONVHOST
         this.HTTPS = opts.HTTPS
         this.LOGTYPE = opts.LOGTYPE
         this.LOGFILE = opts.LOGFILE
@@ -104,6 +110,9 @@ export class ApiServer {
         this.app.locals.HOST = this.HOST
         this.app.locals.HTTPS = this.HTTPS
         this.app.locals.LOGGER = this._logger
+        this.app.locals.CONVPORT = this.CONVPORT
+        this.app.locals.CONVHOST = this.CONVHOST
+        this.app.locals.LASTTOKEN = ""
 
        
         // Build service
@@ -240,6 +249,7 @@ export class ApiServer {
         const jwtConfig: StrategyOptions = {
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: privateKey,
+            algorithms: ['RS256']
         };
 
         interface JwtUser {
@@ -263,10 +273,6 @@ export class ApiServer {
         });
 
         Server.registerAuthenticator(new PassportAuthenticator(strategy, {
-            authOptions: {
-                successRedirect: '/living/v1/convergence/home',
-                failureRedirect: '/living/v1/convergence/login'
-            },
             deserializeUser: (user: string) => JSON.parse(user),
             serializeUser: (user: JwtUser) => {
                 return JSON.stringify(user);

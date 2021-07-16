@@ -1,6 +1,8 @@
 export declare class ApiServer {
     PORT: number;
     HOST: string;
+    CONVPORT: number;
+    CONVHOST: string;
     HTTPS: string;
     LOGLEVEL: string;
     LOGFILE: string;

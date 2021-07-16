@@ -12,16 +12,22 @@
     <!-- Scripts -->
     <script src="https://beta.livingnet.eu/js/app.js" defer></script>
 
+    <!-- Scripts Test Convergence -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.6.3/rxjs.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@convergence/convergence/convergence.global.js"></script>
+    <!-- >script type="module" src="http://127.0.0.1:3132/script/conv.js"></script -->
+    <script src="http://127.0.0.1:3132/script/temporary.js"></script>
+    
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Styles -->
     <link href="https://beta.livingnet.eu/css/app.css" rel="stylesheet">
-    </head>
+</head>
 <body>
-            <img style="position: absolute; z-index:-1; object-fit:cover; height:100%; width: 100%; opacity:0.2" src="https://beta.livingnet.eu/img/living-bg.jpg" alt="">
-        <div id="app">
+    <img style="position: absolute; z-index:-1; object-fit:cover; height:100%; width: 100%; opacity:0.2" src="https://beta.livingnet.eu/img/living-bg.jpg" alt="">
+    <div id="app">
         <div id="waiting-screen">
             <div class="foreground-panel-disable"></div>
             <div class="foreground-panel">
@@ -37,127 +43,126 @@
         </div>
         <div class="d-flex" id="wrapper">
             <nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm sticky-top">
-  
-  <div class="container">
-      
-      <div class="navbar-brand">
-            <a href="#collapseBetaDisclaimer" data-toggle="collapse" aria-expanded="true" role="button" aria-controls="collapseBetaDisclaimer"><span class="badge badge-warning">Beta</span></a>
-            <a href="https://beta.livingnet.eu/welcome">
-                <img style="max-height:60px" src="https://beta.livingnet.eu/img/LOGO-LIVING-DEFINITIVO.png" alt="">
-            </a>
-      </div>
-      
 
-      <div class="" id="navbarSupportedContent">
-          <!-- Left Side Of Navbar -->
-          <ul class="navbar-nav mr-auto">
+                <div class="container">
 
-          </ul>
+                    <div class="navbar-brand">
+                        <a href="#collapseBetaDisclaimer" data-toggle="collapse" aria-expanded="true" role="button" aria-controls="collapseBetaDisclaimer"><span class="badge badge-warning">Beta</span></a>
+                        <a href="https://beta.livingnet.eu/welcome">
+                            <img style="max-height:60px" src="https://beta.livingnet.eu/img/LOGO-LIVING-DEFINITIVO.png" alt="">
+                        </a>
+                    </div>
 
-          <!-- Right Side Of Navbar -->
-          <ul class="navbar-nav ml-auto">
-              <!-- Authentication Links -->
-                                <li class="nav-item">
-                      <a class="nav-link" href="https://127.0.0.1:3132/living/v1/convergence/login">Login</a>
-                  </li>
-                                        <li class="nav-item">
-                          <a class="nav-link" href="#register">Register</a>
-                      </li>
-                                              <li class="nav-item dropdown">
 
-                                        <a id="languageDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre><img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/img/en.png" alt=""> <span class="d-none d-md-inline">English</span></a>
-                    
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown">
-                        <a class="dropdown-item" href="#english"><img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/img/en.png" alt=""> English</a>
-                        <a class="dropdown-item" href="#italian"><img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/img/it.png" alt=""> Italiano</a>
+                    <div class="" id="navbarSupportedContent">
+                        <!-- Left Side Of Navbar -->
+                        <ul class="navbar-nav mr-auto">
+                        </ul>
+
+                        <!-- Right Side Of Navbar -->
+                        <ul class="navbar-nav ml-auto">
+                            <!-- Authentication Links -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="http://127.0.0.1:3132/living/v1/convergence/login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#register">Register</a>
+                            </li>
+                            <li class="nav-item dropdown">
+
+                                <a id="languageDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre><img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/img/en.png" alt=""> <span class="d-none d-md-inline">English</span></a>
+
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown">
+                                    <a class="dropdown-item" href="#english"><img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/img/en.png" alt=""> English</a>
+                                    <a class="dropdown-item" href="#italian"><img class="mr-2" style="width: 18px" src="https://beta.livingnet.eu/img/it.png" alt=""> Italiano</a>
+                                </div>
+
+                            </li>
+                        </ul>
+
+
+
+
+                    </div>
                 </div>
-                
-          </li>
-          </ul>
-
-          
-          
-
-      </div>
-  </div>
-</nav>
+            </nav>
 
 
-            <div id="page-content-wrapper" class="overflow-hidden">      
-                                <div class="d-flex flex-column flex-sm-row w-100">
-                                        <div class="container-fluid pt-4 pb-4 overflow-auto">
-                                                <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-lg">
-                <div class="card-header">Login</div>
+            <div id="page-content-wrapper" class="overflow-hidden">
+                <div class="d-flex flex-column flex-sm-row w-100">
+                    <div class="container-fluid pt-4 pb-4 overflow-auto">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-md-8">
+                                    <div class="card shadow-lg">
+                                        <div class="card-header">Login</div>
 
-                <div class="card-body">
-                    <div class="container mt-3">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <form method="POST" action="https://127.0.0.1:3132/living/v1/convergence/login">
-                                        <input type="hidden" name="_token" value="TXltenoowsUqzw7xEnwsDFiGsnx83uQEtxFjT8a8">                
-                                        <div class="form-group row">
-                                            <label for="email" class="col-md-4 col-form-label text-md-right">Email Address</label>
-                
-                                            <div class="col-md-6">
-                                                <input id="email" type="email" class="form-control " name="email" value="" required autocomplete="email" autofocus>
-                
-                                                                                            </div>
-                                        </div>
-                
-                                        <div class="form-group row">
-                                            <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-                
-                                            <div class="col-md-6">
-                                                <input id="password" type="password" class="form-control " name="password" required autocomplete="current-password">
-                
-                                                                                            </div>
-                                        </div>
-                
-                                        <div class="form-group row">
-                                            <div class="col-md-6 offset-md-4">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" >
-                
-                                                    <label class="form-check-label" for="remember">
-                                                        Remember Me
-                                                    </label>
+                                        <div class="card-body">
+                                            <div class="container mt-3">
+                                                <div class="row">
+                                                    <div class="col-md-9">
+                                                        <form method="POST" action="http://127.0.0.1:3132/living/v1/convergence/login">
+                                                            <input type="hidden" name="_token" value="TXltenoowsUqzw7xEnwsDFiGsnx83uQEtxFjT8a8">
+                                                            <div class="form-group row">
+                                                                <label for="email" class="col-md-4 col-form-label text-md-right">Email Address</label>
+
+                                                                <div class="col-md-6">
+                                                                    <input id="email" type="email" class="form-control " name="email" value="" required autocomplete="email" autofocus>
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group row">
+                                                                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+
+                                                                <div class="col-md-6">
+                                                                    <input id="password" type="password" class="form-control " name="password" required autocomplete="current-password">
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group row">
+                                                                <div class="col-md-6 offset-md-4">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox" name="remember" id="remember">
+
+                                                                        <label class="form-check-label" for="remember">
+                                                                            Remember Me
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group row mt-4">
+                                                                <div class="col-md-8 offset-md-4 text-center">
+                                                                    <button type="submit" class="btn btn-primary">
+                                                                        Login
+                                                                    </button>
+                                                                </div>
+
+                                                                <div class="col-md-8 offset-md-4 mt-2 text-center">
+                                                                    <a href="#reset">
+                                                                        Forgot Your Password?
+                                                                    </a>
+                                                                    <br>
+                                                                    <a href="#register">
+                                                                        Register
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+
+                                                    </div>
+                                                    <div class="col-md-3 text-center">
+                                                        <img style="max-height:150px; max-width:100%" src="https://beta.livingnet.eu/img/living-astronauta.png" alt="">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                
-                                        <div class="form-group row mt-4">
-                                            <div class="col-md-8 offset-md-4 text-center">
-                                                <button type="submit" class="btn btn-primary">
-                                                    Login
-                                                </button>
-                                            </div>
-        
-                                            <div class="col-md-8 offset-md-4 mt-2 text-center">
-                                                                                                    <a href="#reset">
-                                                        Forgot Your Password?
-                                                    </a>
-                                                                                                <br>
-                                                <a href="#register">
-                                                    Register
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    
-                                </div>
-                                <div class="col-md-3 text-center">
-                                    <img style="max-height:150px; max-width:100%" src="https://beta.livingnet.eu/img/living-astronauta.png" alt="">
+                                    </div>
                                 </div>
                             </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                        </div>
 
 
                     </div>
@@ -168,88 +173,89 @@
         </div>
 
         <footer class="footer">
-  <div class="footer_companies border-top">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-2 text-center">
-          <p>Funded by</p>
-          <a href="https://www.regione.lombardia.it" target="_blank" class=""><img src="https://beta.livingnet.eu/img/regione-grigio.jpg" style="width: 100%; max-width:200px" class="" alt=""></a>
-        </div>
-        <div class="col-md-2">
-          <p></p>
-          <a href="http://www.fondazionecariplo.it/it/index.html" target="_blank" class=""><img src="https://beta.livingnet.eu/img/fondazionecariplo-grigio.jpg" style="width: 100%; max-width:200px" class="" alt=""></a>
-        </div>
-        <div class="col-md-2">
-            <p>Partner</p>
-          <a href="http://funder35.it/" target="_blank" class=""><img src="https://beta.livingnet.eu/img/funder35.jpg" style="width: 100%; max-width:200px" class="" alt=""></a>
-        </div>
-        <div class="col-md-2">
-            <p>Network</p>
-          <a href="https://www.ietm.org/" target="_blank" class=""><img src="https://beta.livingnet.eu/img/ietm-grigio.jpg" style="width: 100%; max-width:200px" class="" alt=""></a>
-        </div>
-        <div class="col-md-2">
-            <p></p>
-          <a href="https://cultureactioneurope.org/" target="_blank" class=""><img src="https://beta.livingnet.eu/img/ca-logo-en-CMYKol-WITHOUT-STRAP-480x270-GRIGIO.jpg" style="width: 100%; max-width:200px" class="" alt=""></a>
-        </div>
-        <div class="col-md-2">
-            <p></p>
-          <a href="https://www.progettocresco.it/" target="_blank" class=""><img src="https://beta.livingnet.eu/img/cresco-grigio.jpg" style="width: 100%; max-width:200px" class="" alt=""></a>      
-        </div>
-      </div>
-  </div>
-</div>
-      
-  <div class="footer__main">
-    <div class="container">
-        <div class="row">
-          <div class="col-md-4">
-              <img style="max-height:60px" src="https://beta.livingnet.eu/img/livinglogo-bianco-700x326.png" alt="">
-          </div>
-          <div class="col-md-4">
-            <div>
-              <p>Liv.In.G. SRL Impresa sociale</p>
-              <p>Via Evangelista Torricelli 21</p>
-              <p>20136 Milano</p>
-              <p>P.I/C.F. 10380340967</p>
-              <p><a href="mailto:welcome@livingnet.eu"><b>welcome@livingnet.eu</b></a></p>
+            <div class="footer_companies border-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-2 text-center">
+                            <p>Funded by</p>
+                            <a href="https://www.regione.lombardia.it" target="_blank" class=""><img src="https://beta.livingnet.eu/img/regione-grigio.jpg" style="width: 100%; max-width:200px" class="" alt=""></a>
+                        </div>
+                        <div class="col-md-2">
+                            <p></p>
+                            <a href="http://www.fondazionecariplo.it/it/index.html" target="_blank" class=""><img src="https://beta.livingnet.eu/img/fondazionecariplo-grigio.jpg" style="width: 100%; max-width:200px" class="" alt=""></a>
+                        </div>
+                        <div class="col-md-2">
+                            <p>Partner</p>
+                            <a href="http://funder35.it/" target="_blank" class=""><img src="https://beta.livingnet.eu/img/funder35.jpg" style="width: 100%; max-width:200px" class="" alt=""></a>
+                        </div>
+                        <div class="col-md-2">
+                            <p>Network</p>
+                            <a href="https://www.ietm.org/" target="_blank" class=""><img src="https://beta.livingnet.eu/img/ietm-grigio.jpg" style="width: 100%; max-width:200px" class="" alt=""></a>
+                        </div>
+                        <div class="col-md-2">
+                            <p></p>
+                            <a href="https://cultureactioneurope.org/" target="_blank" class=""><img src="https://beta.livingnet.eu/img/ca-logo-en-CMYKol-WITHOUT-STRAP-480x270-GRIGIO.jpg" style="width: 100%; max-width:200px" class="" alt=""></a>
+                        </div>
+                        <div class="col-md-2">
+                            <p></p>
+                            <a href="https://www.progettocresco.it/" target="_blank" class=""><img src="https://beta.livingnet.eu/img/cresco-grigio.jpg" style="width: 100%; max-width:200px" class="" alt=""></a>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div>
-              <p><strong>Liv.in.G.</strong> fa parte di</p>
-              <p><strong><a href="https://www.ietm.org" target="_blank">IETM</a></strong></p>
-              <p><strong><a href="https://cultureactioneurope.org/" target="_blank">Culture Action</a></strong></p>
-              <p><strong><a href="https://www.progettocresco.it/" target="_blank">C.Re.S.Co.</a></strong></p>
+
+            <div class="footer__main">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img style="max-height:60px" src="https://beta.livingnet.eu/img/livinglogo-bianco-700x326.png" alt="">
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p>Liv.In.G. SRL Impresa sociale</p>
+                                <p>Via Evangelista Torricelli 21</p>
+                                <p>20136 Milano</p>
+                                <p>P.I/C.F. 10380340967</p>
+                                <p><a href="mailto:welcome@livingnet.eu"><b>welcome@livingnet.eu</b></a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div>
+                                <p><strong>Liv.in.G.</strong> fa parte di</p>
+                                <p><strong><a href="https://www.ietm.org" target="_blank">IETM</a></strong></p>
+                                <p><strong><a href="https://cultureactioneurope.org/" target="_blank">Culture Action</a></strong></p>
+                                <p><strong><a href="https://www.progettocresco.it/" target="_blank">C.Re.S.Co.</a></strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
+            <div class="footer__copyright">
+                <div class="container">
+                    <span>© Copyright Liv.In.G. 2021</span><br>
+                    made with care by <a href="http://www.innovaetica.com/" target="blank">Innovaetica</a><br>
+                </div>
+            </div>
+        </footer>
     </div>
-  </div>
-  <div class="footer__copyright">
-    <div class="container">
-        <span>© Copyright Liv.In.G. 2021</span><br>
-        made with care by <a href="http://www.innovaetica.com/" target="blank">Innovaetica</a><br>
-    </div>
-  </div>
-</footer>    </div>
-    
+
     <script>
         deferMenu();
-        function deferMenu(){
-            if(window.jQuery){
-                $("#menu-toggle").click(function(e) {
-                e.preventDefault();
-                $("#wrapper").toggleClass("toggled");
+        function deferMenu() {
+            if (window.jQuery) {
+                $("#menu-toggle").click(function (e) {
+                    e.preventDefault();
+                    $("#wrapper").toggleClass("toggled");
                 });
             } else {
-                setTimeout(function() { deferMenu() }, 50);
+                setTimeout(function () { deferMenu() }, 50);
             }
         };
         function goToMoodle(update_url) {
             var xhttp = ajaxCall(update_url);
             var waiting_screen = document.getElementById('waiting-screen');
             waiting_screen.style.display = "block";
-            xhttp.onreadystatechange = function() {
+            xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     window.open(this.responseText, "_self")
                     waiting_screen.style.display = "none";
@@ -257,7 +263,7 @@
             };
         };
 
-        function ajaxCall(update_url){
+        function ajaxCall(update_url) {
             var xhttp = new XMLHttpRequest();
             xhttp.open("GET", update_url, true);
             xhttp.send();
@@ -266,9 +272,24 @@
     </script>
     <script>
 
-function loginMoodle(){
+        function loginMoodle() {
 
-}
-</script>
+        }
+    </script>
+    <script>
+
+        function connectToConvergence() {
+            const pwd = document.getElementById("password").value
+            const usr = document.getElementById("email").value
+            console.log(usr+' '+pwd)
+            const url = 'http://192.168.1.70:80/api/realtime/convergence/living'
+            const d = _conv_connect(url, usr, pwd)
+            console.log("********* CONNECTION ***********")
+            console.log(d)
+            window._Convergence_app
+            return false
+        }
+
+    </script>
 </body>
 </html>

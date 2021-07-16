@@ -16,13 +16,13 @@ export class LivingUserController {
         return new Promise((resolve, reject) => {
             this.usermodel?.getUser(email)
                 .then((row: any) => {
-                    console.log("getUserLogin")
+                    //console.log("getUserLogin")
                     if (row && row.password == password) {
                         usrpass.user = row.email
                         usrpass.password = row.password
                         resolve(usrpass)
                     } else {
-                        console.log("getUserLogin")
+                        //console.log("getUserLogin")
                         reject(usrpass)
                     }
                 })

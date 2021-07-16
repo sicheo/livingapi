@@ -15,9 +15,11 @@ import { ServiceContext } from "typescript-rest";
 export declare class ConvergenceService {
     context: ServiceContext;
     private dbname;
-    private generateJwt;
+    private token;
+    generateJwt(user: string, keyId: string, role?: string): string;
+    getToken(): Promise<any>;
     getLogin(): Promise<any>;
-    getHome(): Promise<any>;
+    getBuddies(email: string): Promise<any>;
     /**
      * **API call:**<p>
      * Type: POST<p>
