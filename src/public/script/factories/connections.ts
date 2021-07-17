@@ -1,9 +1,10 @@
-import { injectable} from "inversify";
+import { injectable, inject} from "inversify";
 import "reflect-metadata";
-import { UserConnection } from "./interfaces";
+import { UserAuthenticate, UserConnection } from "../interfaces/interfaces";
+import TYPES from "../types/types";
 
 const Convergence = require("@convergence/convergence").Convergence
-const WebSocket = require('ws')
+const WebSocket = require('isomorphic-ws')
 
 
 @injectable()
@@ -18,16 +19,14 @@ export class AnonymousConnection implements UserConnection {
         return new Promise((resolve, reject) => {
             Convergence.connectAnonymously(this._url, "Anonymous", {
                 webSocket: {
-                    factory: (u:any) => new WebSocket(u, { rejectUnauthorized: false }),
+                    factory: (u:any) => new WebSocket(u),
                     class: WebSocket
                 }
             })
                 .then((domain:any) => {
-                    console.log("AnonymousConnection Connection success");
                     resolve(domain)
                 })
-                .catch((error:any) => {
-                    console.log("AnonymousConnection Connection failure", error);
+                .catch((error: any) => {
                     reject(error)
                 });
         })
@@ -61,11 +60,9 @@ export class PasswordConnection implements UserConnection {
                 }
             })
                 .then((domain: any) => {
-                    console.log("PasswordConnection Connection success");
                     resolve(domain)
                 })
                 .catch((error: any) => {
-                    console.log("PasswordConnection Connection failure", error);
                     reject(error)
                 });
         })
@@ -81,29 +78,50 @@ export class PasswordConnection implements UserConnection {
 @injectable()
 export class JwtConnection implements UserConnection {
     private _url = ""
-    private _token = ""
+    private _token: string | undefined
+    private _auth: UserAuthenticate
 
-    constructor(url: string, token: string) {
+    constructor(url: string,  @inject(TYPES.UserConnection) auth: UserAuthenticate) {
         this._url = url
-        this._token = token
+        this._auth = auth
     }
 
-    public connect() {
+    public connect(opts?:any) {
         return new Promise((resolve, reject) => {
-            Convergence.connectWithJwt(this._url, this._token, {
-                webSocket: {
-                    factory: (u: any) => new WebSocket(u, { rejectUnauthorized: false }),
-                    class: WebSocket
-                }
-            })
-                .then((domain: any) => {
-                    console.log("JWTConnection Connection success");
-                    resolve(domain)
-                })
-                .catch((error: any) => {
-                    console.log("JWTConnection Connection failure", error);
-                    reject(error)
-                });
+            if (this._token == undefined || (opts && opts.renew)) {
+                // AUTHENTICATE USER
+                const aopts = { user: opts.user, password: opts.password }
+                this._auth.authenticate(aopts)
+                    .then((token: string) => {
+                        this._token = token
+                        Convergence.connectWithJwt(this._url, this._token, {
+                            webSocket: {
+                                factory: (u: any) => new WebSocket(u, { rejectUnauthorized: false }),
+                                class: WebSocket
+                            }
+                        }).then((domain: any) => {
+                                resolve(domain)
+                            })
+                            .catch((error: any) => {
+                                reject(error)
+                            });
+                    })
+                    .catch((error: string) => {
+                        reject(error)
+                    })
+            }else {
+                Convergence.connectWithJwt(this._url, this._token, {
+                    webSocket: {
+                        factory: (u: any) => new WebSocket(u, { rejectUnauthorized: false }),
+                        class: WebSocket
+                    }
+                }).then((domain: any) => {
+                        resolve(domain)
+                    })
+                    .catch((error: any) => {
+                        reject(error)
+                    });
+            }
         })
     }
 

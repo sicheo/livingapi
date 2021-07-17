@@ -17,7 +17,7 @@ export declare class ConvergenceService {
     private dbname;
     private token;
     generateJwt(user: string, keyId: string, role?: string): string;
-    getToken(): Promise<any>;
+    getToken(config: any): Promise<any>;
     getLogin(): Promise<any>;
     getBuddies(email: string): Promise<any>;
     /**

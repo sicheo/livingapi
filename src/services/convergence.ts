@@ -9,7 +9,7 @@
  */
 
 
-import { Path, GET, POST, FormParam, Context, Security, PathParam, Return, ServiceContext } from "typescript-rest";
+import { Path, GET, POST, FormParam, QueryParam,Context, Security, PathParam, Return, ServiceContext } from "typescript-rest";
 import { LivingBuddiesController } from "../controllers/buddiesControl";
 import { LivingUserController } from "../controllers/usersControl";
 
@@ -61,14 +61,26 @@ export class ConvergenceService {
         return this.token
     }
 
-    @GET
+    @POST
     @Path("token")
-    getToken(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.context.response.append("Content-Type", "text/html; charset=UTF-8")
-            this.context.request.app.locals.LOGGER.error(this.token)
-            resolve(this.context.request.app.locals.LASTTOKEN);
-        });
+    getToken(config:any): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            const confpath = path.join(__dirname, "/../data/", this.dbname)
+            const luser = await new LivingUserController(confpath)
+            this.context.response.append("Content-Type", "application/json")
+            luser.getUserLogin(config.email, config.password)
+                .then((usrpass: any) => {
+                    this.token = this.generateJwt(config.email, this.context.request.app.locals.KEY_ID)
+                    authorization = 'Bearer ' + this.token
+                    this.context.response.append("authorization", authorization)
+                    resolve(this.token)
+                })
+                .catch((err: any) => {
+                    this.context.request.app.locals.LOGGER.error("***ERROR****")
+                    this.context.request.app.locals.LOGGER.error(JSON.stringify(err))
+                    reject(err);
+                })
+        })
     }
 
     @GET

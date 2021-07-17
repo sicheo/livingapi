@@ -12,8 +12,8 @@
 import EventEmitter from "events";
 import { inject } from "inversify";
 import "reflect-metadata";
-import { UserConnection } from "./interfaces";
-import TYPES from "./types";
+import { UserConnection} from "./interfaces/interfaces";
+import TYPES from "./types/types";
 
 
 
@@ -25,9 +25,10 @@ class Brouser {
     private _status = "offline"
     private _evemitter: any
     private _connection: UserConnection
+    private _domain: any
 
 
-    constructor(id: string, @inject(TYPES.UserConnection) connection: UserConnection) {
+    constructor(id: string, @inject(TYPES.UserConnection) connection: UserConnection){
         this._id = id;
         this._extid = id;
         class MyEmitter extends EventEmitter { }
@@ -42,6 +43,10 @@ class Brouser {
 
     get emitter() {
         return this._evemitter
+    }
+
+    get domain() {
+        return this._domain
     }
 
     get token(): string {
@@ -67,24 +72,34 @@ class Brouser {
     }
 
     set status(s: string) {
-        this.status = s
-        this._evemitter.emit("statuschange")
+        if (this._connected) {
+            this.status = s
+            this._domain.profile
+            this._evemitter.emit("statuschange")
+        }
+    }
+
+    set connection(conn: any) {
+        this._connection = conn
     }
 
     isConnected(): boolean {
         return this._connected
     }
 
+
     connect(opts?:any): Promise<any> {
         return new Promise((resolve, reject) => {
             this._connection.connect(opts)
-                .then((res: any) => {
+                .then((d: any) => {
                     this._connected = true
-                    this._evemitter.emit("connected", this._id)
-                    resolve(res)
+                    this._domain = d
+                    this._evemitter.emit("connected", this._domain)
+                    resolve(d)
                 })
                 .catch((error: any) => {
                     this._connected = false
+                    this._evemitter.emit("error", error)
                     reject(error)
                 })
         })
@@ -92,7 +107,7 @@ class Brouser {
 
     disconnect(opts?:any): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._connection.disconnect(opts)
+            this._connection.disconnect(this._domain)
                 .then((res: any) => {
                     this._connected = false
                     this._evemitter.emit("disconnected", this._id)
@@ -100,10 +115,12 @@ class Brouser {
                 })
                 .catch((error: any) => {
                     this._connected = true
+                    this._evemitter.emit("error", error)
                     reject(error)
                 })
         })
     }
+
 
     Hello(): void {
         console.log(`Hello! I'm ${this.id}`);
