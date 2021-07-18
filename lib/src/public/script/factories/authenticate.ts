@@ -1,10 +1,7 @@
-import { injectable } from "inversify";
-import "reflect-metadata";
 import { UserAuthenticate } from "../interfaces/interfaces";
 
 const axios = require('axios').default;
 
-@injectable()
 export class JwtAuthentication implements UserAuthenticate {
     private _token: undefined
     private _url: string
@@ -13,7 +10,7 @@ export class JwtAuthentication implements UserAuthenticate {
         this._url = url
     }
 
-    authenticate(opts:any): Promise<any> {
+    authenticate(opts: any): Promise<any> {
         return new Promise((resolve, reject) => {
             axios.post(this._url, {
                     email: opts.user,
@@ -22,7 +19,7 @@ export class JwtAuthentication implements UserAuthenticate {
                     this._token = response.data
                     resolve(response.data);
                 })
-                .catch(function (error:any) {
+                .catch(function (error: any) {
                     reject(error)
                 })
 

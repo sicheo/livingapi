@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import { UserAuthenticate } from "../interfaces/interfaces";
 export declare class JwtAuthentication implements UserAuthenticate {
     private _token;

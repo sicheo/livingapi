@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import { UserAuthenticate, UserConnection } from "../interfaces/interfaces";
 export declare class AnonymousConnection implements UserConnection {
     private _url;

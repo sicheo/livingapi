@@ -10,10 +10,8 @@
  */
 
 import EventEmitter from "events";
-import { inject } from "inversify";
-import "reflect-metadata";
 import { UserConnection} from "./interfaces/interfaces";
-import TYPES from "./types/types";
+const Convergence = require("@convergence/convergence").Convergence
 
 
 
@@ -26,9 +24,10 @@ class Brouser {
     private _evemitter: any
     private _connection: UserConnection
     private _domain: any
+    private _subscriptions:any[] = []
 
 
-    constructor(id: string, @inject(TYPES.UserConnection) connection: UserConnection){
+    constructor(id: string, connection: UserConnection) {
         this._id = id;
         this._extid = id;
         class MyEmitter extends EventEmitter { }
@@ -88,7 +87,7 @@ class Brouser {
     }
 
 
-    connect(opts?:any): Promise<any> {
+    connect(opts?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             this._connection.connect(opts)
                 .then((d: any) => {
@@ -121,10 +120,41 @@ class Brouser {
         })
     }
 
-
-    Hello(): void {
-        console.log(`Hello! I'm ${this.id}`);
+    subscribe(userlist:string[]) {
+        return new Promise((resolve, reject) => {
+            if (!this.isConnected()) {
+                this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            if (this._domain) {
+                this._domain.presence().subscribe(userlist)
+                    .then((subscriptions: any) => {
+                        for (let i = 0; i < subscriptions.length;i++) {
+                            this._subscriptions.push(subscriptions[i])
+                            this._domain.presence().on("state_set", (evt: any) => {
+                                if (evt.state.has("status")) {
+                                    this.status = evt.state.get("status");
+                                }
+                            });
+                        }
+                        this._evemitter.emit("subscribed", this._subscriptions)
+                        resolve(this._subscriptions)
+                    })
+                    .catch((error: any) => {
+                        this._evemitter.emit("error", error)
+                        reject(error);
+                    });
+            }
+        })
     }
+
+    unsubscribe(username: string) {
+        const unsubscriptions = this._subscriptions.filter(subsc => subsc.user.username == username)
+        for (let i = 0; i < unsubscriptions.length; i++)
+            unsubscriptions[i].unsubscribe()
+        this._evemitter.emit("unsubscribed", username)
+    }
+
 }
 
-export { Brouser };
+export { Brouser};

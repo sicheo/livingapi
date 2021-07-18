@@ -4,16 +4,10 @@
     "\\lib",
     "\\lib\\src",
     "\\lib\\src\\public",
-    "\\lib\\src\\public\\script",
     "\\src",
-    "\\src\\controllers",
     "\\src\\public",
-    "\\src\\public\\script",
-    "\\src\\services",
-    "\\src\\utility",
-    "\\src\\www",
-    "\\src\\__test__"
+    "\\src\\services"
   ],
-  "SelectedNode": "\\src\\public\\script\\brouser.ts",
+  "SelectedNode": "\\webpack.config.js",
   "PreviewInSolutionExplorer": false
 }

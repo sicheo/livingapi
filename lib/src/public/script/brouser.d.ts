@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import { UserConnection } from "./interfaces/interfaces";
 declare class Brouser {
     private _id;
@@ -9,6 +8,7 @@ declare class Brouser {
     private _evemitter;
     private _connection;
     private _domain;
+    private _subscriptions;
     constructor(id: string, connection: UserConnection);
     get id(): string;
     get emitter(): any;
@@ -23,7 +23,8 @@ declare class Brouser {
     isConnected(): boolean;
     connect(opts?: any): Promise<any>;
     disconnect(opts?: any): Promise<any>;
-    Hello(): void;
+    subscribe(userlist: string[]): Promise<unknown>;
+    unsubscribe(username: string): void;
 }
 export { Brouser };
 //# sourceMappingURL=brouser.d.ts.map

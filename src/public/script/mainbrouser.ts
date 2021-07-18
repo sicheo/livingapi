@@ -8,27 +8,6 @@ function sleep(ms:any) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function getToken() {
-    const JwtGenerator = require('@convergence/jwt-util');
-    const fs = require('fs');
-    const path = require('path');
-    const pkfile = path.join(__dirname, '/../../conf/pkliving.key')
-    let privateKey = ""
-    const keyId = "jwtliving070920";
-
-    try {
-        privateKey = fs.readFileSync(pkfile);
-    } catch (error) {
-        console.log(error)
-        process.exit(1)
-    }
-    const gen = new JwtGenerator(keyId, privateKey);
-    const claims = { firstName: "Giulio", lastName: "Stumpo", email:"giulio.stumpo@gmail.com" };
-    const username = "giulio.stumpo@gmail.com";
-    const token = gen.generate(username, claims);
-    return token
-}
-
 const main = async function () {
     const convergenceurl = "http://192.168.43.26/api/realtime/convergence/living"
     const authurl = "http://127.0.0.1:3132/living/v1/convergence/token"
@@ -121,6 +100,41 @@ const main = async function () {
         if (userjwt.isConnected())
             await userjwt.disconnect()
     } catch (error) { }
+
+    const userlist = ["carlotta.garlanda@livingnet.eu","eleonora.decaroli@livingnet.eu"]
+    userjwt.emitter.on("subscribed", (subscriptions: any) => {
+        console.log("EVENT: " + userjwt.id + " subscribed")
+    })
+
+    console.log("    5)Test subscriptions not connected")
+    try {
+        await userjwt.subscribe(userlist)
+        await sleep(3000)
+        if (userjwt.isConnected())
+            await userjwt.disconnect()
+    } catch (error) { }
+
+    console.log("    6)Test subscriptions & unsubscription")
+
+    userjwt.emitter.on("subscribed", (subscriptions: any) => {
+        let subscribed = ""
+        for (let i = 0; i < subscriptions.length; i++)
+            subscribed += " " + subscriptions[i].user.username
+        console.log("EVENT: " + userjwt.id + " subscribed: " + subscribed)
+    })
+
+    userjwt.emitter.on("unsubscribed", (username: string) => {
+        console.log("EVENT: " + userjwt.id + " unsubscribed: " + username)
+    })
+
+    try {
+        await userjwt.connect()
+        await userjwt.subscribe(userlist)
+        await sleep(3000)
+        userjwt.unsubscribe("eleonora.decaroli@livingnet.eu")
+        if (userjwt.isConnected())
+            await userjwt.disconnect()
+    } catch (error) { console.log(error)}
     
     /*
     console.log("    4)Test password connection with wrong user")
