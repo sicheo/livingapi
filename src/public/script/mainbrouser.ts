@@ -1,8 +1,8 @@
 import { Brouser } from "./brouser";
-import { JwtAuthentication } from "./factories/authenticate";
+import { JwtApi } from "./factories/jwtapi";
 import { AnonymousConnection, PasswordConnection, JwtConnection } from "./factories/connections";
 
-
+const prompt = require('prompt-sync')();
 
 function sleep(ms:any) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -10,11 +10,11 @@ function sleep(ms:any) {
 
 const main = async function () {
     const convergenceurl = "http://192.168.43.26/api/realtime/convergence/living"
-    const authurl = "http://127.0.0.1:3132/living/v1/convergence/token"
+    const baseapihurl = "http://127.0.0.1:3132/living/v1/convergence"
 
     let token: string | undefined
 
-    const authconn = new JwtAuthentication(authurl)
+    const jwtapi = new JwtApi(baseapihurl)
 
 
 
@@ -22,17 +22,17 @@ const main = async function () {
     const pwconn = new PasswordConnection(convergenceurl, "giulio.stumpo@gmail.com", "password")
 
     //token = getToken()
-    const jwtconn = new JwtConnection(convergenceurl, authconn)
+    const jwtconn = new JwtConnection(convergenceurl, jwtapi)
 
    
 
 
     const useranon = new Brouser("Anonymous Connection", anonconn)
     const userpwd = new Brouser("Password Connection", pwconn)
-    const userjwt = new Brouser("JWT Connection", jwtconn)
+    const userjwt = new Brouser("giulio.stumpo@gmail.com", jwtconn)
 
-   // set event listeners
-    useranon.emitter.on("connected", async (domain:any) => {
+    // set event listeners
+    useranon.emitter.on("connected", async (domain: any) => {
         console.log("EVENT: " + useranon.id + " connected")
     })
 
@@ -101,22 +101,9 @@ const main = async function () {
             await userjwt.disconnect()
     } catch (error) { }
 
-    const userlist = ["carlotta.garlanda@livingnet.eu","eleonora.decaroli@livingnet.eu"]
-    userjwt.emitter.on("subscribed", (subscriptions: any) => {
-        console.log("EVENT: " + userjwt.id + " subscribed")
-    })
-
-    console.log("    5)Test subscriptions not connected")
-    try {
-        await userjwt.subscribe(userlist)
-        await sleep(3000)
-        if (userjwt.isConnected())
-            await userjwt.disconnect()
-    } catch (error) { }
-
-    console.log("    6)Test subscriptions & unsubscription")
-
-    userjwt.emitter.on("subscribed", (subscriptions: any) => {
+    const userlist = ["carlotta.garlanda@livingnet.eu", "eleonora.decaroli@livingnet.eu"]
+    /*
+    userjwt.emitter.on("subscribed", (subscriptions:any) => {
         let subscribed = ""
         for (let i = 0; i < subscriptions.length; i++)
             subscribed += " " + subscriptions[i].user.username
@@ -127,34 +114,42 @@ const main = async function () {
         console.log("EVENT: " + userjwt.id + " unsubscribed: " + username)
     })
 
+    userjwt.emitter.on("statuschange", (status: string) => {
+        console.log("EVENT: " + userjwt.id + " statuschange: " + status)
+    })
+    /*
+    console.log("    5)Test subscriptions not connected")
     try {
-        await userjwt.connect()
         await userjwt.subscribe(userlist)
         await sleep(3000)
-        userjwt.unsubscribe("eleonora.decaroli@livingnet.eu")
         if (userjwt.isConnected())
             await userjwt.disconnect()
-    } catch (error) { console.log(error)}
-    
-    /*
-    console.log("    4)Test password connection with wrong user")
+    } catch (error) { }
+    */
+
+    userjwt.emitter.on("state_set", (ret: any) => {
+        console.log("EVENT: " + userjwt.id + " statuschange: " + JSON.stringify(ret))
+    })
+
+    console.log("    6)Test subscriptions & unsubscription")
+
     try {
-        const pwconnerr = new PasswordConnection(anonurl, "giulio.stumpo1@gmail.com", "password")
-        userpwd.connection = pwconnerr
-        await userpwd.connect()
-        await sleep(3000)
-        if (userpwd.isConnected())
-            await userpwd.disconnect()
-    } catch (error) {}
+        await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "password" })
+        await sleep(1000)
+        console.log("session id: " + userjwt.getSessionId())
+        prompt('press any key');
+        await userjwt.subscribe()
+        userjwt.status = "dnd"
+        await sleep(1000)
+        prompt('press any key');
+        userjwt.status = "available"
+        await sleep(1000)
+        prompt('press any key');
+        await userjwt.unsubscribeAll()
+        if (userjwt.isConnected())
+            await userjwt.disconnect()
+    } catch (error) { }
 
-    console.log("    5)Test set status")
-    userjwt.connect()
-        .then((d: any) => {
-            userjwt.status = "dnd"
-        })
-        .catch((error) => {
-
-        })*/
 
 }
 

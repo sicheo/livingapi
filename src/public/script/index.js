@@ -1,11 +1,11 @@
 import { Brouser } from "./brouser";
-import { JwtAuthentication } from "./factories/authenticate";
+import { JwtApi } from "./factories/jwtapi";
 import { AnonymousConnection, PasswordConnection, JwtConnection } from "./factories/connections";
 
 let ConvApp = {}
 
 ConvApp.Brouser = Brouser
-ConvApp.JwtAuthentication = JwtAuthentication
+ConvApp.JwtApi = JwtApi
 ConvApp.AnonymousConnection = AnonymousConnection
 ConvApp.JwtConnection = JwtConnection
 ConvApp.PasswordConnection = PasswordConnection

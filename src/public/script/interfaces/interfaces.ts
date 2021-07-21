@@ -1,10 +1,15 @@
+interface UserPersistenceApi {
+    authenticate(opts?: any): Promise<any>;
+    getBuddyList(url: string): Promise<any>;
+}
+
 interface UserConnection {
     connect(opts?:any): Promise<any>;
-    disconnect(opts?:any): Promise<any>;
+    disconnect(opts?: any): Promise<any>;
+    isConnected(): boolean;
+    isAuthenticated(): boolean;
+    getApiInterface(): UserPersistenceApi|undefined
 }
 
-interface UserAuthenticate {
-    authenticate(opts?: any): Promise<any>;
-}
 
-export { UserConnection, UserAuthenticate}
+export { UserConnection, UserPersistenceApi}
