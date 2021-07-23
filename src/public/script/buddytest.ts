@@ -1,6 +1,7 @@
 import { Brouser } from "./brouser";
 import { JwtApi } from "./factories/jwtapi";
 import { JwtConnection } from "./factories/connections";
+import * as Conv from "@convergence/convergence"
 
 const prompt = require('prompt-sync')();
 
@@ -9,7 +10,7 @@ function sleep(ms: any) {
 }
 
 const buddytest = async function () {
-    const convergenceurl = "http://192.168.43.26/api/realtime/convergence/living"
+    const convergenceurl = "http://192.168.1.156/api/realtime/convergence/living"
     const baseapihurl = "http://127.0.0.1:3132/living/v1/convergence"
 
    
@@ -34,8 +35,13 @@ const buddytest = async function () {
         console.log("ERROR: " + userjwt.id + " " + error)
     })
 
-    userjwt.emitter.on("state_set", (ret: any) => {
-        console.log("EVENT: " + userjwt.id + " statuschange: " + ret)
+
+    userjwt.emitter.on(Conv.PresenceStateSetEvent.NAME, (ret) => {
+        console.log("EVENT: " + userjwt.id + " statuschange: " + JSON.stringify(ret))
+    })
+
+    userjwt.emitter.on(Conv.PresenceAvailabilityChangedEvent.NAME, (ret) => {
+        console.log("EVENT: " + userjwt.id + " availabilitychange: " + JSON.stringify(ret))
     })
 
     console.log("    6)Test subscriptions & unsubscription")

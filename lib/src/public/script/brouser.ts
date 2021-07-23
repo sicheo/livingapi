@@ -16,21 +16,50 @@ import * as Conv from "@convergence/convergence"
 
 
 
-/**
- * Class Brouser
- * 
- * Manage the user realtime status inside the browser app 
- * 
- * @private string _id: user id
- * @private string _extid: external identifier
- * @private string  _status: user connection status ('offline','available','dnd', 'away')
- * @private EventEmitter _emitter: event emitter
- * @private UserConnection  _connection: user connection to the server(s)
- * @private UserPersistenceApi _apiInterface: interface to api server
- * @private ConvergenceDomain _domain: interface to convergence domain
- * @private ConvergenceSession _session: interface to convergence session
- * */
+
 class Brouser {
+    /**
+     * Summary: Bruoser() user event digital twin.
+     *
+     * Description: connects. 
+     *
+     * @since      x.x.x
+     * @deprecated x.x.x Use new_function_name() instead.
+     * @access     private
+     *
+     * @constructs namespace.Class
+     * @augments   Parent
+     * @mixes      mixin
+     *
+     * @alias    realName
+     * @memberof namespace
+     *
+     * @see   Function/class relied on
+     * @link  URL
+     * @fires Class#eventName
+     *
+     * @private string _id: user id
+     * @private string _extid: external identifier
+     * @private string  _status: user connection status ('offline','available','dnd', 'away')
+     * @private EventEmitter _emitter: event emitter
+     * @private UserConnection  _connection: user connection to the server(s)
+     * @private UserPersistenceApi _apiInterface: interface to api server
+     * @private ConvergenceDomain _domain: interface to convergence domain
+     * @private ConvergenceSession _session: interface to convergence session
+     */
+
+    static EVT_GOTBUDDIES = "buddies"
+    static EVT_CONNECTED = Conv.ConnectedEvent.NAME
+    static EVT_SUBSCRIBED = "subscribed"
+    static EVT_UNSUBSCRIBED = "unsubscribed"
+    static EVT_UNSUBSCRIBEDALL = "unsubscribedall"
+    static EVT_ERROR = Conv.ErrorEvent.NAME
+    static EVT_DISCONNECTED = Conv.DisconnectedEvent.NAME
+    static EVT_PRESENCESTATE = Conv.PresenceStateSetEvent.NAME
+    static EVT_PRESENCESTATEREMOVED = Conv.PresenceStateRemovedEvent.NAME
+    static EVT_PRESENCESTATECLEARED = Conv.PresenceStateClearedEvent.NAME
+    static EVT_PRESENCEAVAILABILITYCHANGED =  Conv.PresenceAvailabilityChangedEvent.NAME
+
     private _id: string
     private _extid: string
     private _status = "offline"
@@ -66,6 +95,29 @@ class Brouser {
      */
     get id(): string {
         return this._id
+    }
+
+    /**
+     * @method getBuddies()
+     * 
+     * @returns string[]: array of userid
+     */
+    getBuddies(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if (!this._apiInterface) {
+                reject("API interface not defined")
+            } else { 
+            this._apiInterface.getBuddyList("/buddies/" + this._id)
+                .then((response: any) => {
+                    const list = response.map((item: any) => (item.buddy));
+                    this._evemitter.emit(Brouser.EVT_GOTBUDDIES, list)
+                    resolve(list)
+                })
+                .catch((error: any) => {
+                    reject(error)
+                })
+            }
+        })
     }
 
     /**
@@ -177,19 +229,24 @@ class Brouser {
     }
 
     /**
-     * @method connect()
-     *
-     * @param opts (optional): {user:username, password:passwd} - if not supplied try to reconnect
+     * @method connect(opts)
+     *  connescts to Convergenge Server and Api Server
+     * 
+     * @param opts (optional): (user:username, password:passwd) - if not supplied try to reconnect
      * @returns Promise<any>: ConvergenceDomain
      */
     connect(opts?: any): Promise<any> {
         return new Promise((resolve, reject) => {
+            const res = {
+                user: this._id, evt: "connected", value: "pippo"
+            }
             this._connection.connect(opts)
                 .then((d: any) => {
                     this._domain = d
                     this.subscribeDomainEvents()
                     this._session = d.session()
-                    this._evemitter.emit("connected", this._domain)
+                    res.value= d._domainId
+                    this._evemitter.emit(Brouser.EVT_CONNECTED, res)
                     this.status = "available"
                     resolve(d)
                 })
@@ -202,6 +259,7 @@ class Brouser {
 
     /**
      * @method disconnect()
+     * disconnects from Convergence Server
      *
      * @returns Promise<any>: after disconnection domain is no longer available
      */
@@ -220,8 +278,9 @@ class Brouser {
     }
 
     /**
-     * @method subscribe()
-     *
+     * @method subscribe(userlist)
+     * subscribe to userlist events. Emits "subscribed"
+     * 
      * @param userlist (optional): ["user1", "user2",...] - if not supplied get userlist from Api erver
      * @returns subscriptions: array of subcription
      */
@@ -246,9 +305,9 @@ class Brouser {
                         subscriptions.forEach((subscription: any) => {
                             this._subscriptions.push(subscription)
                         });
-                        this._evemitter.emit("subscribed", this._subscriptions)
+                        this._evemitter.emit(Brouser.EVT_SUBSCRIBED, this._subscriptions)
                         this.subscribePresenceEvents(this._id)
-                        this.subscribeBuddyPresenceEvents()
+                        this.subscribeBuddiesPresenceEvents()
                         resolve(this._subscriptions)
                     })
                     .catch((error: any) => {
@@ -259,64 +318,122 @@ class Brouser {
         })
     }
 
+    /**
+     * @method unsubscribe(username)
+     * unsubscribe username. Emits "unsubscribed"
+     *
+     * @param username string: username to unsubscribe
+     */
     unsubscribe(username: string) {
         const unsubscriptions = this._subscriptions.filter(subsc => subsc.user.username == username)
-        for (let i = 0; i < unsubscriptions.length; i++)
+        for (let i = 0; i < unsubscriptions.length; i++) {
+            this.unsubscribeBuddyEvents(this._subscriptions[i])
             unsubscriptions[i].unsubscribe()
-        this._evemitter.emit("unsubscribed", username)
+        }
+        this._evemitter.emit(Brouser.EVT_UNSUBSCRIBED, username)
     }
 
-
+    /**
+     * @method unsubscribeAll()
+     * unsubscribe all subscibed users. Emits "unsubscribedall"
+     *
+     */
     unsubscribeAll() {
-        for (let i = 0; i < this._subscriptions.length; i++)
+        for (let i = 0; i < this._subscriptions.length; i++) {
+            this.unsubscribeBuddyEvents(this._subscriptions[i])
             this._subscriptions[i].unsubscribe()
+        }
         this._subscriptions = []
-        this._evemitter.emit("unsubscribedall")
+        this._evemitter.emit(Brouser.EVT_UNSUBSCRIBEDALL)
     }
 
    
 
     private subscribeDomainEvents() {
-        this._domain.on(Conv.ConnectedEvent.NAME, () => {
-            this._evemitter.emit(Conv.ConnectedEvent.NAME, this._id)
-        })
+        /*
+        this._domain.on(Conv.ConnectedEvent.NAME, (ret: any) => {
+            const res = {
+                user: this._id, evt: "connected", value: ""
+            }
+            console.log("CONNECTED **************")
+            this._evemitter.emit(Conv.ConnectedEvent.NAME, res)
+        })*/
+
         this._domain.on(Conv.DisconnectedEvent.NAME, () => {
-            this._evemitter.emit(Conv.DisconnectedEvent.NAME, this._id)
+            this._evemitter.emit(Brouser.EVT_DISCONNECTED, this._id)
         })
+
         this._domain.on(Conv.ErrorEvent.NAME, () => {
-            this._evemitter.emit(Conv.ErrorEvent.NAME, this._id)
+            this._evemitter.emit(Brouser.EVT_ERROR, this._id)
         })
     }
 
-    private subscribePresenceEvents(user?:string) {
+    private subscribePresenceEvents(user?: string) {
+        const res = {
+            user: user, evt: "", value: {}
+        }
         this._domain.presence(user).on(Conv.PresenceStateSetEvent.NAME, (ret: any) => {
             if (ret.state.has("status")) {
                 this._status = ret.state.get("status");
+                res.value = this._status
+                res.evt = "status_set";
             }
-            this._evemitter.emit(Conv.PresenceStateSetEvent.NAME, this.status)
+            this._evemitter.emit(Brouser.EVT_PRESENCESTATE, res)
         })
         this._domain.presence(user).on(Conv.PresenceStateRemovedEvent.NAME, (ret: any) => {
-            this._evemitter.emit(Conv.PresenceStateRemovedEvent.NAME, ret)
+            this._evemitter.emit(Brouser.EVT_PRESENCESTATEREMOVED, ret)
         })
         this._domain.presence(user).on(Conv.PresenceStateClearedEvent.NAME, (ret: any) => {
-            this._evemitter.emit(Conv.PresenceStateClearedEvent.NAME, ret)
+            this._evemitter.emit(Brouser.EVT_PRESENCESTATECLEARED, ret)
         })
         this._domain.presence(user).on(Conv.PresenceAvailabilityChangedEvent.NAME, (ret: any) => {
-            this._evemitter.emit(Conv.PresenceAvailabilityChangedEvent.NAME, ret)
+            const res = {
+                user: user, evt: "", value: {}
+            }
+            res.value = ret.available
+            res.evt = "availability_change";
+            this._evemitter.emit(Brouser.EVT_PRESENCEAVAILABILITYCHANGED, ret)
         })
     }
 
-    private subscribeBuddyPresenceEvents() {
-        this._subscriptions.forEach((subscription: any) => {
+    private subscribeBuddyPresenceEvents(subscription : Conv.UserPresenceSubscription) {
+            const res = {
+                user: subscription.user.username, evt: "", value: {}
+            }
             subscription.on(Conv.PresenceStateSetEvent.NAME, (ret: any) => {
                 if (ret.state.has("status")) {
-                    this._status = ret.state.get("status");
+                    //this._status = ret.state.get("status");
+                    res.evt = "status_set";
+                    res.value = ret.state.get("status");
                 }
-                this._evemitter.emit(Conv.PresenceStateSetEvent.NAME, this.status)
+                this._evemitter.emit(Brouser.EVT_PRESENCESTATE, res)
             })
+            subscription.on(Conv.PresenceAvailabilityChangedEvent.NAME, (ret: any) => {
+                const res = {
+                    user: subscription.user.username, evt: "", value: {}
+                }
+                res.value = ret.available
+                res.evt = "availability_change";
+
+                this._evemitter.emit(Brouser.EVT_PRESENCEAVAILABILITYCHANGED, res)
+            })
+    }
+
+    private subscribeBuddiesPresenceEvents() {
+        this._subscriptions.forEach((subscription: any) => {
+            this.subscribeBuddyPresenceEvents(subscription)
         })
     }
-    
+
+    private unsubscribeBuddyEvents(subscription: Conv.UserPresenceSubscription) {
+        subscription.removeAllListeners()
+    }
+
+    private unsubscribeBuddiesEvents() {
+        this._subscriptions.forEach((subscription: any) => {
+            this.unsubscribeBuddyEvents(subscription)
+        })
+    }
 
 }
 

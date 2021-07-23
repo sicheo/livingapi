@@ -8,8 +8,9 @@
     "\\src",
     "\\src\\public",
     "\\src\\public\\script",
+    "\\src\\public\\script\\factories",
     "\\src\\services"
   ],
-  "SelectedNode": "\\src\\public\\script\\brouser.ts",
+  "SelectedNode": "\\package.json",
   "PreviewInSolutionExplorer": false
 }

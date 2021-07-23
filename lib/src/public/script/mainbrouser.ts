@@ -1,6 +1,7 @@
 import { Brouser } from "./brouser";
 import { JwtApi } from "./factories/jwtapi";
 import { AnonymousConnection, PasswordConnection, JwtConnection } from "./factories/connections";
+import * as Conv from "@convergence/convergence"
 
 const prompt = require('prompt-sync')();
 
@@ -9,7 +10,7 @@ function sleep(ms:any) {
 }
 
 const main = async function () {
-    const convergenceurl = "http://192.168.43.26/api/realtime/convergence/living"
+    const convergenceurl = "http://192.168.1.156/api/realtime/convergence/living"
     const baseapihurl = "http://127.0.0.1:3132/living/v1/convergence"
 
     let token: string | undefined
@@ -32,8 +33,8 @@ const main = async function () {
     const userjwt = new Brouser("giulio.stumpo@gmail.com", jwtconn)
 
     // set event listeners
-    useranon.emitter.on("connected", async (domain: any) => {
-        console.log("EVENT: " + useranon.id + " connected")
+    useranon.emitter.on(Conv.ConnectedEvent.NAME, async (ret: any) => {
+        console.log("EVENT: " + useranon.id + " connected: ")
     })
 
     useranon.emitter.on("disconnected", (id: any) => {
@@ -44,8 +45,8 @@ const main = async function () {
         console.log("ERROR: " + useranon.id + " " + error)
     })
 
-    userpwd.emitter.on("connected",async (domain: any) => {
-        console.log("EVENT: " + userpwd.id + " connected")
+    userpwd.emitter.on(Conv.ConnectedEvent.NAME, async (ret: any) => {
+        console.log("EVENT: " + userpwd.id + " connected: ")
     })
 
     userpwd.emitter.on("disconnected", (id: any) => {
@@ -56,8 +57,8 @@ const main = async function () {
         console.log("ERROR: " + userpwd.id+ " " + error)
     })
 
-    userjwt.emitter.on("connected", async (userpwd: any) => {
-        console.log("EVENT: " + userjwt.id + " connected")
+    userjwt.emitter.on(Conv.ConnectedEvent.NAME, async (res: any) => {
+        console.log("EVENT: " + userjwt.id + " connected: " + JSON.stringify(res))
     })
 
     userjwt.emitter.on("disconnected", (id: any) => {
@@ -101,33 +102,9 @@ const main = async function () {
             await userjwt.disconnect()
     } catch (error) { }
 
-    const userlist = ["carlotta.garlanda@livingnet.eu", "eleonora.decaroli@livingnet.eu"]
-    /*
-    userjwt.emitter.on("subscribed", (subscriptions:any) => {
-        let subscribed = ""
-        for (let i = 0; i < subscriptions.length; i++)
-            subscribed += " " + subscriptions[i].user.username
-        console.log("EVENT: " + userjwt.id + " subscribed: " + subscribed)
-    })
+    
 
-    userjwt.emitter.on("unsubscribed", (username: string) => {
-        console.log("EVENT: " + userjwt.id + " unsubscribed: " + username)
-    })
-
-    userjwt.emitter.on("statuschange", (status: string) => {
-        console.log("EVENT: " + userjwt.id + " statuschange: " + status)
-    })
-    /*
-    console.log("    5)Test subscriptions not connected")
-    try {
-        await userjwt.subscribe(userlist)
-        await sleep(3000)
-        if (userjwt.isConnected())
-            await userjwt.disconnect()
-    } catch (error) { }
-    */
-
-    userjwt.emitter.on("state_set", (ret: any) => {
+    userjwt.emitter.on(Conv.PresenceStateSetEvent.NAME, (ret: any) => {
         console.log("EVENT: " + userjwt.id + " statuschange: " + JSON.stringify(ret))
     })
 

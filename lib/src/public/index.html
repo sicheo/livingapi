@@ -6,42 +6,99 @@
     <script src="script/dist/brouser.bundle.js"></script>
 </head>
 <body>
+    <h3>Presence</h3>
+    <span>
+        <label for="buddylist">Buddies:</label>
+
+        <select name="buddylist" id="buddylist">
+            <option value="all">ALL</option>
+        </select>
+    </span>
+    <span><input type="button" id="subcribeBtn" value="Unsubscribe" onclick="unsubscribe()" /></span>
+    <p id="useravailability"></p>
+    <p id="userpresence"></p>
     <script>
         const baseapiurl = "http://127.0.0.1:3132/living/v1/convergence";
-        const convergenceurl = "http://192.168.43.26/api/realtime/convergence/living"
+        const convergenceurl = "http://192.168.1.156/api/realtime/convergence/living"
 
         const apiconn = new window.ConvApp.JwtApi(baseapiurl);
 
         const jwtconn = new window.ConvApp.JwtConnection(convergenceurl, apiconn);
 
-        const userjwt = new window.ConvApp.Brouser("giulio.stumpo@gmail.com", jwtconn);
+        const userjwt = new window.ConvApp.Brouser("eleonora.decaroli@livingnet.eu", jwtconn);
 
-        const opts = { user: "giulio.stumpo@gmail.com", password: "password" };
+        const opts = { user: "eleonora.decaroli@livingnet.eu", password: "password" };
 
         const userlist = ["carlotta.garlanda@livingnet.eu", "eleonora.decaroli@livingnet.eu"]
 
-        userjwt.emitter.on("connected", (userpwd) => {
+        function changeText(newtext, textarea) {
+            const x = document.getElementById(textarea)
+            x.innerHTML = newtext
+        }
+
+        function unsubscribe() {
+            const x = document.getElementById("subcribeBtn")
+            if (x.value == "Unsubscribe") {
+                userjwt.unsubscribeAll();
+                changeText("User unsubscribed", "useravailability")
+                changeText("User unsubscribed", "userpresence")
+                x.value = "Subscribe"
+            } else {
+                userjwt.subscribe();
+                x.value = "Unsubscribe"
+            }
+        }
+
+        function addbuddies(list) {
+            const x = document.getElementById("buddylist")
+            x.options.length = 0
+            
+            var all = document.createElement('option');
+            all.text = 'ALL';
+            all.value = 'all';
+            x.options.add(all);
+
+            for (let i = 0; i < list.length; i++) {
+                var buddy = document.createElement('option');
+                buddy.text = list[i];
+                buddy.value = list[i];
+                x.options.add(buddy);
+            }
+
+        }
+
+        userjwt.emitter.on(ConvApp.Brouser.EVT_CONNECTED, (userpwd) => {
             console.log("EVENT: " + userjwt.id + " connected")
         })
 
-        userjwt.emitter.on("disconnected", (id) => {
+        userjwt.emitter.on(ConvApp.Brouser.EVT_DISCONNECTED, (id) => {
             console.log("EVENT: " + id + " disconnected")
         })
 
-        userjwt.emitter.on("error", (error) => {
+        userjwt.emitter.on(ConvApp.Brouser.EVT_ERROR, (error) => {
             console.log("ERROR: " + userjwt.id + " " + error)
         })
 
-        userjwt.emitter.on("state_set", (ret) => {
-            console.log("EVENT: " + userjwt.id + " statuschange: " + JSON.stringify(ret))
+
+        userjwt.emitter.on(ConvApp.Brouser.EVT_PRESENCESTATE, (ret) => {
+            changeText("User: " + ret.user + " status: " + ret.value, "userpresence")
+        })
+
+        userjwt.emitter.on(ConvApp.Brouser.EVT_PRESENCEAVAILABILITYCHANGED, (ret) => {
+            changeText("User: " + ret.user + " availability: " + ret.value, "useravailability")
+            if (ret.value == false)
+                changeText("User: " + ret.user + " status: " + "disconnected", "userpresence")
+        })
+
+        userjwt.emitter.on(ConvApp.Brouser.EVT_GOTBUDDIES, (ret) => {
+            addbuddies(ret)
         })
 
         userjwt.connect(opts)
             .then((domain) => {
                 userjwt.subscribe()
                     .then((subscriptions) => {
-                        userjwt.unsubscribe("eleonora.decaroli@livingnet.eu")
-                        userjwt.disconnect()
+                        userjwt.getBuddies()
                     })
             })
             .catch((error) => {
