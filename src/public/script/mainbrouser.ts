@@ -10,7 +10,7 @@ function sleep(ms:any) {
 }
 
 const main = async function () {
-    const convergenceurl = "http://192.168.1.156/api/realtime/convergence/living"
+    const convergenceurl = "http://80.211.35.126:8000/api/realtime/convergence/living"
     const baseapihurl = "http://127.0.0.1:3132/living/v1/convergence"
 
     let token: string | undefined
@@ -20,7 +20,7 @@ const main = async function () {
 
 
     const anonconn = new AnonymousConnection(convergenceurl)
-    const pwconn = new PasswordConnection(convergenceurl, "giulio.stumpo@gmail.com", "password")
+    const pwconn = new PasswordConnection(convergenceurl, "giulio.stumpo@gmail.com", "giulio2")
 
     //token = getToken()
     const jwtconn = new JwtConnection(convergenceurl, jwtapi)
@@ -88,7 +88,7 @@ const main = async function () {
 
     console.log("    3)Test jwt connection")
     try {
-        await userjwt.connect({ user: "giulio.stumpo@gmail.com", password:"password"})
+        await userjwt.connect({ user: "giulio.stumpo@gmail.com", password:"giulio2"})
         await sleep(3000)
         if (userjwt.isConnected())
             await userjwt.disconnect()
@@ -111,7 +111,7 @@ const main = async function () {
     console.log("    6)Test subscriptions & unsubscription")
 
     try {
-        await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "password" })
+        await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
         await sleep(1000)
         console.log("session id: " + userjwt.getSessionId())
         prompt('press any key');

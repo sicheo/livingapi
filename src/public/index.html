@@ -42,9 +42,13 @@
                 userjwt.unsubscribeAll();
                 changeText("User unsubscribed", "useravailability")
                 changeText("User unsubscribed", "userpresence")
+                addbuddies([])
                 x.value = "Subscribe"
             } else {
-                userjwt.subscribe();
+                userjwt.subscribe()
+                    .then((subscriptions) => {
+                        userjwt.getBuddies()
+                    })
                 x.value = "Unsubscribe"
             }
         }

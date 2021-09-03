@@ -3,14 +3,14 @@
     "",
     "\\lib",
     "\\lib\\src",
-    "\\lib\\src\\public",
-    "\\lib\\src\\public\\script",
+    "\\lib\\src\\conf",
     "\\src",
     "\\src\\public",
-    "\\src\\public\\script",
-    "\\src\\public\\script\\factories",
-    "\\src\\services"
+    "\\src\\public\\script\\interfaces",
+    "\\src\\services",
+    "\\src\\utility",
+    "\\src\\www"
   ],
-  "SelectedNode": "\\package.json",
+  "SelectedNode": "\\lib\\src\\conf\\apisrv.json",
   "PreviewInSolutionExplorer": false
 }

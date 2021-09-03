@@ -7,6 +7,6 @@
   "PASSWD": "password",
   "JWT_SECRET": "BGyeoì29358nnDuIS193845hn@!",
   "KEY_ID": "jwtliving070920",
-  "CONVHOST": "192.168.1.70",
-  "CONVPORT": "80"
+  "CONVHOST": "80.211.35.126",
+  "CONVPORT": "8000"
 }
