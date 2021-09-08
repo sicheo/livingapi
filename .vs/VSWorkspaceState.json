@@ -4,13 +4,13 @@
     "\\lib",
     "\\lib\\src",
     "\\lib\\src\\conf",
+    "\\lib\\src\\data",
     "\\src",
     "\\src\\public",
-    "\\src\\public\\script\\interfaces",
-    "\\src\\services",
-    "\\src\\utility",
-    "\\src\\www"
+    "\\src\\public\\script",
+    "\\src\\public\\script\\factories",
+    "\\src\\public\\script\\interfaces"
   ],
-  "SelectedNode": "\\lib\\src\\conf\\apisrv.json",
+  "SelectedNode": "\\src\\public\\script\\factories\\connections.ts",
   "PreviewInSolutionExplorer": false
 }

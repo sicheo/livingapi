@@ -34,7 +34,7 @@ describe('UNIT-TEST', () => {
     it('should return 200', async () => {
         const params = {
             email: "giulio.stumpo@gmail.com",
-            password: "password"
+            password: "giulio2"
         };
         const response = await request(server)
             .post(`/living/v1/convergence/login`)

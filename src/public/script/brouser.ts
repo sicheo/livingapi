@@ -19,7 +19,7 @@ import * as Conv from "@convergence/convergence"
 
 class Brouser {
     /**
-     * Summary: Bruoser() user event digital twin.
+     * Summary: Brouser() user event digital twin.
      *
      * Description: connects. 
      *
@@ -68,7 +68,7 @@ class Brouser {
     private _apiInterface: UserPersistenceApi |undefined = undefined
     private _domain: any
     private _session: any
-    private _presence: any
+    private _identity: any
     private _subscriptions:any[] = []
 
 
@@ -248,6 +248,7 @@ class Brouser {
                     res.value= d._domainId
                     this._evemitter.emit(Brouser.EVT_CONNECTED, res)
                     this.status = "available"
+                    this._identity = d.identity()
                     resolve(d)
                 })
                 .catch((error: any) => {
@@ -345,6 +346,66 @@ class Brouser {
         }
         this._subscriptions = []
         this._evemitter.emit(Brouser.EVT_UNSUBSCRIBEDALL)
+    }
+
+    /**
+     * @method searchUser()
+     * 
+     * @param username string: username to search
+     * @returns user: {username, firstName, lastName, displayName, email, isAnonimous}
+     */
+    searchUser(username:string) {
+        return new Promise(async (resolve, reject) => {
+            if (!this.isConnected()) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            this._identity.user(username).then((user: any) => {
+                resolve(user); // will be undefined if the user does not exist   
+            }).catch((error: any) => {
+                reject(error)
+            })
+        })
+    }
+
+    /**
+     * @method searchUserByEmail()
+     * 
+     * @param email string: username to search
+     * @returns user: {username, firstName, lastName, displayName, email, isAnonimous}
+     */
+    searchUserByEmal(email: string) {
+        return new Promise(async (resolve, reject) => {
+            if (!this.isConnected()) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            this._identity.userByEmail(email).then((user: any) => {
+                resolve(user); // will be undefined if the user does not exist   
+            }).catch((error: any) => {
+                reject(error)
+            })
+        })
+    }
+
+    /**
+    * @method search()
+    * 
+    * @param query object: {fields:['firstname','lastName'], term: 'pippo', offset:0, limit:10, orderBy:{field:'lastName', ascending: true}}
+    * @returns user array: [{username, firstName, lastName, displayName, email, isAnonimous}]
+    */
+    search(query: any) {
+        return new Promise(async (resolve, reject) => {
+            if (!this.isConnected()) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            this._identity.search.then((users: any) => {
+                resolve(users); // will be undefined if the user does not exist   
+            }).catch((error: any) => {
+                reject(error)
+            })
+        })
     }
 
    
