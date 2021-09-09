@@ -63,13 +63,8 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
   "typedocOptions": {
-    "inputFiles": [ "./src" ],
-    "mode": "modules",
-    "out": "docs",
-    "includeDeclarations": false,
-    "excludeExternals": false,
-    "excludePrivate": true,
-    "includeVersion":  true
+    "entryPoints": [ "./src" ],
+    "out": "docs"
   },
   "include": [ "src", "src/**/*", "src/**/*.json", "src/**/**/*" ]
 }

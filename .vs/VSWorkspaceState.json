@@ -1,16 +1,17 @@
 {
   "ExpandedNodes": [
     "",
-    "\\lib",
     "\\lib\\src",
-    "\\lib\\src\\conf",
     "\\lib\\src\\data",
     "\\src",
     "\\src\\public",
     "\\src\\public\\script",
     "\\src\\public\\script\\factories",
-    "\\src\\public\\script\\interfaces"
+    "\\src\\public\\script\\interfaces",
+    "\\src\\services",
+    "\\src\\utility",
+    "\\src\\__test__"
   ],
-  "SelectedNode": "\\src\\public\\script\\factories\\connections.ts",
+  "SelectedNode": "\\src\\apisrv.ts",
   "PreviewInSolutionExplorer": false
 }

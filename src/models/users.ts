@@ -34,4 +34,41 @@ export class LivingUserModel {
         })
     }
 
+    public insertUser(user:any) {
+        return new Promise((resolve, reject) => {
+            const date = new Date()
+            this.db.all("INSERT INTO users (firstname, lastname, primary_bio, secondary_bio, secondary_bio_language, usertype, username,email, email_verified_at, password, completed, active, is_admin, remember_token, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                [user.firstname, user.lastname, user.primary_bio, user.secondary_bio, user.secondary_bio_language, user.usertype, user.username, user.email, user.email_verified_at, user.password, user.completed, user.active, user.is_admin, user.remember_token, date.toISOString(), date.toISOString() ], (err: any, rows: any) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(rows);
+            })
+        })
+    }
+
+    public deleteUser(email: string) {
+        return new Promise((resolve, reject) => {
+            this.db.all("DELETE FROM users WHERE email = ?",
+                [email], (err: any, rows: any) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(rows);
+                })
+        })
+    }
+
+    public changePassword(email:string,password: string) {
+        return new Promise((resolve, reject) => {
+            this.db.all("UPDATE users SET password = ? WHERE email = ?",
+                [password, email], (err: any, rows: any) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(rows);
+                })
+        })
+    }
+
 }

@@ -3,7 +3,7 @@ import EventEmitter from "events";
 import { UserConnection } from "./interfaces/interfaces";
 declare class Brouser {
     /**
-     * Summary: Bruoser() user event digital twin.
+     * Summary: Brouser() user event digital twin.
      *
      * Description: connects.
      *
@@ -50,7 +50,7 @@ declare class Brouser {
     private _apiInterface;
     private _domain;
     private _session;
-    private _presence;
+    private _identity;
     private _subscriptions;
     /**
      * @constructor
@@ -169,6 +169,27 @@ declare class Brouser {
      *
      */
     unsubscribeAll(): void;
+    /**
+     * @method searchUser()
+     *
+     * @param username string: username to search
+     * @returns user: {username, firstName, lastName, displayName, email, isAnonimous}
+     */
+    searchUser(username: string): Promise<unknown>;
+    /**
+     * @method searchUserByEmail()
+     *
+     * @param email string: username to search
+     * @returns user: {username, firstName, lastName, displayName, email, isAnonimous}
+     */
+    searchUserByEmal(email: string): Promise<unknown>;
+    /**
+    * @method search()
+    *
+    * @param query object: {fields:['firstname','lastName'], term: 'pippo', offset:0, limit:10, orderBy:{field:'lastName', ascending: true}}
+    * @returns user array: [{username, firstName, lastName, displayName, email, isAnonimous}]
+    */
+    search(query: any): Promise<unknown>;
     private subscribeDomainEvents;
     private subscribePresenceEvents;
     private subscribeBuddyPresenceEvents;
