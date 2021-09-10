@@ -57,9 +57,33 @@ export class LivingUserController {
         })
     }
 
+    public getUser(email: string) {
+        return new Promise((resolve, reject) => {
+            this.usermodel?.getUser(email)
+                .then((row: any) => {
+                    resolve(row)
+                })
+                .catch((err: any) => {
+                    reject(err)
+                })
+        })
+    }
+
     public changePassword(email: string, password:string) {
         return new Promise((resolve, reject) => {
             this.usermodel?.changePassword(email, password)
+                .then((row: any) => {
+                    resolve(row)
+                })
+                .catch((err: any) => {
+                    reject(err)
+                })
+        })
+    }
+
+    public updateUser(user: any) {
+        return new Promise((resolve, reject) => {
+            this.usermodel?.insertUser(user)
                 .then((row: any) => {
                     resolve(row)
                 })

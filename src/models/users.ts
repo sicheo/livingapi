@@ -71,4 +71,18 @@ export class LivingUserModel {
         })
     }
 
+    public updateUser(user: any) {
+        return new Promise((resolve, reject) => {
+            const date = new Date()
+            this.db.all("UPDATE users SET firstname = ?, lastname = ?, primary_bio = ?, secondary_bio = ?, secondary_bio_language = ?, usertype = ?, username = ?, completed = ?, active = ?, is_admin = ?, updated_at = ? WHERE email = ?",
+                [user.firstname, user.lastname, user.primary_bio, user.secondary_bio, user.secondary_bio_language, user.usertype, user.username, user.completed, user.active, user.is_admin, date.toISOString(),user.email],
+                (err: any, rows: any) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(rows);
+                })
+        })
+    }
+
 }

@@ -6,6 +6,8 @@ let server: Express
 
 let token = ''
 
+let user:any
+
 
 
 beforeAll(async () => {
@@ -59,7 +61,7 @@ describe('UNIT-TEST API SERVER', () => {
             secondary_bio_language: "IT",
             usertype: 1,
             username: "pluto",
-            email: "pluto@pippo",
+            email: "pluto@pippo.com",
             email_verified_at: null,
             password: "oldpassword",
             completed: 0,
@@ -76,7 +78,7 @@ describe('UNIT-TEST API SERVER', () => {
 
     it('/living/v1/convergence/newpasswd: should return 200', async () => {
         const params = {
-            email: "pluto@pippo",
+            email: "pluto@pippo.com",
             password: "newpassword"
         };
         const response = await request(server)
@@ -86,10 +88,28 @@ describe('UNIT-TEST API SERVER', () => {
         expect(response.statusCode).toBe(200)
     })
 
+    it('/living/v1/convergence/getuser: should return 200', async () => {
+        const response = await request(server)
+            .get(`/living/v1/convergence/getuser/pluto@pippo.com`)
+            .auth(token.split(" ")[1], { type: 'bearer' })
+        user = response.body
+        console.log(user)
+        expect(response.statusCode).toBe(200)
+    })
 
+    it('/living/v1/convergence/updateuser: should return 200', async () => {
+        //user.primary_bio ="new primary bio"
+        const response = await request(server)
+            .post(`/living/v1/convergence/updateuser`)
+            .auth(token.split(" ")[1], { type: 'bearer' })
+            .send(user)
+        expect(response.statusCode).toBe(200)
+    })
+
+    
     it('/living/v1/convergence/deluser: should return 200', async () => {
         const params = {
-            email: "pluto@pippo"
+            email: "pluto@pippo.com"
         };
         const response = await request(server)
             .post(`/living/v1/convergence/deluser`)

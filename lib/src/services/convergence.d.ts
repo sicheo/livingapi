@@ -45,9 +45,10 @@ export declare class ConvergenceService {
     /**
     * **API call:**<p>
     * Type: GET<p>
-    * [curl -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/buddies/email] (curl -d @lf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/buddies/email )<p>
+    * [curl -H "Content-Type: application/json" -X GET http://80.211.35.126:3132/living/v1/convergence/buddies/:email] (curl --H "Content-Type: application/json" -X GET http://80.211.35.126:3132/living/v1/convergence/buddies/:email )<p>
     * Get the buddies list for userid=email<p>
     * The request must pass jwt in auth header.
+    * Role: ROLE_ADMIN, ROLE_USER
     */
     getBuddies(email: string): Promise<any>;
     /**
@@ -94,6 +95,42 @@ export declare class ConvergenceService {
     /**
      * **API call:**<p>
      * Type: POST<p>
+     * [curl -d @conf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/updateuser] (curl -d @lf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/updateuser )<p>
+     * Update user. The user pramenter is a json object in the body of the request<p>
+     * example<p>
+     * ```
+     *	{
+     *
+     *		firstname: "username",
+     *		lastname: "password",
+     *		primary_bio: "",
+     *		secondary_bio: "",
+     *		secondary_bio_language: "",
+     *		usertype: "",
+     *		username: "",
+     *		email: "",
+     *		password: "",
+     *		completed: 0,
+     *		active: 1,
+     *		is_admin: 0,
+     *
+     *	}
+     * The request must pass jwt in auth header.
+     * Role: ROLE_ADMIN, ROLE_USER
+     */
+    updateuser(user: any): Promise<any>;
+    /**
+     * **API call:**<p>
+     * Type: POST<p>
+     * [curl -H "Content-Type: application/json" -X GET http://80.211.35.126:3132/living/v1/convergence/getuser/email] (curl -H "Content-Type: application/json" -X GET http://80.211.35.126:3132/living/v1/convergence/getuser/email )<p>
+     * Get the buddies list for userid=email<p>
+     * The request must pass jwt in auth header.
+     * Role: ROLE_ADMIN, ROLE_USER
+     */
+    getuser(email: string): Promise<any>;
+    /**
+     * **API call:**<p>
+     * Type: POST<p>
      * [curl -d @conf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/deluser] (curl -d @lf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/deluser )<p>
      * Delete user from user table. The user pramenter is a json object in the body of the request<p>
      * example<p>
@@ -101,6 +138,8 @@ export declare class ConvergenceService {
      *
      *		email: "user@mail"
      *	}
+     * The request must pass jwt in auth header.
+     * Role: ROLE_ADMIN
      */
     deluser(user: any): Promise<any>;
     /**
@@ -114,6 +153,8 @@ export declare class ConvergenceService {
      *		email: "user@mail",
      *		password: "newpassword"
      *	}
+     * The request must pass jwt in auth header.
+     * Role: ROLE_ADMIN, ROLE_USER
      */
     newpasswd(user: any): Promise<any>;
     /**
