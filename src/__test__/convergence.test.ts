@@ -1,14 +1,18 @@
-import request from 'supertest'
-import { Express } from 'express-serve-static-core'
-import { ApiServer } from '@App/apisrv'
+import { Brouser } from "../public/script/brouser";
+import { JwtApi } from "../public/script/factories/jwtapi";
+import { AnonymousConnection, PasswordConnection, JwtConnection } from "../public/script/factories/connections";
+import * as Conv from "@convergence/convergence"
 
-let server: Express
-
-let token = ''
-
-let user:any
-
-
+const convergenceurl = "http://80.211.35.126:8000/api/realtime/convergence/living"
+const baseapihurl = "http://127.0.0.1:3132/living/v1/convergence"
+let token: string | undefined
+const jwtapi = new JwtApi(baseapihurl)
+const anonconn = new AnonymousConnection(convergenceurl)
+const pwconn = new PasswordConnection(convergenceurl, "giulio.stumpo@gmail.com", "giulio2")
+const jwtconn = new JwtConnection(convergenceurl, jwtapi)
+const useranon = new Brouser("Anonymous Connection", anonconn)
+const userpwd = new Brouser("Password Connection", pwconn)
+const userjwt = new Brouser("giulio.stumpo@gmail.com", jwtconn)
 
 beforeAll(async () => {
     try {
@@ -17,105 +21,13 @@ beforeAll(async () => {
         process.env.HOST = "127.0.0.1"
         process.env.HTTPS = 'NO'
         process.env.PORT = '3132'
-        const apiserver = await new ApiServer(["convergence", "mock"])
-        server = apiserver.getApp() as Express
     } catch (error) {
         console.log(error)
     }
 })
 
-describe('UNIT-TEST API SERVER', () => {
-
-    it('/living/v1/mock: should return 200', async () => {
-        const response = await request(server)
-            .get(`/living/v1/mock`)
-        expect(response.statusCode).toBe(200)
+describe('UNIT-TEST CONVERGENCE SERVER ', () => {
+    it('useranon.connect should return', async () => {
+        await expect(useranon.connect()).resolves.toBeDefined();
     })
-
-
-    it('/living/v1/convergence/login: should return 200', async () => {
-        const params = {
-            email: "giulio.stumpo@gmail.com",
-            password: "giulio2"
-        };
-        const response = await request(server)
-            .post(`/living/v1/convergence/login`)
-            .send(params)
-        token = response.headers['authorization']
-        expect(response.statusCode).toBe(200)
-    })
-
-    it('/living/v1/convergence/buddies: should return 200', async () => {
-        const response = await request(server)
-            .get(`/living/v1/convergence/buddies/giulio.stumpo@gmail.com`)
-            .auth(token.split(" ")[1], { type: 'bearer' })
-        expect(response.statusCode).toBe(200)
-    })
-
-    it('/living/v1/convergence/adduser: should return 200', async () => {
-        const params = {
-            firstname: "pluto",
-            lastname: "pippo",
-            primary_bio: "",
-            secondary_bio: "",
-            secondary_bio_language: "IT",
-            usertype: 1,
-            username: "pluto",
-            email: "pluto@pippo.com",
-            email_verified_at: null,
-            password: "oldpassword",
-            completed: 0,
-            active: 1,
-            is_admin: 0,
-            remember_token: ""
-        };
-        const response = await request(server)
-            .post(`/living/v1/convergence/adduser`)
-            .auth(token.split(" ")[1], { type: 'bearer' })
-            .send(params)
-        expect(response.statusCode).toBe(200)
-    })
-
-    it('/living/v1/convergence/newpasswd: should return 200', async () => {
-        const params = {
-            email: "pluto@pippo.com",
-            password: "newpassword"
-        };
-        const response = await request(server)
-            .post(`/living/v1/convergence/newpasswd`)
-            .auth(token.split(" ")[1], { type: 'bearer' })
-            .send(params)
-        expect(response.statusCode).toBe(200)
-    })
-
-    it('/living/v1/convergence/getuser: should return 200', async () => {
-        const response = await request(server)
-            .get(`/living/v1/convergence/getuser/pluto@pippo.com`)
-            .auth(token.split(" ")[1], { type: 'bearer' })
-        user = response.body
-        console.log(user)
-        expect(response.statusCode).toBe(200)
-    })
-
-    it('/living/v1/convergence/updateuser: should return 200', async () => {
-        //user.primary_bio ="new primary bio"
-        const response = await request(server)
-            .post(`/living/v1/convergence/updateuser`)
-            .auth(token.split(" ")[1], { type: 'bearer' })
-            .send(user)
-        expect(response.statusCode).toBe(200)
-    })
-
-    
-    it('/living/v1/convergence/deluser: should return 200', async () => {
-        const params = {
-            email: "pluto@pippo.com"
-        };
-        const response = await request(server)
-            .post(`/living/v1/convergence/deluser`)
-            .auth(token.split(" ")[1], { type: 'bearer' })
-            .send(params)
-        expect(response.statusCode).toBe(200)
-    })
-
 })

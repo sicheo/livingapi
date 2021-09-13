@@ -1,4 +1,5 @@
-
+// To compile from source and include json extension:
+// export NODE_SQLITE3_JSON1 = yes prior to doing npm install sqlite3--build - from - source=sqlite3
 const sqlite3 = require('sqlite3');
 
 export class LivingUserModel {
@@ -85,4 +86,17 @@ export class LivingUserModel {
         })
     }
 
+    public updateUserField(email: string, field: string, value: any) {
+        const stmt = "UPDATE users SET " + field +"= ?  WHERE email = ?"
+        return new Promise((resolve, reject) => {
+            this.db.all(stmt,
+                [value,email],
+                (err: any, rows: any) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(rows);
+                })
+        })
+    }
 }

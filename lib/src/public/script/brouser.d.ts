@@ -30,6 +30,10 @@ declare class Brouser {
      * @private UserPersistenceApi _apiInterface: interface to api server
      * @private ConvergenceDomain _domain: interface to convergence domain
      * @private ConvergenceSession _session: interface to convergence session
+     * @private ConvergenceIdentity _identity: interface to convergence identity service
+     * @private ConvergencePresence _presence: interface to convergence presence service
+     * @private ConvergenceModels _models: interface to convergence model service
+     * @private ConvergenceChat _chats: interface to convergence chat service
      */
     static EVT_GOTBUDDIES: string;
     static EVT_CONNECTED: string;
@@ -42,6 +46,7 @@ declare class Brouser {
     static EVT_PRESENCESTATEREMOVED: string;
     static EVT_PRESENCESTATECLEARED: string;
     static EVT_PRESENCEAVAILABILITYCHANGED: string;
+    static ACT_TYPE_PROJECT: string;
     private _id;
     private _extid;
     private _status;
@@ -51,7 +56,12 @@ declare class Brouser {
     private _domain;
     private _session;
     private _identity;
+    private _presence;
     private _subscriptions;
+    private _activities;
+    private _activity;
+    private _models;
+    private _chats;
     /**
      * @constructor
      *
@@ -151,6 +161,7 @@ declare class Brouser {
     /**
      * @method subscribe(userlist)
      * subscribe to userlist events. Emits "subscribed"
+     * control the online presence and availability of other users
      *
      * @param userlist (optional): ["user1", "user2",...] - if not supplied get userlist from Api erver
      * @returns subscriptions: array of subcription
@@ -165,7 +176,7 @@ declare class Brouser {
     unsubscribe(username: string): void;
     /**
      * @method unsubscribeAll()
-     * unsubscribe all subscibed users. Emits "unsubscribedall"
+     * unsubscribe all subscribed users. Emits "unsubscribedall"
      *
      */
     unsubscribeAll(): void;
@@ -190,6 +201,29 @@ declare class Brouser {
     * @returns user array: [{username, firstName, lastName, displayName, email, isAnonimous}]
     */
     search(query: any): Promise<unknown>;
+    /**
+     * @method joinactivity(userlist)
+     * join activity or create if not exists
+     *
+     * @param type string: activity type
+     * @param id string: activity id
+     * @returns joined activity
+     */
+    joinactivity(type: string, id: string): Promise<unknown>;
+    /**
+     * @method leaveactivity(leave)
+     * leave activity
+     *
+     * @returns nothing
+     */
+    leaveactivity(): Promise<unknown>;
+    /**
+     * @method getpartecipants()
+     * leave activity
+     *
+     * @returns partecipats array
+     */
+    getparticipants(): Promise<unknown>;
     private subscribeDomainEvents;
     private subscribePresenceEvents;
     private subscribeBuddyPresenceEvents;

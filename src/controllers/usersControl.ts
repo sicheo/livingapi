@@ -83,7 +83,19 @@ export class LivingUserController {
 
     public updateUser(user: any) {
         return new Promise((resolve, reject) => {
-            this.usermodel?.insertUser(user)
+            this.usermodel?.updateUser(user)
+                .then((row: any) => {
+                    resolve(row)
+                })
+                .catch((err: any) => {
+                    reject(err)
+                })
+        })
+    }
+
+    public updateUserField(email: string, field:string, value:any) {
+        return new Promise((resolve, reject) => {
+            this.usermodel?.updateUserField(email, field, value)
                 .then((row: any) => {
                     resolve(row)
                 })

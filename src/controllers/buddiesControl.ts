@@ -23,4 +23,28 @@ export class LivingBuddiesController {
                 })
         })
     }
+
+    public addBuddy(item: any) {
+        return new Promise((resolve, reject) => {
+            this.buddymodel?.addBuddy(item)
+                .then((rows: any) => {
+                    resolve(rows)
+                })
+                .catch((err: any) => {
+                    reject(err)
+                })
+        })
+    }
+
+    public deleteBuddy(item: any) {
+        return new Promise((resolve, reject) => {
+            this.buddymodel?.deleteBuddy(item)
+                .then((rows: any) => {
+                    resolve(rows)
+                })
+                .catch((err: any) => {
+                    reject(err)
+                })
+        })
+    }
 }

@@ -24,4 +24,29 @@ export class LivingBuddiesModel {
         })
     }
 
+    public addBuddy(item: any) {
+        return new Promise((resolve, reject) => {
+            this.db.all("INSERT INTO buddylist (user, buddy) VALUES (?,?)",
+                [item.email, item.buddy], (err: any, rows: any) => {
+
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(rows);
+                })
+        })
+    }
+
+    public deleteBuddy(item: any) {
+        return new Promise((resolve, reject) => {
+            this.db.all("DELETE FROM buddylist WHERE (user = ? AND buddy = ?)",
+                [item.email, item.buddy], (err: any, rows: any) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(rows);
+                })
+        })
+    }
+
 }

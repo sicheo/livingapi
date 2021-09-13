@@ -146,6 +146,74 @@ export class ConvergenceService {
     }
 
     /**
+    * **API call:**<p>
+    * Type: GET<p>
+    * [curl -H "Content-Type: application/json" -X GET http://80.211.35.126:3132/living/v1/convergence/addbuddy/:buddy] (curl --H "Content-Type: application/json" -X GET http://80.211.35.126:3132/living/v1/convergence/addbuddy/:buddy )<p>
+    * Add buddy to buddylist for request user<p>
+    * The request must pass jwt in auth header.
+    * Role: ROLE_ADMIN, ROLE_USER
+    */
+    @GET
+    @Path("addbuddy/:buddy")
+    @Security(["ROLE_ADMIN", "ROLE_USER"])
+    addBuddy(@PathParam("buddy") buddy: string): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            const confpath = path.join(__dirname, "/../data/", this.dbname)
+            const buddies = await new LivingBuddiesController(confpath)
+            const token = this.context.request.get('authorization')
+            let decoded: any
+            if (token == undefined)
+                reject("addbuddy error: token undefined")
+            else {
+                decoded = jwt_decode(token.split(" ")[1]);
+                const item = { email: decoded.email,buddy:buddy}
+                buddies.addBuddy(item)
+                    .then((rows: any) => {
+                        resolve(rows)
+                    })
+                    .catch((err: any) => {
+                        this.context.request.app.locals.LOGGER.error(JSON.stringify(err))
+                        reject(err)
+                    })
+            }
+        });
+    }
+
+    /**
+    * **API call:**<p>
+    * Type: GET<p>
+    * [curl -H "Content-Type: application/json" -X GET http://80.211.35.126:3132/living/v1/convergence/deletebuddy/:buddy] (curl --H "Content-Type: application/json" -X GET http://80.211.35.126:3132/living/v1/convergence/deletebuddy/:buddy )<p>
+    * Add buddy to buddylist for request user<p>
+    * The request must pass jwt in auth header.
+    * Role: ROLE_ADMIN, ROLE_USER
+    */
+    @GET
+    @Path("deletebuddy/:buddy")
+    @Security(["ROLE_ADMIN", "ROLE_USER"])
+    deleteBuddy(@PathParam("buddy") buddy: string): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            const confpath = path.join(__dirname, "/../data/", this.dbname)
+            const buddies = await new LivingBuddiesController(confpath)
+            const token = this.context.request.get('authorization')
+            let decoded: any
+            if (token == undefined)
+                reject("deletebuddy error: token undefined")
+            else {
+                decoded = jwt_decode(token.split(" ")[1]);
+                const item = { email: decoded.email, buddy: buddy }
+                buddies.deleteBuddy(item)
+                    .then((rows: any) => {
+                        resolve(rows)
+                    })
+                    .catch((err: any) => {
+                        this.context.request.app.locals.LOGGER.error(JSON.stringify(err))
+                        reject(err)
+                    })
+            }
+        });
+    }
+
+    /**
      * **API call:**<p>
      * Type: POST<p>
      * [curl -d @conf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/login] (curl -d @lf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/login )<p>
@@ -292,13 +360,56 @@ export class ConvergenceService {
                 const roles = decoded.auth.split(',')
                 if ((decoded.email != user.email) && (!roles.includes("ROLE_ADMIN")))
                     reject("update error: not authorized")
-                luser.insertUser(user).then((rows: any) => {
+                luser.updateUser(user).then((rows: any) => {
                     resolve(rows)
                 })
                 .catch((err: any) => {
                     this.context.request.app.locals.LOGGER.error(JSON.stringify(err))
                     reject(err)
                 })
+            }
+        });
+    }
+
+    /**
+     * **API call:**<p>
+     * Type: POST<p>
+     * [curl -d @conf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/updateuserfield] (curl -d @lf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/updateuserfield )<p>
+     * Update user field. The user paramenter is a json object in the body of the request<p>
+     * example<p>
+     * ```
+     *	{
+     *
+     *		email: "",
+     *		field: "",
+     *		value: ""
+     *	}
+     * The request must pass jwt in auth header.
+     * Role: ROLE_ADMIN, ROLE_USER
+     */
+    @POST
+    @Path("updateuserfield")
+    @Security(["ROLE_ADMIN", "ROLE_USER"])
+    updateuserfield(user: any): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            const confpath = path.join(__dirname, "/../data/", this.dbname)
+            const luser = await new LivingUserController(confpath)
+            const token = this.context.request.get('authorization')
+            let decoded: any
+            if (token == undefined)
+                reject("updatefield error: token undefined")
+            else {
+                decoded = jwt_decode(token.split(" ")[1]);
+                const roles = decoded.auth.split(',')
+                if ((decoded.email != user.email) && (!roles.includes("ROLE_ADMIN")))
+                    reject("updatefield error: not authorized")
+                luser.updateUserField(user.email,user.field,user.value).then((rows: any) => {
+                    resolve(rows)
+                })
+                    .catch((err: any) => {
+                        this.context.request.app.locals.LOGGER.error(JSON.stringify(err))
+                        reject(err)
+                    })
             }
         });
     }

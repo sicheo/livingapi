@@ -52,6 +52,24 @@ export declare class ConvergenceService {
     */
     getBuddies(email: string): Promise<any>;
     /**
+    * **API call:**<p>
+    * Type: GET<p>
+    * [curl -H "Content-Type: application/json" -X GET http://80.211.35.126:3132/living/v1/convergence/addbuddy/:buddy] (curl --H "Content-Type: application/json" -X GET http://80.211.35.126:3132/living/v1/convergence/addbuddy/:buddy )<p>
+    * Add buddy to buddylist for request user<p>
+    * The request must pass jwt in auth header.
+    * Role: ROLE_ADMIN, ROLE_USER
+    */
+    addBuddy(buddy: string): Promise<any>;
+    /**
+    * **API call:**<p>
+    * Type: GET<p>
+    * [curl -H "Content-Type: application/json" -X GET http://80.211.35.126:3132/living/v1/convergence/deletebuddy/:buddy] (curl --H "Content-Type: application/json" -X GET http://80.211.35.126:3132/living/v1/convergence/deletebuddy/:buddy )<p>
+    * Add buddy to buddylist for request user<p>
+    * The request must pass jwt in auth header.
+    * Role: ROLE_ADMIN, ROLE_USER
+    */
+    deleteBuddy(buddy: string): Promise<any>;
+    /**
      * **API call:**<p>
      * Type: POST<p>
      * [curl -d @conf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/login] (curl -d @lf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/login )<p>
@@ -119,6 +137,23 @@ export declare class ConvergenceService {
      * Role: ROLE_ADMIN, ROLE_USER
      */
     updateuser(user: any): Promise<any>;
+    /**
+     * **API call:**<p>
+     * Type: POST<p>
+     * [curl -d @conf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/updateuserfield] (curl -d @lf.json -H "Content-Type: application/json" -X POST http://80.211.35.126:3132/living/v1/convergence/updateuserfield )<p>
+     * Update user field. The user paramenter is a json object in the body of the request<p>
+     * example<p>
+     * ```
+     *	{
+     *
+     *		email: "",
+     *		field: "",
+     *		value: ""
+     *	}
+     * The request must pass jwt in auth header.
+     * Role: ROLE_ADMIN, ROLE_USER
+     */
+    updateuserfield(user: any): Promise<any>;
     /**
      * **API call:**<p>
      * Type: POST<p>

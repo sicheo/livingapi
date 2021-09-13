@@ -3,12 +3,8 @@
     "",
     "\\src",
     "\\src\\public",
-    "\\src\\public\\script\\factories",
-    "\\src\\public\\script\\interfaces",
-    "\\src\\services",
-    "\\src\\utility",
-    "\\src\\__test__"
+    "\\src\\public\\script"
   ],
-  "SelectedNode": "\\src\\__test__\\convergence.test.ts",
+  "SelectedNode": "\\src\\public\\script\\brouser.ts",
   "PreviewInSolutionExplorer": false
 }

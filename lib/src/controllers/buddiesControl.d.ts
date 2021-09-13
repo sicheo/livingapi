@@ -3,5 +3,7 @@ export declare class LivingBuddiesController {
     constructor(connectionstring: string);
     private init;
     getUserBuddies(email: string): Promise<unknown>;
+    addBuddy(item: any): Promise<unknown>;
+    deleteBuddy(item: any): Promise<unknown>;
 }
 //# sourceMappingURL=buddiesControl.d.ts.map

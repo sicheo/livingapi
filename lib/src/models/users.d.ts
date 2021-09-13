@@ -7,5 +7,6 @@ export declare class LivingUserModel {
     deleteUser(email: string): Promise<unknown>;
     changePassword(email: string, password: string): Promise<unknown>;
     updateUser(user: any): Promise<unknown>;
+    updateUserField(email: string, field: string, value: any): Promise<unknown>;
 }
 //# sourceMappingURL=users.d.ts.map

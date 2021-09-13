@@ -46,8 +46,13 @@ class Brouser {
      * @private UserPersistenceApi _apiInterface: interface to api server
      * @private ConvergenceDomain _domain: interface to convergence domain
      * @private ConvergenceSession _session: interface to convergence session
+     * @private ConvergenceIdentity _identity: interface to convergence identity service
+     * @private ConvergencePresence _presence: interface to convergence presence service
+     * @private ConvergenceModels _models: interface to convergence model service
+     * @private ConvergenceChat _chats: interface to convergence chat service
      */
 
+    // EVENTS
     static EVT_GOTBUDDIES = "buddies"
     static EVT_CONNECTED = Conv.ConnectedEvent.NAME
     static EVT_SUBSCRIBED = "subscribed"
@@ -58,7 +63,10 @@ class Brouser {
     static EVT_PRESENCESTATE = Conv.PresenceStateSetEvent.NAME
     static EVT_PRESENCESTATEREMOVED = Conv.PresenceStateRemovedEvent.NAME
     static EVT_PRESENCESTATECLEARED = Conv.PresenceStateClearedEvent.NAME
-    static EVT_PRESENCEAVAILABILITYCHANGED =  Conv.PresenceAvailabilityChangedEvent.NAME
+    static EVT_PRESENCEAVAILABILITYCHANGED = Conv.PresenceAvailabilityChangedEvent.NAME
+
+    // ACTION TYPES
+    static ACT_TYPE_PROJECT = "project"
 
     private _id: string
     private _extid: string
@@ -69,7 +77,12 @@ class Brouser {
     private _domain: any
     private _session: any
     private _identity: any
-    private _subscriptions:any[] = []
+    private _presence: any
+    private _subscriptions: any[] = []
+    private _activities: any | undefined = undefined
+    private _activity= { activity: undefined, partecipants:[] }
+    private _models: any
+    private _chats: any
 
 
     /**
@@ -181,7 +194,7 @@ class Brouser {
      */
     set status(s: string) {
         if (this._domain) {
-            this._domain.presence().setState("status", s)
+            this._presence.setState("status", s)
             //this._evemitter.emit("statuschange",this._status)
         } else {
             //this._evemitter.emit("error", "_domain null")
@@ -248,7 +261,11 @@ class Brouser {
                     res.value= d._domainId
                     this._evemitter.emit(Brouser.EVT_CONNECTED, res)
                     this.status = "available"
+                    this._presence = d.presence()
                     this._identity = d.identity()
+                    this._activities = d.activities()
+                    this._models = d.models()
+                    this._chats = d.chat()
                     resolve(d)
                 })
                 .catch((error: any) => {
@@ -281,6 +298,7 @@ class Brouser {
     /**
      * @method subscribe(userlist)
      * subscribe to userlist events. Emits "subscribed"
+     * control the online presence and availability of other users
      * 
      * @param userlist (optional): ["user1", "user2",...] - if not supplied get userlist from Api erver
      * @returns subscriptions: array of subcription
@@ -301,7 +319,7 @@ class Brouser {
                 }
             }
             if (this._domain) {
-                this._domain.presence().subscribe(list)
+                this._presence.subscribe(list)
                     .then((subscriptions: any) => {
                         subscriptions.forEach((subscription: any) => {
                             this._subscriptions.push(subscription)
@@ -336,7 +354,7 @@ class Brouser {
 
     /**
      * @method unsubscribeAll()
-     * unsubscribe all subscibed users. Emits "unsubscribedall"
+     * unsubscribe all subscribed users. Emits "unsubscribedall"
      *
      */
     unsubscribeAll() {
@@ -408,18 +426,84 @@ class Brouser {
         })
     }
 
-   
 
-    private subscribeDomainEvents() {
-        /*
-        this._domain.on(Conv.ConnectedEvent.NAME, (ret: any) => {
-            const res = {
-                user: this._id, evt: "connected", value: ""
+    /**
+     * @method joinactivity(userlist)
+     * join activity or create if not exists
+     * 
+     * @param type string: activity type
+     * @param id string: activity id
+     * @returns joined activity
+     */
+    joinactivity(type: string, id: string) {
+        const options = {
+            autoCreate: {
+                groupPermissions: {
+                    "admins": ["join", "lurk", "set_state", "view_state", "manage", "remove"]
+                }
             }
-            console.log("CONNECTED **************")
-            this._evemitter.emit(Conv.ConnectedEvent.NAME, res)
-        })*/
+        }
+        return new Promise(async (resolve, reject) => {
+            if (!this.isConnected()) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            this._activities.join(type, id, options).then((activity: any) => {
+                this._activity.activity = activity
+                resolve(activity)
+            }).catch((error: any) => {
+                reject(error)
+            })
+        })
 
+    }
+
+    /**
+     * @method leaveactivity(leave)
+     * leave activity 
+     * 
+     * @returns nothing
+     */
+    leaveactivity() {
+        return new Promise(async (resolve, reject) => {
+            if (!this._activity.activity != undefined) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            this._activities.leave().then(() => {
+                this._activity.activity = undefined
+                resolve("activity leaved")
+            }).catch((error: any) => {
+                reject(error)
+            })
+        })
+
+    }
+
+    /**
+     * @method getpartecipants()
+     * leave activity 
+     * 
+     * @returns partecipats array
+     */
+    getparticipants() {
+        return new Promise(async (resolve, reject) => {
+            if (!this._activity.activity != undefined) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            this._activities._participants = this._activities.activity.participants()
+            resolve(this._activities._participants)
+            
+        })
+
+    }
+
+    /*
+     * EVENT SUBSCRIPTION
+     * 
+     */
+    private subscribeDomainEvents() {
         this._domain.on(Conv.DisconnectedEvent.NAME, () => {
             this._evemitter.emit(Brouser.EVT_DISCONNECTED, this._id)
         })

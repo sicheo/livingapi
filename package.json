@@ -8,6 +8,7 @@
     "test:unit": "jest --detectOpenHandles",
     "build": "tsc && npm run copy && npx webpack --config webpack.config.js",
     "copy": "npx ncp src/conf lib/src/conf && npx ncp src/data lib/src/data && ncp src/www lib/src/www && ncp src/public lib/src/public",
+    "startlocal": "npx node --trace-warnings lib/src/utility/start.js",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "eslint \"src/**\"",
     "prepare": "npm run build",
@@ -16,6 +17,7 @@
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
     "testsrv": "node --trace-warnings lib/src/utility/start.js",
+    "testjson": "node --trace-warnings lib/src/utility/checkjson.js",
     "testuser": "node --trace-warnings lib/src/utility/checkuser.js",
     "testbrouser": "node --trace-warnings lib/src/public/script/mainbrouser.js",
     "testbuddy": "node --trace-warnings lib/src/public/script/buddytest.js"

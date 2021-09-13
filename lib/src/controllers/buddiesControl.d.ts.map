@@ -1,1 +1,1 @@
-{"version":3,"file":"buddiesControl.d.ts","sourceRoot":"","sources":["../../../src/controllers/buddiesControl.ts"],"names":[],"mappings":"AAGA,qBAAa,uBAAuB;IAChC,OAAO,CAAC,UAAU,CAAgC;gBAEtC,gBAAgB,EAAE,MAAM;YAItB,IAAI;IAIX,cAAc,CAAC,KAAK,EAAE,MAAM;CAWtC"}
+{"version":3,"file":"buddiesControl.d.ts","sourceRoot":"","sources":["../../../src/controllers/buddiesControl.ts"],"names":[],"mappings":"AAGA,qBAAa,uBAAuB;IAChC,OAAO,CAAC,UAAU,CAAgC;gBAEtC,gBAAgB,EAAE,MAAM;YAItB,IAAI;IAIX,cAAc,CAAC,KAAK,EAAE,MAAM;IAY5B,QAAQ,CAAC,IAAI,EAAE,GAAG;IAYlB,WAAW,CAAC,IAAI,EAAE,GAAG;CAW/B"}
