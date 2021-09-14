@@ -46,7 +46,7 @@ const main = async function () {
     })
 
     userpwd.emitter.on(Conv.ConnectedEvent.NAME, async (ret: any) => {
-        console.log("EVENT: " + userpwd.id + " connected: ")
+        console.log("EVENT: " + ret.user + " connected: session " + ret.session)
     })
 
     userpwd.emitter.on("disconnected", (id: any) => {
@@ -76,31 +76,31 @@ const main = async function () {
         await sleep(3000)
         if (useranon.isConnected())
             await useranon.disconnect()
-    } catch (error) { }
+    } catch (error) { console.log(error)}
 
     console.log("    2)Test password connection")
     try {
         await userpwd.connect()
         await sleep(3000)
-        if (userpwd.isConnected())
+        //if (userpwd.isConnected())
             await userpwd.disconnect()
-    } catch (error) { }
+    } catch (error) { console.log(error) }
 
     console.log("    3)Test jwt connection")
     try {
         await userjwt.connect({ user: "giulio.stumpo@gmail.com", password:"giulio2"})
         await sleep(3000)
-        if (userjwt.isConnected())
+        //if (userjwt.isConnected())
             await userjwt.disconnect()
-    } catch (error) { }
+    } catch (error) { console.log(error) }
 
     console.log("    4)Test jwt re-connection")
     try {
         await userjwt.connect()
         await sleep(3000)
-        if (userjwt.isConnected())
+        //if (userjwt.isConnected())
             await userjwt.disconnect()
-    } catch (error) { }
+    } catch (error) { console.log(error) }
 
     
 
@@ -125,7 +125,7 @@ const main = async function () {
         await userjwt.unsubscribeAll()
         if (userjwt.isConnected())
             await userjwt.disconnect()
-    } catch (error) { }
+    } catch (error) { console.log(error) }
 
 
 }

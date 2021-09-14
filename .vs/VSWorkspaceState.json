@@ -1,10 +1,13 @@
 {
   "ExpandedNodes": [
     "",
+    "\\lib",
+    "\\lib\\src",
+    "\\lib\\src\\__test__",
     "\\src",
     "\\src\\public",
-    "\\src\\public\\script"
+    "\\src\\public\\script",
+    "\\src\\__test__"
   ],
-  "SelectedNode": "\\src\\public\\script\\brouser.ts",
   "PreviewInSolutionExplorer": false
 }

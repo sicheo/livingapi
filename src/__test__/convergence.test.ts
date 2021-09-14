@@ -14,6 +14,10 @@ const useranon = new Brouser("Anonymous Connection", anonconn)
 const userpwd = new Brouser("Password Connection", pwconn)
 const userjwt = new Brouser("giulio.stumpo@gmail.com", jwtconn)
 
+function sleep(ms: any) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 beforeAll(async () => {
     try {
         const path = require("path")
@@ -27,7 +31,34 @@ beforeAll(async () => {
 })
 
 describe('UNIT-TEST CONVERGENCE SERVER ', () => {
-    it('useranon.connect should return', async () => {
-        await expect(useranon.connect()).resolves.toBeDefined();
+    it('useranon.connect should throw exception', async () => {
+        try {
+            await expect(useranon.connect()).rejects.toThrow("Anonymous authentication is disabled for the requested domain.")
+            //useranon.disconnect()
+        } catch (error) {}
+    })
+
+    it('userpwd.connect should return connected', async () => {
+        try {
+            await expect(userpwd.connect()).resolves.toBe("connected")
+            await sleep(3000)
+            await userpwd.disconnect()
+        } catch (error) {}
+    })
+
+    it('userjwt.connect should return connected', async () => {
+        try {
+            await expect(userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })).resolves.toBe("connected")
+            await sleep(3000)
+            await userjwt.disconnect()
+        } catch (error) { }
+    })
+
+    it('userjwt.connect (reconnection) should return connected', async () => {
+        try {
+            await expect(userjwt.connect()).resolves.toBe("connected")
+            await sleep(3000)
+            await userjwt.disconnect()
+        } catch (error) { }
     })
 })

@@ -13,6 +13,7 @@ import EventEmitter from "events";
 import { UserConnection, UserPersistenceApi } from "./interfaces/interfaces";
 
 import * as Conv from "@convergence/convergence"
+import unknown from "isomorphic-ws";
 
 
 
@@ -251,22 +252,23 @@ class Brouser {
     connect(opts?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             const res = {
-                user: this._id, evt: "connected", value: "pippo"
+                user: this._id, evt: "connected", domain: "pippo", session: unknown
             }
             this._connection.connect(opts)
                 .then((d: any) => {
                     this._domain = d
                     this.subscribeDomainEvents()
                     this._session = d.session()
-                    res.value= d._domainId
-                    this._evemitter.emit(Brouser.EVT_CONNECTED, res)
-                    this.status = "available"
+                    res.domain = d._domainId
+                    res.session = this._session.sessionId()
                     this._presence = d.presence()
                     this._identity = d.identity()
                     this._activities = d.activities()
                     this._models = d.models()
                     this._chats = d.chat()
-                    resolve(d)
+                    this.status = "available"
+                    this._evemitter.emit(Brouser.EVT_CONNECTED, res)
+                    resolve('connected')
                 })
                 .catch((error: any) => {
                     //this._evemitter.emit("error", error)
@@ -285,7 +287,7 @@ class Brouser {
         return new Promise((resolve, reject) => {
             this._connection.disconnect(this._domain)
                 .then((res: any) => {
-                    //this._evemitter.emit("disconnected", this._id)
+                    this._evemitter.emit("disconnected", this._id)
                     resolve(res)
                 })
                 .catch((error: any) => {

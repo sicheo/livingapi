@@ -39,7 +39,13 @@ export class AnonymousConnection implements UserConnection {
     public disconnect(domain:any) {
         return new Promise((resolve, reject) => {
             this._connected = false
-            resolve(domain.dispose())
+            domain.dispose()
+                .then(() => {
+                    resolve("disconnected")
+                })
+                .catch((error: any) => {
+                    reject(error)
+                })
         })
     }
 
@@ -95,7 +101,13 @@ export class PasswordConnection implements UserConnection {
         return new Promise((resolve, reject) => {
             this._connected = false
             this._authenticated = false
-            resolve(domain.dispose())
+            domain.dispose()
+                .then(() => {
+                    resolve("disconnected")
+                })
+                .catch((error: any) => {
+                    reject(error)
+                })
         })
     }
 
@@ -173,11 +185,17 @@ export class JwtConnection implements UserConnection {
         })
     }
 
-    public disconnect(domain:any) {
+    public disconnect(domain: any) {
         return new Promise((resolve, reject) => {
             this._connected = false
             this._authenticated = false
-            resolve(domain.dispose())
+            domain.dispose()
+                .then(() => {
+                    resolve("disconnected")
+                })
+                .catch((error: any) => {
+                    reject(error)
+                })
         })
     }
 
