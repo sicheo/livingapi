@@ -186,7 +186,6 @@ export class JwtConnection implements UserConnection {
     }
 
     public disconnect(domain: any) {
-        console.log("DISCONNECT")
         return new Promise((resolve, reject) => {
             this._connected = false
             this._authenticated = false

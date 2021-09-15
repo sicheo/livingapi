@@ -81,7 +81,7 @@ class Brouser {
     private _presence: any
     private _subscriptions: any[] = []
     private _activities: any | undefined = undefined
-    private _activity= { activity: undefined, partecipants:[] }
+    private _activity= { activity: undefined, participants:[], permissons: undefined }
     private _models: any
     private _chats: any
 
@@ -268,7 +268,7 @@ class Brouser {
                     this._chats = d.chat()
                     this.status = "available"
                     this._evemitter.emit(Brouser.EVT_CONNECTED, res)
-                    resolve('connected')
+                    resolve(this._domain)
                 })
                 .catch((error: any) => {
                     //this._evemitter.emit("error", error)
@@ -360,12 +360,15 @@ class Brouser {
      *
      */
     unsubscribeAll() {
-        for (let i = 0; i < this._subscriptions.length; i++) {
-            this.unsubscribeBuddyEvents(this._subscriptions[i])
-            this._subscriptions[i].unsubscribe()
-        }
-        this._subscriptions = []
-        this._evemitter.emit(Brouser.EVT_UNSUBSCRIBEDALL)
+        return new Promise(async (resolve, reject) => {
+            for (let i = 0; i < this._subscriptions.length; i++) {
+                this.unsubscribeBuddyEvents(this._subscriptions[i])
+                this._subscriptions[i].unsubscribe()
+            }
+            this._subscriptions = []
+            this._evemitter.emit(Brouser.EVT_UNSUBSCRIBEDALL)
+            resolve("unsubscribed")
+        })
     }
 
     /**
@@ -388,25 +391,6 @@ class Brouser {
         })
     }
 
-    /**
-     * @method searchUserByEmail()
-     * 
-     * @param email string: username to search
-     * @returns user: {username, firstName, lastName, displayName, email, isAnonimous}
-     */
-    searchUserByEmal(email: string) {
-        return new Promise(async (resolve, reject) => {
-            if (!this.isConnected()) {
-                //this._evemitter.emit("error", "Not connected")
-                reject("Not connected")
-            }
-            this._identity.userByEmail(email).then((user: any) => {
-                resolve(user); // will be undefined if the user does not exist   
-            }).catch((error: any) => {
-                reject(error)
-            })
-        })
-    }
 
     /**
     * @method search()
@@ -420,7 +404,7 @@ class Brouser {
                 //this._evemitter.emit("error", "Not connected")
                 reject("Not connected")
             }
-            this._identity.search.then((users: any) => {
+            this._identity.search(query).then((users: any) => {
                 resolve(users); // will be undefined if the user does not exist   
             }).catch((error: any) => {
                 reject(error)
@@ -428,16 +412,36 @@ class Brouser {
         })
     }
 
+    /**
+    * @method getGroup()
+    *
+    * @returns groups object: user group info object
+    */
+
+    getGroup() {
+        return new Promise(async (resolve, reject) => {
+            if (!this.isConnected()) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            const query = ['LivigGroup']
+            this._identity.groups(query).then((groups: any) => {
+                resolve(groups[0]); // will be undefined if the user does not exist   
+            }).catch((error: any) => {
+                reject(error)
+            })
+        })
+    }
 
     /**
-     * @method joinactivity(userlist)
+     * @method joinActivity(type,id)
      * join activity or create if not exists
      * 
      * @param type string: activity type
      * @param id string: activity id
      * @returns joined activity
      */
-    joinactivity(type: string, id: string) {
+    joinActivity(type: string, id: string) {
         const options = {
             autoCreate: {
                 groupPermissions: {
@@ -457,49 +461,209 @@ class Brouser {
                 reject(error)
             })
         })
-
     }
 
     /**
-     * @method leaveactivity(leave)
+     * @method leaveActivity()
      * leave activity 
      * 
      * @returns nothing
      */
-    leaveactivity() {
+    leaveActivity() {
         return new Promise(async (resolve, reject) => {
             if (!this._activity.activity != undefined) {
                 //this._evemitter.emit("error", "Not connected")
                 reject("Not connected")
             }
-            this._activities.leave().then(() => {
+            const act: any = this._activity.activity
+            act.leave().then(() => {
                 this._activity.activity = undefined
+                this._activity.participants = []
                 resolve("activity leaved")
             }).catch((error: any) => {
                 reject(error)
             })
         })
-
     }
 
     /**
-     * @method getpartecipants()
-     * leave activity 
+     * @method getPartecipants()
+     * get activity participants 
      * 
      * @returns partecipats array
      */
-    getparticipants() {
+    getParticipants() {
         return new Promise(async (resolve, reject) => {
             if (!this._activity.activity != undefined) {
                 //this._evemitter.emit("error", "Not connected")
                 reject("Not connected")
             }
-            this._activities._participants = this._activities.activity.participants()
+            const act:any = this._activity.activity
+            this._activity.participants = act.participants()
             resolve(this._activities._participants)
-            
         })
-
     }
+
+    /**
+     * @method removeActivity()
+     * remove activity 
+     * 
+     * @returns nothing
+     */
+    removeActivity() {
+        return new Promise(async (resolve, reject) => {
+            if ((this._activity == undefined)) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            const act:any = this._activity.activity
+            if (act != undefined){
+                const type = act.type
+                const id = act.id
+                this._activities.remove(type,id).then(() => {
+                    this._activity.activity = undefined
+                    resolve("activity leaved")
+                }).catch((error: any) => {
+                    reject(error)
+                })
+            }
+        })
+    }
+
+    /**
+     * @method setActivityState(key, value)
+     * set activity state (key) to value
+     * 
+     * @param key string: state key
+     * @param value string: state value
+     * @returns nothing
+     */
+    setActivityState(key:string,value:string) {
+        return new Promise(async (resolve, reject) => {
+            if ((this._activity == undefined)) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            const act: any = this._activity.activity
+            if (act != undefined) {
+                act.setState(key,value)
+                resolve("state setted")
+            }
+        })
+    }
+
+    /**
+     * @method setActivityPermissions(type,perm)
+     * set activity permissions by type
+     * 
+     * @param type string: "user"|"group"|"world"
+     * @param perm object: {"name":["join" | "lurk" | "view_state" | "set_state" | "remove" | "manage"]}
+     * @returns nothing
+     */
+    setActivityPermissions(type:string, perm:any) {
+        return new Promise(async (resolve, reject) => {
+            if ((this._activity == undefined)) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            const act: any = this._activity.activity
+            const permissions: any = act.permissions()
+            if (act != undefined) {
+                switch (type) {
+                    case "user":
+                        permissions.setUserPermissions(perm)
+                            .then(() => {
+                                resolve("user permission set")
+                            }).catch((error:any) => {
+                                reject(error)
+                            })
+                        break;
+                    case "group":
+                        permissions.setGroupPermissions(perm)
+                            .then(() => {
+                                resolve("group permission set")
+                            }).catch((error: any) => {
+                                reject(error)
+                            })
+                        break;
+                    case "world":
+                        permissions.setWorldPermissions(perm)
+                            .then(() => {
+                                resolve("world permission set")
+                            }).catch((error: any) => {
+                                reject(error)
+                            })
+                        break;
+                    default:
+                        reject("bad perm group")
+                }
+            }
+        })
+    }
+
+    /**
+     * @method getActivityState(key)
+     * get activity state (key)
+     * 
+     * @param key string: state key
+     * @returns activity state value
+     */
+    getActivityState(key: string) {
+        return new Promise(async (resolve, reject) => {
+            if ((this._activity == undefined)) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            const act: any = this._activity.activity
+            if (act != undefined) {
+                const state = act.state().get(key)
+                resolve(state)
+            }
+        })
+    }
+
+    /**
+     * @method removeActivityState(key)
+     *  set activity state (key) to value
+     *
+     * @param key string: state key
+     * @returns nothing
+     */
+    removeActivityState(key: string) {
+        return new Promise(async (resolve, reject) => {
+            if ((this._activity == undefined)) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            const act: any = this._activity.activity
+            if (act != undefined) {
+                act.removeState(key)
+                resolve("state removed")
+            }
+        })
+    }
+
+    /**
+     * @method clearActivityState()
+     * clear activity
+     * 
+     * @returns nothing
+     */
+    clearActivityState() {
+        return new Promise(async (resolve, reject) => {
+            if ((this._activity == undefined)) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Not connected")
+            }
+            const act: any = this._activity.activity
+            if (act != undefined) {
+                act.clearState()
+                resolve("state cleared")
+            }
+        })
+    }
+
+    
 
     /*
      * EVENT SUBSCRIPTION

@@ -179,7 +179,7 @@ declare class Brouser {
      * unsubscribe all subscribed users. Emits "unsubscribedall"
      *
      */
-    unsubscribeAll(): void;
+    unsubscribeAll(): Promise<unknown>;
     /**
      * @method searchUser()
      *
@@ -188,13 +188,6 @@ declare class Brouser {
      */
     searchUser(username: string): Promise<unknown>;
     /**
-     * @method searchUserByEmail()
-     *
-     * @param email string: username to search
-     * @returns user: {username, firstName, lastName, displayName, email, isAnonimous}
-     */
-    searchUserByEmal(email: string): Promise<unknown>;
-    /**
     * @method search()
     *
     * @param query object: {fields:['firstname','lastName'], term: 'pippo', offset:0, limit:10, orderBy:{field:'lastName', ascending: true}}
@@ -202,28 +195,82 @@ declare class Brouser {
     */
     search(query: any): Promise<unknown>;
     /**
-     * @method joinactivity(userlist)
+    * @method getGroup()
+    *
+    * @returns groups object: user group info object
+    */
+    getGroup(): Promise<unknown>;
+    /**
+     * @method joinActivity(type,id)
      * join activity or create if not exists
      *
      * @param type string: activity type
      * @param id string: activity id
      * @returns joined activity
      */
-    joinactivity(type: string, id: string): Promise<unknown>;
+    joinActivity(type: string, id: string): Promise<unknown>;
     /**
-     * @method leaveactivity(leave)
+     * @method leaveActivity()
      * leave activity
      *
      * @returns nothing
      */
-    leaveactivity(): Promise<unknown>;
+    leaveActivity(): Promise<unknown>;
     /**
-     * @method getpartecipants()
-     * leave activity
+     * @method getPartecipants()
+     * get activity participants
      *
      * @returns partecipats array
      */
-    getparticipants(): Promise<unknown>;
+    getParticipants(): Promise<unknown>;
+    /**
+     * @method removeActivity()
+     * remove activity
+     *
+     * @returns nothing
+     */
+    removeActivity(): Promise<unknown>;
+    /**
+     * @method setActivityState(key, value)
+     * set activity state (key) to value
+     *
+     * @param key string: state key
+     * @param value string: state value
+     * @returns nothing
+     */
+    setActivityState(key: string, value: string): Promise<unknown>;
+    /**
+     * @method setActivityPermissions(type,perm)
+     * set activity permissions by type
+     *
+     * @param type string: "user"|"group"|"world"
+     * @param perm object: {"name":["join" | "lurk" | "view_state" | "set_state" | "remove" | "manage"]}
+     * @returns nothing
+     */
+    setActivityPermissions(type: string, perm: any): Promise<unknown>;
+    /**
+     * @method getActivityState(key)
+     * get activity state (key)
+     *
+     * @param key string: state key
+     * @returns activity state value
+     */
+    getActivityState(key: string): Promise<unknown>;
+    /**
+     * @method removeActivityState(key)
+     *  set activity state (key) to value
+     *
+     * @param key string: state key
+     * @returns nothing
+     */
+    removeActivityState(key: string): Promise<unknown>;
+    /**
+     * @method clearActivityState()
+     * clear activity
+     *
+     * @returns nothing
+     */
+    clearActivityState(): Promise<unknown>;
     private subscribeDomainEvents;
     private subscribePresenceEvents;
     private subscribeBuddyPresenceEvents;

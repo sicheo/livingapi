@@ -35,28 +35,82 @@ describe('UNIT-TEST CONVERGENCE SERVER ', () => {
         try {
             await expect(useranon.connect()).rejects.toThrow("Anonymous authentication is disabled for the requested domain.")
             //useranon.disconnect()
-        } catch (error) {}
+            await sleep(3000)
+        } catch (error) { console.log(error)}
     })
 
     it('userpwd.connect should return connected', async () => {
         try {
-            await expect(userpwd.connect()).resolves.toBe("connected")
+            await expect(userpwd.connect()).resolves.toBeDefined()
             await sleep(3000)
             await userpwd.disconnect()
-        } catch (error) {}
+        } catch (error) { console.log(error)}
     })
 
     it('userjwt.connect should return connected', async () => {
         try {
-            await expect(userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })).resolves.toBe("connected")
+            await expect(userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })).resolves.toBeDefined()
+            await sleep(3000)
+            await userjwt.disconnect()
+        } catch (error) { console.log(error) }
+    })
+
+    it('userjwt.connect (reconnection) should return connected', async () => {
+        try {
+            await expect(userjwt.connect()).resolves.toBeDefined()
+            await sleep(3000)
+            await userjwt.disconnect()
+        } catch (error) { console.log(error) }
+    })
+
+    it('userjwt.subscribe should return defined', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await expect(userjwt.subscribe()).resolves.toBeDefined()
+            await sleep(3000)
+            await userjwt.disconnect()
+        } catch (error) { console.log(error) }
+    })
+
+    it('userjwt.unsubscribe should return unsubscribed', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await userjwt.subscribe()
+            await sleep(1000)
+            await expect(userjwt.unsubscribeAll()).resolves.toEqual("unsubscribed")
+            await sleep(1000)
+            await userjwt.disconnect()
+        } catch (error) { }
+    })
+
+    it('userjwt.searchUser should return defined', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await expect(userjwt.searchUser("carlotta.garlanda@livingnet.eu")).resolves.toBeDefined()
             await sleep(3000)
             await userjwt.disconnect()
         } catch (error) { }
     })
 
-    it('userjwt.connect (reconnection) should return connected', async () => {
+    it('userjwt.search should return defined', async () => {
         try {
-            await expect(userjwt.connect()).resolves.toBe("connected")
+            const query = { fields: ['firstName', 'lastName'], term: 'Carlotta', offset: 0, limit: 10, orderBy: { field: 'lastName', ascending: true } }
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await expect(userjwt.search(query)).resolves.toBeDefined()
+            await sleep(3000)
+            await userjwt.disconnect()
+        } catch (error) { }
+    })
+
+    it('userjwt.getGroup should return defined', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await expect(userjwt.getGroup()).resolves.toBeDefined()
             await sleep(3000)
             await userjwt.disconnect()
         } catch (error) { }
