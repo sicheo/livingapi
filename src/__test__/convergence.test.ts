@@ -30,13 +30,13 @@ beforeAll(async () => {
     }
 })
 
-describe('UNIT-TEST CONVERGENCE SERVER ', () => {
+
+describe('UNIT-TEST CONVERGENCE SERVER PRESENCE', () => {
     it('useranon.connect should throw exception', async () => {
         try {
             await expect(useranon.connect()).rejects.toThrow("Anonymous authentication is disabled for the requested domain.")
-            //useranon.disconnect()
             await sleep(3000)
-        } catch (error) { console.log(error)}
+        } catch (error) { }
     })
 
     it('userpwd.connect should return connected', async () => {
@@ -58,7 +58,7 @@ describe('UNIT-TEST CONVERGENCE SERVER ', () => {
     it('userjwt.connect (reconnection) should return connected', async () => {
         try {
             await expect(userjwt.connect()).resolves.toBeDefined()
-            await sleep(3000)
+            await sleep(2000)
             await userjwt.disconnect()
         } catch (error) { console.log(error) }
     })
@@ -68,7 +68,7 @@ describe('UNIT-TEST CONVERGENCE SERVER ', () => {
             await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
             await sleep(1000)
             await expect(userjwt.subscribe()).resolves.toBeDefined()
-            await sleep(3000)
+            await sleep(2000)
             await userjwt.disconnect()
         } catch (error) { console.log(error) }
     })
@@ -90,7 +90,7 @@ describe('UNIT-TEST CONVERGENCE SERVER ', () => {
             await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
             await sleep(1000)
             await expect(userjwt.searchUser("carlotta.garlanda@livingnet.eu")).resolves.toBeDefined()
-            await sleep(3000)
+            await sleep(2000)
             await userjwt.disconnect()
         } catch (error) { }
     })
@@ -101,7 +101,7 @@ describe('UNIT-TEST CONVERGENCE SERVER ', () => {
             await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
             await sleep(1000)
             await expect(userjwt.search(query)).resolves.toBeDefined()
-            await sleep(3000)
+            await sleep(2000)
             await userjwt.disconnect()
         } catch (error) { }
     })
@@ -111,8 +111,118 @@ describe('UNIT-TEST CONVERGENCE SERVER ', () => {
             await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
             await sleep(1000)
             await expect(userjwt.getGroup()).resolves.toBeDefined()
-            await sleep(3000)
+            await sleep(2000)
             await userjwt.disconnect()
         } catch (error) { }
     })
+
+})
+
+describe('UNIT-TEST CONVERGENCE SERVER ACTIVITY', () => {
+    it('userjwt.joinActivity should return defined', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await expect(userjwt.joinActivity("project","Progetto1")).resolves.toBeDefined()
+            await sleep(2000)
+            await userjwt.disconnect()
+        } catch (error) { }
+    })
+
+    it('userjwt.setActivityState should return "state setted"', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await userjwt.joinActivity("project", "Progetto1")
+            await sleep(1000)
+            await expect(userjwt.setActivityState("workpakg1", "working")).resolves.toBe("state setted")
+            await sleep(2000)
+            await userjwt.disconnect()
+        } catch (error) { }
+    })
+
+    it('userjwt.getActivityState should return "working"', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await userjwt.joinActivity("project", "Progetto1")
+            await sleep(1000)
+            await expect(userjwt.getActivityState("workpakg1")).resolves.toBe("working")
+            await sleep(2000)
+            await userjwt.disconnect()
+        } catch (error) { }
+    })
+
+    it('userjwt.removeActivityState should return "state removed"', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await userjwt.joinActivity("project", "Progetto1")
+            await sleep(1000)
+            await expect(userjwt.removeActivityState("workpakg1")).resolves.toBe("state removed")
+            await sleep(2000)
+            await userjwt.disconnect()
+        } catch (error) { }
+    })
+
+    it('userjwt.clearActivityState should return "state cleared"', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await userjwt.joinActivity("project", "Progetto1")
+            await sleep(1000)
+            await expect(userjwt.clearActivityState()).resolves.toBe("state cleared")
+            await sleep(2000)
+            await userjwt.disconnect()
+        } catch (error) { }
+    })
+
+    it('userjwt.setActivityPermissions should return "group permission set"', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await userjwt.joinActivity("project", "Progetto1")
+            await sleep(1000)
+            const perms = { "LivingGroup": ["join" , "lurk" , "view_state" , "set_state" ] }
+            await expect(userjwt.setActivityPermissions("group",perms)).resolves.toBe("group permission set")
+            await sleep(2000)
+            await userjwt.disconnect()
+        } catch (error) { }
+    })
+
+    it('userjwt.getActivityPermissions should return defined', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await userjwt.joinActivity("project", "Progetto1")
+            await sleep(1000)
+            await expect(userjwt.getActivityPermissions("group")).resolves.toBeDefined()
+            await sleep(2000)
+            await userjwt.disconnect()
+        } catch (error) { }
+    })
+
+    it('userjwt.leaveActivity should return "activity leaved"', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await userjwt.joinActivity("project", "Progetto1")
+            await sleep(1000)
+            await expect(userjwt.leaveActivity()).resolves.toBe("activity leaved")
+            await sleep(2000)
+            await userjwt.disconnect()
+        } catch (error) { }
+    })
+
+    it('userjwt.removeActivity should return "activity removed"', async () => {
+        try {
+            await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+            await sleep(1000)
+            await userjwt.joinActivity("project", "Progetto1")
+            await sleep(1000)
+            await expect(userjwt.removeActivity()).resolves.toBe("activity removed")
+            await sleep(2000)
+            await userjwt.disconnect()
+        } catch (error) { }
+    },10000)
 })

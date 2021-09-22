@@ -46,6 +46,11 @@ declare class Brouser {
     static EVT_PRESENCESTATEREMOVED: string;
     static EVT_PRESENCESTATECLEARED: string;
     static EVT_PRESENCEAVAILABILITYCHANGED: string;
+    static EVT_ACTIVITYSESSIONLEFT: string;
+    static EVT_ACTIVITYSESSIONJOINED: string;
+    static EVT_ACTIVITYSTATESET: string;
+    static EVT_ACTIVITYSTATEREMOVED: string;
+    static EVT_ACTIVITYSTATECLEARED: string;
     static ACT_TYPE_PROJECT: string;
     private _id;
     private _extid;
@@ -249,6 +254,14 @@ declare class Brouser {
      */
     setActivityPermissions(type: string, perm: any): Promise<unknown>;
     /**
+    * @method getActivityPermissions(type)
+    * set activity permissions by type
+    *
+    * @param type string: "user"|"group"|"world"
+    * @returns activity permissions
+    */
+    getActivityPermissions(type: string): Promise<unknown>;
+    /**
      * @method getActivityState(key)
      * get activity state (key)
      *
@@ -277,6 +290,7 @@ declare class Brouser {
     private subscribeBuddiesPresenceEvents;
     private unsubscribeBuddyEvents;
     private unsubscribeBuddiesEvents;
+    private subscribeActivityEvents;
 }
 export { Brouser };
 //# sourceMappingURL=brouser.d.ts.map

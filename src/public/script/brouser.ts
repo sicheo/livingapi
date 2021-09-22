@@ -61,10 +61,21 @@ class Brouser {
     static EVT_UNSUBSCRIBEDALL = "unsubscribedall"
     static EVT_ERROR = Conv.ErrorEvent.NAME
     static EVT_DISCONNECTED = Conv.DisconnectedEvent.NAME
+
     static EVT_PRESENCESTATE = Conv.PresenceStateSetEvent.NAME
     static EVT_PRESENCESTATEREMOVED = Conv.PresenceStateRemovedEvent.NAME
     static EVT_PRESENCESTATECLEARED = Conv.PresenceStateClearedEvent.NAME
     static EVT_PRESENCEAVAILABILITYCHANGED = Conv.PresenceAvailabilityChangedEvent.NAME
+    
+    static EVT_ACTIVITYSESSIONLEFT = Conv.ActivitySessionLeftEvent.EVENT_NAME
+    static EVT_ACTIVITYSESSIONJOINED = Conv.ActivitySessionJoinedEvent.EVENT_NAME
+    static EVT_ACTIVITYSTATESET = Conv.ActivityStateSetEvent.EVENT_NAME
+    static EVT_ACTIVITYSTATEREMOVED = Conv.ActivityStateRemovedEvent.EVENT_NAME
+    static EVT_ACTIVITYSTATECLEARED = Conv.ActivityStateClearedEvent.EVENT_NAME
+    static EVT_ACTIVITYLEFT = "left"
+    static EVT_ACTIVITYDELETED = "deleted"
+    static EVT_ACTIVITYFORCELEAVE = "force_leave"
+
 
     // ACTION TYPES
     static ACT_TYPE_PROJECT = "project"
@@ -444,9 +455,10 @@ class Brouser {
     joinActivity(type: string, id: string) {
         const options = {
             autoCreate: {
-                groupPermissions: {
-                    "admins": ["join", "lurk", "set_state", "view_state", "manage", "remove"]
-                }
+                groupPermissions: [{
+                   "LivingGroup": ["join", "lurk", "set_state", "view_state"],
+                }],
+                worldPermissions: ["join", "set_state", "view_state"]
             }
         }
         return new Promise(async (resolve, reject) => {
@@ -456,6 +468,7 @@ class Brouser {
             }
             this._activities.join(type, id, options).then((activity: any) => {
                 this._activity.activity = activity
+                this.subscribeActivityEvents(activity)
                 resolve(activity)
             }).catch((error: any) => {
                 reject(error)
@@ -518,11 +531,11 @@ class Brouser {
             }
             const act:any = this._activity.activity
             if (act != undefined){
-                const type = act.type
-                const id = act.id
-                this._activities.remove(type,id).then(() => {
+                const type = act.type()
+                const id = act.id()
+                this._activities.remove(id,type).then(() => {
                     this._activity.activity = undefined
-                    resolve("activity leaved")
+                    resolve("activity removed")
                 }).catch((error: any) => {
                     reject(error)
                 })
@@ -568,7 +581,7 @@ class Brouser {
             }
             const act: any = this._activity.activity
             const permissions: any = act.permissions()
-            if (act != undefined) {
+            if (permissions != undefined) {
                 switch (type) {
                     case "user":
                         permissions.setUserPermissions(perm)
@@ -583,6 +596,7 @@ class Brouser {
                             .then(() => {
                                 resolve("group permission set")
                             }).catch((error: any) => {
+                                console.log(error)
                                 reject(error)
                             })
                         break;
@@ -606,7 +620,7 @@ class Brouser {
     * set activity permissions by type
     * 
     * @param type string: "user"|"group"|"world"
-    * @returns nothing
+    * @returns activity permissions
     */
     getActivityPermissions(type: string) {
         return new Promise(async (resolve, reject) => {
@@ -794,6 +808,83 @@ class Brouser {
             this.unsubscribeBuddyEvents(subscription)
         })
     }
+
+    private subscribeActivityEvents(activity: Conv.Activity) {
+        activity.on(Conv.ActivitySessionLeftEvent.EVENT_NAME, (ret: any) => {
+            const res = {
+                user: unknown, evt: unknown, sessionId: unknown, participant: unknown
+            }
+            res.evt = "activity_session_leave";
+            res.user = ret.user;
+            res.sessionId = ret.sessionId
+            res.participant = ret.participant
+            this._evemitter.emit(Brouser.EVT_ACTIVITYSESSIONLEFT, res)
+        })
+
+        activity.on(Conv.ActivitySessionJoinedEvent.EVENT_NAME, (ret: any) => {
+            const res = {
+                user: unknown, evt: unknown, sessionId: unknown, participant: unknown
+            }
+            res.evt = "activity_session_join";
+            res.user = ret.user;
+            res.sessionId = ret.sessionId
+            res.participant = ret.participant
+            this._evemitter.emit(Brouser.EVT_ACTIVITYSESSIONJOINED, res)
+        })
+
+        activity.on(Conv.ActivityStateSetEvent.EVENT_NAME, (ret: any) => {
+            const res = {
+                user: unknown, evt: unknown, sessionId: unknown, key: unknown, value: unknown
+            }
+            res.evt = "activity_session_join";
+            res.user = ret.user;
+            res.sessionId = ret.sessionId
+            res.key = ret.key
+            res.value = ret.value
+            this._evemitter.emit(Brouser.EVT_ACTIVITYSTATESET, res)
+        })
+
+        activity.on(Conv.ActivityStateRemovedEvent.EVENT_NAME, (ret: any) => {
+            const res = {
+                user: unknown, evt: unknown, sessionId: unknown, key: unknown, oldvalue: unknown
+            }
+            res.evt = "activity_session_join";
+            res.user = ret.user;
+            res.sessionId = ret.sessionId
+            res.key = ret.key
+            res.oldvalue = ret.oldvalue
+            this._evemitter.emit(Brouser.EVT_ACTIVITYSTATEREMOVED, res)
+        })
+
+        activity.on(Conv.ActivityStateClearedEvent.EVENT_NAME, (ret: any) => {
+            const res = {
+                user: unknown, evt: unknown, sessionId: unknown, key: unknown, oldvalues: unknown
+            }
+            res.evt = "activity_session_join";
+            res.user = ret.user;
+            res.sessionId = ret.sessionId
+            res.key = ret.key
+            res.oldvalues = ret.oldvalues
+            this._evemitter.emit(Brouser.EVT_ACTIVITYSTATECLEARED, res)
+        })
+
+        activity.on(Brouser.EVT_ACTIVITYLEFT, (ret: any) => {
+            const res = ret
+            this._evemitter.emit(Brouser.EVT_ACTIVITYLEFT, res)
+        })
+
+        activity.on(Brouser.EVT_ACTIVITYDELETED, (ret: any) => {
+            const res = ret
+            this._evemitter.emit(Brouser.EVT_ACTIVITYDELETED, res)
+        })
+
+        activity.on(Brouser.EVT_ACTIVITYFORCELEAVE, (ret: any) => {
+            const res = ret
+            this._evemitter.emit(Brouser.EVT_ACTIVITYFORCELEAVE, res)
+        })
+    }
+
+
 
 }
 
