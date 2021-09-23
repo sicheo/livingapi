@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\docs",
+    "\\lib",
+    "\\lib\\src",
+    "\\lib\\src\\public",
+    "\\lib\\src\\public\\script",
     "\\src",
     "\\src\\public",
     "\\src\\public\\script",
@@ -10,6 +13,6 @@
     "\\src\\utility",
     "\\src\\__test__"
   ],
-  "SelectedNode": "\\jest.config.js",
+  "SelectedNode": "\\lib\\src\\public\\script\\mainbrouser.js",
   "PreviewInSolutionExplorer": false
 }

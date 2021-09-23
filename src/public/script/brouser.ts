@@ -55,26 +55,26 @@ class Brouser {
 
     // EVENTS
     static EVT_GOTBUDDIES = "buddies"
-    static EVT_CONNECTED = Conv.ConnectedEvent.NAME
-    static EVT_SUBSCRIBED = "subscribed"
-    static EVT_UNSUBSCRIBED = "unsubscribed"
-    static EVT_UNSUBSCRIBEDALL = "unsubscribedall"
-    static EVT_ERROR = Conv.ErrorEvent.NAME
-    static EVT_DISCONNECTED = Conv.DisconnectedEvent.NAME
+    static EVT_CONNECTED = "conn_"+Conv.ConnectedEvent.NAME
+    static EVT_SUBSCRIBED = "conn_subscribed"
+    static EVT_UNSUBSCRIBED = "conn_unsubscribed"
+    static EVT_UNSUBSCRIBEDALL = "conn_unsubscribedall"
+    static EVT_ERROR = "conn_" +Conv.ErrorEvent.NAME
+    static EVT_DISCONNECTED = "conn_" +Conv.DisconnectedEvent.NAME
 
-    static EVT_PRESENCESTATE = Conv.PresenceStateSetEvent.NAME
-    static EVT_PRESENCESTATEREMOVED = Conv.PresenceStateRemovedEvent.NAME
-    static EVT_PRESENCESTATECLEARED = Conv.PresenceStateClearedEvent.NAME
-    static EVT_PRESENCEAVAILABILITYCHANGED = Conv.PresenceAvailabilityChangedEvent.NAME
+    static EVT_PRESENCESTATE = "pres_" +Conv.PresenceStateSetEvent.NAME
+    static EVT_PRESENCESTATEREMOVED = "pres_" +Conv.PresenceStateRemovedEvent.NAME
+    static EVT_PRESENCESTATECLEARED = "pres_" +Conv.PresenceStateClearedEvent.NAME
+    static EVT_PRESENCEAVAILABILITYCHANGED = "pres_" +Conv.PresenceAvailabilityChangedEvent.NAME
     
-    static EVT_ACTIVITYSESSIONLEFT = Conv.ActivitySessionLeftEvent.EVENT_NAME
-    static EVT_ACTIVITYSESSIONJOINED = Conv.ActivitySessionJoinedEvent.EVENT_NAME
-    static EVT_ACTIVITYSTATESET = Conv.ActivityStateSetEvent.EVENT_NAME
-    static EVT_ACTIVITYSTATEREMOVED = Conv.ActivityStateRemovedEvent.EVENT_NAME
-    static EVT_ACTIVITYSTATECLEARED = Conv.ActivityStateClearedEvent.EVENT_NAME
-    static EVT_ACTIVITYLEFT = "left"
-    static EVT_ACTIVITYDELETED = "deleted"
-    static EVT_ACTIVITYFORCELEAVE = "force_leave"
+    static EVT_ACTIVITYSESSIONLEFT = "act_" +Conv.ActivitySessionLeftEvent.EVENT_NAME
+    static EVT_ACTIVITYSESSIONJOINED = "act_" +Conv.ActivitySessionJoinedEvent.EVENT_NAME
+    static EVT_ACTIVITYSTATESET = "act_" +Conv.ActivityStateSetEvent.EVENT_NAME
+    static EVT_ACTIVITYSTATEREMOVED = "act_" +Conv.ActivityStateRemovedEvent.EVENT_NAME
+    static EVT_ACTIVITYSTATECLEARED = "act_" +Conv.ActivityStateClearedEvent.EVENT_NAME
+    static EVT_ACTIVITYLEFT = "act_left"
+    static EVT_ACTIVITYDELETED = "act_deleted"
+    static EVT_ACTIVITYFORCELEAVE = "act_force_leave"
 
 
     // ACTION TYPES
@@ -452,7 +452,7 @@ class Brouser {
      * @param id string: activity id
      * @returns joined activity
      */
-    joinActivity(type: string, id: string) {
+    joinActivity(type: string, id: string, sub=true) {
         const options = {
             autoCreate: {
                 groupPermissions: [{
@@ -464,11 +464,12 @@ class Brouser {
         return new Promise(async (resolve, reject) => {
             if (!this.isConnected()) {
                 //this._evemitter.emit("error", "Not connected")
-                reject("Not connected")
+                reject("Join Activity Not connected")
             }
             this._activities.join(type, id, options).then((activity: any) => {
                 this._activity.activity = activity
-                this.subscribeActivityEvents(activity)
+                if(sub)
+                    this.subscribeActivityEvents(activity)
                 resolve(activity)
             }).catch((error: any) => {
                 reject(error)
@@ -484,12 +485,13 @@ class Brouser {
      */
     leaveActivity() {
         return new Promise(async (resolve, reject) => {
-            if (!this._activity.activity != undefined) {
+            if (this._activity == undefined) {
                 //this._evemitter.emit("error", "Not connected")
-                reject("Not connected")
+                reject("Leave Activity Not connected")
             }
             const act: any = this._activity.activity
             act.leave().then(() => {
+                //this.unsubscribeActivityEvents(act)
                 this._activity.activity = undefined
                 this._activity.participants = []
                 resolve("activity leaved")
@@ -509,7 +511,7 @@ class Brouser {
         return new Promise(async (resolve, reject) => {
             if (!this._activity.activity != undefined) {
                 //this._evemitter.emit("error", "Not connected")
-                reject("Not connected")
+                reject("Get Participants Not connected")
             }
             const act:any = this._activity.activity
             this._activity.participants = act.participants()
@@ -527,13 +529,14 @@ class Brouser {
         return new Promise(async (resolve, reject) => {
             if ((this._activity == undefined)) {
                 //this._evemitter.emit("error", "Not connected")
-                reject("Not connected")
+                reject("Remove Activity Not connected")
             }
             const act:any = this._activity.activity
             if (act != undefined){
                 const type = act.type()
                 const id = act.id()
-                this._activities.remove(id,type).then(() => {
+                this._activities.remove(id, type).then(() => {
+                    //this.unsubscribeActivityEvents(act)
                     this._activity.activity = undefined
                     resolve("activity removed")
                 }).catch((error: any) => {
@@ -555,7 +558,7 @@ class Brouser {
         return new Promise(async (resolve, reject) => {
             if ((this._activity == undefined)) {
                 //this._evemitter.emit("error", "Not connected")
-                reject("Not connected")
+                reject("Set Activity State Not connected")
             }
             const act: any = this._activity.activity
             if (act != undefined) {
@@ -577,7 +580,7 @@ class Brouser {
         return new Promise(async (resolve, reject) => {
             if ((this._activity == undefined)) {
                 //this._evemitter.emit("error", "Not connected")
-                reject("Not connected")
+                reject("Set Activity Permission Not connected")
             }
             const act: any = this._activity.activity
             const permissions: any = act.permissions()
@@ -626,7 +629,7 @@ class Brouser {
         return new Promise(async (resolve, reject) => {
             if ((this._activity == undefined)) {
                 //this._evemitter.emit("error", "Not connected")
-                reject("Not connected")
+                reject("Get Activity Permissions Not connected")
             }
             const act: any = this._activity.activity
             const permissions: any = act.permissions()
@@ -675,7 +678,7 @@ class Brouser {
         return new Promise(async (resolve, reject) => {
             if ((this._activity == undefined)) {
                 //this._evemitter.emit("error", "Not connected")
-                reject("Not connected")
+                reject("Get Activity State Not connected")
             }
             const act: any = this._activity.activity
             if (act != undefined) {
@@ -696,7 +699,7 @@ class Brouser {
         return new Promise(async (resolve, reject) => {
             if ((this._activity == undefined)) {
                 //this._evemitter.emit("error", "Not connected")
-                reject("Not connected")
+                reject("Remove Activity State Not connected")
             }
             const act: any = this._activity.activity
             if (act != undefined) {
@@ -716,7 +719,7 @@ class Brouser {
         return new Promise(async (resolve, reject) => {
             if ((this._activity == undefined)) {
                 //this._evemitter.emit("error", "Not connected")
-                reject("Not connected")
+                reject("Clear activity Not connected")
             }
             const act: any = this._activity.activity
             if (act != undefined) {
@@ -809,77 +812,80 @@ class Brouser {
         })
     }
 
+    private unsubscribeActivityEvents(activity: Conv.Activity) {
+        activity.removeAllListeners()
+    }
+
     private subscribeActivityEvents(activity: Conv.Activity) {
         activity.on(Conv.ActivitySessionLeftEvent.EVENT_NAME, (ret: any) => {
             const res = {
-                user: unknown, evt: unknown, sessionId: unknown, participant: unknown
+                evt: unknown, ret: unknown
             }
             res.evt = "activity_session_leave";
-            res.user = ret.user;
-            res.sessionId = ret.sessionId
-            res.participant = ret.participant
+            res.ret = ret;
             this._evemitter.emit(Brouser.EVT_ACTIVITYSESSIONLEFT, res)
         })
 
         activity.on(Conv.ActivitySessionJoinedEvent.EVENT_NAME, (ret: any) => {
             const res = {
-                user: unknown, evt: unknown, sessionId: unknown, participant: unknown
+                evt: unknown, ret: unknown
             }
-            res.evt = "activity_session_join";
-            res.user = ret.user;
-            res.sessionId = ret.sessionId
-            res.participant = ret.participant
+            res.evt = "activity_session_joined";
+            res.ret = ret;
             this._evemitter.emit(Brouser.EVT_ACTIVITYSESSIONJOINED, res)
         })
 
         activity.on(Conv.ActivityStateSetEvent.EVENT_NAME, (ret: any) => {
             const res = {
-                user: unknown, evt: unknown, sessionId: unknown, key: unknown, value: unknown
+                evt: unknown, ret: unknown
             }
-            res.evt = "activity_session_join";
-            res.user = ret.user;
-            res.sessionId = ret.sessionId
-            res.key = ret.key
-            res.value = ret.value
+            res.evt = "activity_state_set";
+            res.ret = ret;
             this._evemitter.emit(Brouser.EVT_ACTIVITYSTATESET, res)
         })
 
         activity.on(Conv.ActivityStateRemovedEvent.EVENT_NAME, (ret: any) => {
             const res = {
-                user: unknown, evt: unknown, sessionId: unknown, key: unknown, oldvalue: unknown
+                evt: unknown, ret: unknown
             }
-            res.evt = "activity_session_join";
-            res.user = ret.user;
-            res.sessionId = ret.sessionId
-            res.key = ret.key
-            res.oldvalue = ret.oldvalue
+            res.evt = "activity_state_removed";
+            res.ret = ret;
             this._evemitter.emit(Brouser.EVT_ACTIVITYSTATEREMOVED, res)
         })
 
         activity.on(Conv.ActivityStateClearedEvent.EVENT_NAME, (ret: any) => {
             const res = {
-                user: unknown, evt: unknown, sessionId: unknown, key: unknown, oldvalues: unknown
+                evt: unknown, ret: unknown
             }
-            res.evt = "activity_session_join";
-            res.user = ret.user;
-            res.sessionId = ret.sessionId
-            res.key = ret.key
-            res.oldvalues = ret.oldvalues
+            res.evt = "activity_state_cleared";
+            res.ret = ret;
             this._evemitter.emit(Brouser.EVT_ACTIVITYSTATECLEARED, res)
         })
 
-        activity.on(Brouser.EVT_ACTIVITYLEFT, (ret: any) => {
-            const res = ret
+        activity.on("left", (ret: any) => {
+            const res = {
+                evt: unknown, ret: unknown
+            }
+            res.evt = "activity_left";
+            res.ret = ret;
             this._evemitter.emit(Brouser.EVT_ACTIVITYLEFT, res)
         })
 
-        activity.on(Brouser.EVT_ACTIVITYDELETED, (ret: any) => {
-            const res = ret
+        activity.on("deleted", (ret: any) => {
+            const res = {
+                evt: unknown, ret: unknown
+            }
+            res.evt = "activity_deleted";
+            res.ret = ret;
             this._evemitter.emit(Brouser.EVT_ACTIVITYDELETED, res)
         })
 
-        activity.on(Brouser.EVT_ACTIVITYFORCELEAVE, (ret: any) => {
-            const res = ret
+        activity.on("force_leave", (ret: any) => {
+            const res = {
+                evt: unknown, ret: unknown
+            }
+            res.evt = "activity_force_leave";
+            res.ret = ret;
             this._evemitter.emit(Brouser.EVT_ACTIVITYFORCELEAVE, res)
         })
     }

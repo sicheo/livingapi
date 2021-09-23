@@ -51,6 +51,9 @@ declare class Brouser {
     static EVT_ACTIVITYSTATESET: string;
     static EVT_ACTIVITYSTATEREMOVED: string;
     static EVT_ACTIVITYSTATECLEARED: string;
+    static EVT_ACTIVITYLEFT: string;
+    static EVT_ACTIVITYDELETED: string;
+    static EVT_ACTIVITYFORCELEAVE: string;
     static ACT_TYPE_PROJECT: string;
     private _id;
     private _extid;
@@ -213,7 +216,7 @@ declare class Brouser {
      * @param id string: activity id
      * @returns joined activity
      */
-    joinActivity(type: string, id: string): Promise<unknown>;
+    joinActivity(type: string, id: string, sub?: boolean): Promise<unknown>;
     /**
      * @method leaveActivity()
      * leave activity
@@ -290,6 +293,7 @@ declare class Brouser {
     private subscribeBuddiesPresenceEvents;
     private unsubscribeBuddyEvents;
     private unsubscribeBuddiesEvents;
+    private unsubscribeActivityEvents;
     private subscribeActivityEvents;
 }
 export { Brouser };

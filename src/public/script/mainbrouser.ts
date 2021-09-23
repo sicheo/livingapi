@@ -33,40 +33,80 @@ const main = async function () {
     const userjwt = new Brouser("giulio.stumpo@gmail.com", jwtconn)
 
     // set event listeners
-    useranon.emitter.on(Conv.ConnectedEvent.NAME, async (ret: any) => {
+    useranon.emitter.on(Brouser.EVT_CONNECTED, async (ret: any) => {
         console.log("EVENT: " + useranon.id + " connected: ")
     })
 
-    useranon.emitter.on("disconnected", (id: any) => {
+    useranon.emitter.on(Brouser.EVT_DISCONNECTED, (id: any) => {
         console.log("EVENT: " + id + " disconnected")
     })
 
-    useranon.emitter.on("error", (error: any) => {
+    useranon.emitter.on(Brouser.EVT_ERROR, (error: any) => {
         console.log("ERROR: " + useranon.id + " " + error)
     })
 
-    userpwd.emitter.on(Conv.ConnectedEvent.NAME, async (ret: any) => {
+    userpwd.emitter.on(Brouser.EVT_CONNECTED, async (ret: any) => {
         console.log("EVENT: " + ret.user + " connected: session " + ret.session)
     })
 
-    userpwd.emitter.on("disconnected", (id: any) => {
+    userpwd.emitter.on(Brouser.EVT_DISCONNECTED, (id: any) => {
         console.log("EVENT: " + id + " disconnected")
     })
 
-    userpwd.emitter.on("error", (error: any) => {
+    userpwd.emitter.on(Brouser.EVT_ERROR, (error: any) => {
         console.log("ERROR: " + userpwd.id+ " " + error)
     })
 
-    userjwt.emitter.on(Conv.ConnectedEvent.NAME, async (res: any) => {
+    userjwt.emitter.on(Brouser.EVT_CONNECTED, async (res: any) => {
         console.log("EVENT: " + userjwt.id + " connected: " + JSON.stringify(res))
     })
 
-    userjwt.emitter.on("disconnected", (id: any) => {
+    userjwt.emitter.on(Brouser.EVT_DISCONNECTED, (id: any) => {
         console.log("EVENT: " + id + " disconnected")
     })
 
-    userjwt.emitter.on("error", (error: any) => {
+    userjwt.emitter.on(Brouser.EVT_ERROR, (error: any) => {
         console.log("ERROR: " + userjwt.id + " " + error)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_ACTIVITYSESSIONLEFT, (res: any) => {
+        console.log("Activity Session Left "+res.evt)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_ACTIVITYSESSIONJOINED, (res: any) => {
+        console.log("Activity Session Joined " +res.evt)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_ACTIVITYSTATESET, (res: any) => {
+        console.log("Activity State Set " +res.evt)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_ACTIVITYSTATEREMOVED, (res: any) => {
+        console.log("Activity State Removed " +res.evt)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_ACTIVITYSTATECLEARED, (res: any) => {
+        console.log("Activity State Cleared " +res.evt)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_ACTIVITYLEFT, (res: any) => {
+        console.log("Activity Left " +res.evt)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_ACTIVITYDELETED, (res: any) => {
+        console.log("Activity Deleted " +res.evt)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_ACTIVITYFORCELEAVE, (res: any) => {
+        console.log("Activity ForceLeave " +res.evt)
+        //console.log(res.ret.user)
     })
 
     // start test
@@ -104,8 +144,8 @@ const main = async function () {
 
     
 
-    userjwt.emitter.on(Conv.PresenceStateSetEvent.NAME, (ret: any) => {
-        console.log("EVENT: " + userjwt.id + " statuschange: " + JSON.stringify(ret))
+    userjwt.emitter.on(Brouser.EVT_PRESENCESTATE, (ret: any) => {
+        console.log("EVENT: " + userjwt.id + " statuschange: " + JSON.stringify(ret.value))
     })
 
     console.log("    6)Test subscriptions & unsubscription")
@@ -127,6 +167,47 @@ const main = async function () {
             await userjwt.disconnect()
     } catch (error) { console.log(error) }
 
+    console.log("    7) Test activity")
+
+    try {
+        const perms = { "LivingGroup": ["join", "lurk", "view_state", "set_state"] }
+        await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+        await sleep(1000)
+        console.log("session id: " + userjwt.getSessionId())
+        await userjwt.joinActivity("project", "Progetto1")
+        await sleep(1000)
+        await userjwt.setActivityState("workpakg1", "working")
+        await sleep(1000)
+        const ret = await userjwt.getActivityState("workpakg1")
+        console.log("activity status: "+ret)
+        await sleep(1000)
+        await userjwt.setActivityPermissions("group", perms)
+        await sleep(1000)
+        const prm = await userjwt.getActivityPermissions("group")
+        await sleep(1000)
+        console.log("activity permissions " + prm)
+        await userjwt.removeActivityState("workpakg1")
+        await sleep(1000)
+        await userjwt.setActivityState("workpakg1", "working")
+        await sleep(1000)
+        await userjwt.clearActivityState()
+        await sleep(1000)
+        await userjwt.leaveActivity()
+        await sleep(1000)
+        if (userjwt.isConnected())
+            await userjwt.disconnect()
+        await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+        await sleep(1000)
+        console.log("session id: " + userjwt.getSessionId())
+        await userjwt.joinActivity("project", "Progetto1")
+        await sleep(1000)
+        await userjwt.joinActivity("project", "Progetto1", false)
+        await sleep(1000)
+        await userjwt.removeActivity()
+        await sleep(1000)
+        if (userjwt.isConnected())
+            await userjwt.disconnect()
+    } catch (error) { console.log(error) }
 
 }
 
