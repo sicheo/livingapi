@@ -39,12 +39,30 @@ To use the library in your web app you need two servers up and running
 ### Convergence Server
 Run the Convergence Server with Admin Console and Orient DB. To start Convergence Server:
 - See [here](https://github.com/convergencelabs/convergence-docker-compose) to start the server in production
-- or use [this](https://github.com/convergencelabs/convergence-omnibus-container) for developmnet
+- or use [this](https://github.com/convergencelabs/convergence-omnibus-container) for development
 
-
+In order to use JWT authorization with Convergence Server for a given domain, setup a JWT authentication for that domain with a public key, then genarte a token using private key and the KeyId associated with public key.
 
 ### Api Server
-
+To start the API server, invoke the following:
+```
+npm run testsrv
+```
+The API server starts with cofiguration parameters in 
+```
+{
+  "HOST": "<API server binding address>",
+  "PORT": "<API Server port>",
+  "HTTPS": "<HTTPS mode (NO|YES>",
+  "LOGTYPE": "<logger mode (file|stdouy)>",
+  "USER": "<API Server initial user>",
+  "PASSWD": "<API Server initail passwd>",
+  "JWT_SECRET": "<JWT secret>",
+  "KEY_ID": "<Convergence Server key id>",
+  "CONVHOST": "<Convergence Server host/ip>",
+  "CONVPORT": "<Cpnvergence Server Port>"
+}
+```
 
 ## Features
 
