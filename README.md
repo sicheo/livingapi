@@ -70,7 +70,7 @@ The API server starts with cofiguration parameters in
 - [Authentication/Authorization](#Authentication): api for managing authentication and authorizations
   - [Connection](#Connection): connect to Convergence Server
   - [Disconnection](#Disconnection): disconnects from Convergence Server
-  - [User Search](#UserSaerch): search user by name
+  - [User Search](#UserSearch): search user by name
   - [Search](#Search): serach users by query
   - [Group](#Group): get user group
 - [Presence Service](#Presence): presence service management api
