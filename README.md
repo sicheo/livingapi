@@ -41,7 +41,7 @@ Run the Convergence Server with Admin Console and Orient DB. To start Convergenc
 - See [here](https://github.com/convergencelabs/convergence-docker-compose) to start the server in production
 - or use [this](https://github.com/convergencelabs/convergence-omnibus-container) for development
 
-In order to use JWT authorization with Convergence Server for a given domain, setup a JWT authentication for that domain with a public key, then genarte a token using private key and the KeyId associated with public key.
+In order to use JWT authorization with Convergence Server for a given domain, setup a JWT authentication for that domain with a public key, then generate a token using private key and the KeyId associated with public key.
 
 ### Api Server
 To start the API server, invoke the following:
@@ -101,6 +101,17 @@ To create new digital user and connect to Convergence with JWT use:
 The instance *userjwt* now contains all the collaboration API. Each API call is asyncronous (returns a Promise). Each API call emits an event. The caller can listen to the event and will be notified when the call completes (or if an error occurs).
 
 ### Authentication/Authorization
+To connect the user to Convergence Server use:
+```
+userjwt.connect({ user: "user@mail.com", password: "password" })
+```
+You can subscribe to the connection event using:
+```
+userjwt.emitter.on(Brouser.EVT_CONNECTED, async (res: any) => {
+        ...do whatever you need...
+    })
+```
+
 
 ### Presence
 
