@@ -87,10 +87,19 @@ window.ConvApp
 ```
 
 ### Create
-To create new digital user use:
+To create new digital user and connect to Convergence with JWT use:
 ```
-window.ConvApp
+        const baseapiurl = "http://<apiserver>:<apiport>/living/v1/convergence";
+        const convergenceurl = "http://<convergenceserver>:<convergenceport>/api/realtime/convergence/living"
+
+        const apiconn = new window.ConvApp.JwtApi(baseapiurl);
+
+        const jwtconn = new window.ConvApp.JwtConnection(convergenceurl, apiconn);
+
+        const userjwt = new window.ConvApp.Brouser("user@mail.com", jwtconn);
 ```
+The instance *userjwt* now contains all the collaboration API. Each API call is asyncronous (returns a Promise). Each API call emits an event. The caller can listen to the event and will be notified when the call completes (or if an error occurs).
+
 ### Authentication/Authorization
 
 ### Presence
