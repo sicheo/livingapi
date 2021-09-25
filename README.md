@@ -1,7 +1,7 @@
 
 # livingapi
 ## Living API server
-[![Repo](https://img.shields.io/badge/Repo-livingapi-blue)](https://github.com/sicheo/livingapi)
+[![Repo](https://img.shields.io/badge/Repo-livingapi-blue)](https://github.com/sicheo/livingapi)]
 
 Real time server API for collaboration webapps based on [Convergence Server][convserv]
 
@@ -92,6 +92,8 @@ window.ConvApp
 ```
 
 ### Create
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
 To create new digital user and connect to Convergence with JWT use:
 ```
         const baseapiurl = "http://<apiserver>:<apiport>/living/v1/convergence";
