@@ -72,6 +72,19 @@ The API server starts with cofiguration parameters in
 - [Shared project](#Project): api for managing shared project artifacts
 - [Chat](#Chat): chat api
 
+To use the library in your webapp import the script:
+```
+<head>
+    <meta charset="utf-8" />
+    <title>Some title </title>
+    <script src="script/dist/brouser.bundle.js"></script>
+</head>
+```
+The API is accessible through the global object:
+```
+npm run testsrv
+```
+
 ### Authentication/Authorization
 
 ### Presence
