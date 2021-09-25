@@ -7,11 +7,11 @@ Real time server API for collaboration webapps based on [Convergence Server][con
 
 ### Features
 
-- [Authentication/Authorization](#Authentication/Authorization):
-- [Presence Service](#Presence):
-- [Shared activity](#Activity):
-- [Shared project](#Project):
-- [Chat](#Chat):
+- [Authentication/Authorization](#Authentication/Authorization): api for managing authentication and authorizations
+- [Presence Service](#Presence): presence service management api
+- [Shared activity](#Activity): api for mananging shared activity among users
+- [Shared project](#Project): api for managing shared project artifacts
+- [Chat](#Chat): chat api
 
 ### Authentication/Authorization
 
