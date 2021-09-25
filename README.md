@@ -68,7 +68,8 @@ The API server starts with cofiguration parameters in
 
 - [Create new user digital twin](#Create): create new digital user and connect to Convergence Platform
 - [Authentication/Authorization](#Authentication): api for managing authentication and authorizations
-- - Connection
+  - [Connection](#Connection)
+  - [Disconnection](#Disconnection)
 - [Presence Service](#Presence): presence service management api
 - [Shared activity](#Activity): api for mananging shared activity among users
 - [Shared project](#Project): api for managing shared project artifacts
