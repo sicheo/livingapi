@@ -5,7 +5,9 @@
 
 Real time server API for collaboration webapps based on [Convergence Server][convserv]
 
-### Features
+## Architecture
+
+## Features
 
 - [Authentication/Authorization](#Authentication/Authorization): api for managing authentication and authorizations
 - [Presence Service](#Presence): presence service management api
@@ -19,7 +21,7 @@ Real time server API for collaboration webapps based on [Convergence Server][con
 
 ### Activity
 
-### project
+### Project
 
 ### Chat
 
