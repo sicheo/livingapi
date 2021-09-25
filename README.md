@@ -1,7 +1,7 @@
 
 # livingapi
 ## Living API server
-[![Repo](https://img.shields.io/badge/Repo-livingapi-blue)](https://github.com/sicheo/livingapi)]
+[![Repo](https://img.shields.io/badge/Repo-livingapi-blue)](https://github.com/sicheo/livingapi)
 
 Real time server API for collaboration webapps based on [Convergence Server][convserv]
 
@@ -109,6 +109,8 @@ The instance *userjwt* now contains all the collaboration API. Each API call is 
 
 ### Authentication
 #### Connection
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
 To connect the user to Convergence Server use:
 ```
 userjwt.connect({ user: "user@mail.com", password: "password" })
@@ -127,6 +129,8 @@ The res object returned by the event listerner is the following:
 }
 ```
 #### Disconnection
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
 To disconnect the user from Convergence Server use:
 ```
 userjwt.disconnect()
@@ -138,6 +142,8 @@ userjwt.emitter.on(Brouser.EVT_DISCONNECTED, async (id: any ) => {
     })
 ```
 #### UserSearch
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
 To get user info by username use:
 ```
 userjwt.searchUser("user@mail.com")
