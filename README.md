@@ -7,6 +7,16 @@ Real time server API for collaboration webapps based on [Convergence Server][con
 
 ## Architecture
 
+![NewPlatform-SW Arch](https://user-images.githubusercontent.com/66950550/134783203-1a1413eb-386e-4a60-98c5-47ab77ed0bb9.png)
+
+The project consists of the following components
+- **API Server library + API Server**: this server handles authentication and permissions through the JWT. It also ensures data persistence.
+- **API Convergence Server library**: this library allows the interface with the Convergence Server (WebSocket real time api)
+- **Client js library for Front End**: this library (webpack bundle) exports the Convapp object that the Front End application can import and use to access collaboration services
+
+## Installation
+
+
 ## Features
 
 - [Authentication/Authorization](#Authentication/Authorization): api for managing authentication and authorizations
