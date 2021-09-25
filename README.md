@@ -16,7 +16,7 @@ The project consists of the following components
 
 ## Setup
 
-First, clone the RedisTimeSeries repository from git:
+First, clone the livingapi  repository from git:
 
 ```
 git clone  https://github.com/sicheo/livingapi.git
@@ -27,13 +27,24 @@ Then, to install required node modules, invoke the following:
 ```
 npm install
 ```
-To build the server:
+To build the api server:
 
 ```
 npm run build
 ```
 
-## Run
+## Run the servers
+To use the library in your web app you need two servers up and running
+
+### Convergence Server
+Run the Convergence Server with Admin Console and Orient DB. To start Convergence Server:
+- See [here](https://github.com/convergencelabs/convergence-docker-compose) to start the server in production
+- or use [this](https://github.com/convergencelabs/convergence-omnibus-container) for developmnet
+
+
+
+### Api Server
+
 
 ## Features
 
