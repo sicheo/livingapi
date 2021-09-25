@@ -66,6 +66,7 @@ The API server starts with cofiguration parameters in
 
 ## Features
 
+- [Create new user digital twin](#Create): create new digital user and connect to Convergence Platform
 - [Authentication/Authorization](#Authentication/Authorization): api for managing authentication and authorizations
 - [Presence Service](#Presence): presence service management api
 - [Shared activity](#Activity): api for mananging shared activity among users
@@ -82,9 +83,14 @@ To use the library in your webapp import the script:
 ```
 The API is accessible through the global object:
 ```
-npm run testsrv
+window.ConvApp
 ```
 
+### Create
+To create new digital user use:
+```
+window.ConvApp
+```
 ### Authentication/Authorization
 
 ### Presence
