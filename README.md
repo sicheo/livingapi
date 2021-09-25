@@ -14,8 +14,26 @@ The project consists of the following components
 - **API Convergence Server library**: this library allows the interface with the Convergence Server (WebSocket real time api)
 - **Client js library for Front End**: this library (webpack bundle) exports the Convapp object that the Front End application can import and use to access collaboration services
 
-## Installation
+## Setup
 
+First, clone the RedisTimeSeries repository from git:
+
+```
+git clone  https://github.com/sicheo/livingapi.git
+```
+
+Then, to install required node modules, invoke the following:
+
+```
+npm install
+```
+To build the server:
+
+```
+npm run build
+```
+
+## Run
 
 ## Features
 
