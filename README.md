@@ -68,11 +68,11 @@ The API server starts with cofiguration parameters in
 
 - [Create new user digital twin](#Create): create new digital user and connect to Convergence Platform
 - [Authentication/Authorization](#Authentication): api for managing authentication and authorizations
-  - [Connection](#Connection)
-  - [Disconnection](#Disconnection)
-  - [User Search](#UserSaerch)
-  - [Search](#Search)
-  - [Group](#Group)
+  - [Connection](#Connection): connect to Convergence Server
+  - [Disconnection](#Disconnection): disconnects from Convergence Server
+  - [User Search](#UserSaerch): search user by name
+  - [Search](#Search): serach users by query
+  - [Group](#Group): get user group
 - [Presence Service](#Presence): presence service management api
 - [Shared activity](#Activity): api for mananging shared activity among users
 - [Shared project](#Project): api for managing shared project artifacts
@@ -117,7 +117,7 @@ userjwt.emitter.on(Brouser.EVT_CONNECTED, async (res: any) => {
         ...do whatever you need to do...
     })
 ```
-The res object is the following:
+The res object returned by the event listerner is the following:
 ```
 {
   domain: <domainId>
@@ -136,7 +136,31 @@ userjwt.emitter.on(Brouser.EVT_DISCONNECTED, async (id: any ) => {
     })
 ```
 #### UserSearch
-
+To get user info by username use:
+```
+userjwt.searchUser("user@mail.com")
+```
+You can subscribe to the user search event using:
+```
+userjwt.emitter.on(Brouser.EVT_SEARCHUSER, (user: any) => {
+        ...do whatever you need to do...
+    })
+```
+The user object returned by the event listener is the following:
+```
+{
+  {"userType":"normal", 
+  "username":"user@mail.com", 
+  "firstName":"User First Name", 
+  "lastName":"User Last Name", 
+  "displayName":"User Display Name", 
+  "email":"user@mail.com", 
+  "anonymous":false, 
+  "convergence":false, 
+  "normal":true, 
+  "userId":{"userType":"normal","username":"user@mail.com","_guid":"normal:user@mail.comu"}}
+}
+```
 #### Search
 
 #### Group
