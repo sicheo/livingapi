@@ -67,7 +67,7 @@ The API server starts with cofiguration parameters in
 ## Features
 
 - [Create new user digital twin](#Create): create new digital user and connect to Convergence Platform
-- [Authentication/Authorization](#Authentication/Authorization): api for managing authentication and authorizations
+- [Authentication/Authorization](#Authentication): api for managing authentication and authorizations
 - [Presence Service](#Presence): presence service management api
 - [Shared activity](#Activity): api for mananging shared activity among users
 - [Shared project](#Project): api for managing shared project artifacts
@@ -100,7 +100,7 @@ To create new digital user and connect to Convergence with JWT use:
 ```
 The instance *userjwt* now contains all the collaboration API. Each API call is asyncronous (returns a Promise). Each API call emits an event. The caller can listen to the event and will be notified when the call completes (or if an error occurs).
 
-### Authentication/Authorization
+### Authentication
 To connect the user to Convergence Server use:
 ```
 userjwt.connect({ user: "user@mail.com", password: "password" })
