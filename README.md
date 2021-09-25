@@ -7,11 +7,11 @@ Real time server API for collaboration webapps based on [Convergence Server][con
 
 ### Features
 
-- [Authentication/Authorization](#https://github.com/sicheo/livingapi/blob/main/README.md#authenticationauthorization)
-- [Presence Service](#Presence)
-- Shared activity
-- Shared project
-- Chat
+- [Authentication/Authorization](#Authentication/Authorization):
+- [Presence Service](#Presence):
+- [Shared activity](#Activity):
+- [Shared project](#Project):
+- [Chat](#Chat):
 
 ### Authentication/Authorization
 
