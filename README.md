@@ -170,8 +170,12 @@ The user object returned by the event listener is the following:
 }
 ```
 #### Search
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
 
 #### Group
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
 
 ### Presence
 
