@@ -68,6 +68,7 @@ The API server starts with cofiguration parameters in
 
 - [Create new user digital twin](#Create): create new digital user and connect to Convergence Platform
 - [Authentication/Authorization](#Authentication): api for managing authentication and authorizations
+- - Connection
 - [Presence Service](#Presence): presence service management api
 - [Shared activity](#Activity): api for mananging shared activity among users
 - [Shared project](#Project): api for managing shared project artifacts
@@ -101,6 +102,7 @@ To create new digital user and connect to Convergence with JWT use:
 The instance *userjwt* now contains all the collaboration API. Each API call is asyncronous (returns a Promise). Each API call emits an event. The caller can listen to the event and will be notified when the call completes (or if an error occurs).
 
 ### Authentication
+#### Connection
 To connect the user to Convergence Server use:
 ```
 userjwt.connect({ user: "user@mail.com", password: "password" })
@@ -108,10 +110,27 @@ userjwt.connect({ user: "user@mail.com", password: "password" })
 You can subscribe to the connection event using:
 ```
 userjwt.emitter.on(Brouser.EVT_CONNECTED, async (res: any) => {
-        ...do whatever you need...
+        ...do whatever you need to do...
     })
 ```
-
+The res object is the following:
+```
+{
+  domain: <domainId>
+  session: <sessionId>
+}
+```
+#### Disconnection
+To disconnect the user from Convergence Server use:
+```
+userjwt.disconnect()
+```
+You can subscribe to the disconnection event using:
+```
+userjwt.emitter.on(Brouser.EVT_DISCONNECTED, async (id: any ) => {
+        ...do whatever you need to do...
+    })
+```
 
 ### Presence
 
