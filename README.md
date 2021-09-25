@@ -70,6 +70,9 @@ The API server starts with cofiguration parameters in
 - [Authentication/Authorization](#Authentication): api for managing authentication and authorizations
   - [Connection](#Connection)
   - [Disconnection](#Disconnection)
+  - [User Search](#UserSaerch)
+  - [Search](#Search)
+  - [Group](#Group)
 - [Presence Service](#Presence): presence service management api
 - [Shared activity](#Activity): api for mananging shared activity among users
 - [Shared project](#Project): api for managing shared project artifacts
@@ -132,6 +135,11 @@ userjwt.emitter.on(Brouser.EVT_DISCONNECTED, async (id: any ) => {
         ...do whatever you need to do...
     })
 ```
+#### UserSearch
+
+#### Search
+
+#### Group
 
 ### Presence
 
