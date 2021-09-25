@@ -121,7 +121,7 @@ userjwt.emitter.on(Brouser.EVT_CONNECTED, async (res: any) => {
         ...do whatever you need to do...
     })
 ```
-The res object returned by the event listerner is the following:
+The ```res``` object returned by the event listerner is the following:
 ```
 {
   domain: <domainId>
@@ -154,7 +154,7 @@ userjwt.emitter.on(Brouser.EVT_SEARCHUSER, (user: any) => {
         ...do whatever you need to do...
     })
 ```
-The user object returned by the event listener is the following:
+The ```user``` object returned by the event listener is the following:
 ```
 {
   {"userType":"normal", 
