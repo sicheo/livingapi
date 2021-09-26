@@ -75,6 +75,7 @@ The API server starts with cofiguration parameters in
   - [Group](#Group): get user group
 - [Presence Service](#Presence): presence service management api
   - [Subscribe](#Subscribe): subscribe to get presence event notification
+  - [Set Presence Status](#SetPresence): set presence status
   - [Unsubscribe](#Unsubscribe): unsubscribe presence event notification
 - [Shared activity](#Activity): api for managing shared activity among users
   - [Join/Create Avtivity](#JoinActivity): join an activity (create if not existent)
@@ -250,7 +251,7 @@ The ```group``` object returned by the event listener is the following:
 #### Subscribe
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
-To subscribe to userlist events use:
+To subscribe to userlist (buddies) events use:
 ```
 userjwt.subscribe()
 ```
@@ -267,15 +268,44 @@ The ```ret``` object returned by the event listerner is the following:
   state: "offline"|"available"|"dnd"|"away"
 }
 ```
+#### SetPresence
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To change the presence status of the user use:
+```
+userjwt.status = "available"|"dnd"|"away"
+```
 
 #### Unsubscribe
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To unsubscribe to userlist (buddies) events use:
+```
+userjwt.unsubscribeAll()
+```
 
 ### Activity
 
 #### JoinActivity
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
+To join an existing activity (or create if it doesn't exists) use:
+```
+userjwt.joinActivity("<activity-type>", "<activity-id>")
+```
+You can subscribe to the join activity event using:
+```
+userjwt.emitter.on(Brouser.EVT_ACTIVITYSESSIONJOINED, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is the following:
+```
+{
+  evt: "status_set"
+  state: "offline"|"available"|"dnd"|"away"
+}
+```
 #### LeaveActivity
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
