@@ -250,6 +250,24 @@ The ```group``` object returned by the event listener is the following:
 #### Subscribe
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
+To subscribe to userlist events use:
+```
+userjwt.subscribe()
+```
+You can get presence state change event using:
+```
+userjwt.emitter.on(Brouser.EVT_PRESENCESTATE, (ret: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```ret``` object returned by the event listerner is the following:
+```
+{
+  evt: "status_set"
+  state: "offline"|"available"|"dnd"|"away"
+}
+```
+
 #### Unsubscribe
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
