@@ -83,7 +83,7 @@ The API server starts with cofiguration parameters in
   - [Remove Activity](#RemoveActivity)
   - [Set Activity State](#SetActivityState)
   - [Get Activity State](#GetActivityState)
-  - [Remove Activity State](#Remove Activity State)
+  - [Remove Activity State](#RemoveActivityState)
   - [Clear Activity State](#ClearActivityState)
   - [Set Activity Permissions](#SetActivityPermissions)
   - [Get Activity Permissions](#GetActivityPermissions)
