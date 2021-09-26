@@ -394,23 +394,107 @@ userjwt.emitter.on(Brouser.EVT_ACTIVITYSTATESET, (res: any) => {
 The ```res``` object returned by the event listerner is:
 ```
 {
-  activity: The Activity deleted.
-  user: The username.
-  sessionId: The session id.
+  activity: The Activity this participant belongs too.
+  sessionId: The session id of the participant.
+  user: The username of the participant.
+  local: A flag indicating if the participant represents the local user / session.
+  state: The state of this participant within the activity.
+  key: the state that was modified.
+  value: the value of the state.
 }
 ```
 
 #### GetActivityState
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
+To get an activity state use:
+```
+const res = userjwt.getActivityState("<state name>")
+```
+The ```res``` object returned is a string with the state value.
+
+
 #### RemoveActivityState
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To remove an activity state use:
+```
+userjwt.removeActivityState("<state name>")
+```
+You can subscribe to the remove activity state event using:
+```
+userjwt.emitter.on(Brouser.EVT_ACTIVITYSTATEREMOVED, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is:
+```
+{
+  activity: The Activity this participant belongs too.
+  sessionId: The session id of the participant.
+  user: The username of the participant.
+  local: A flag indicating if the participant represents the local user / session.
+  state: The state of this participant within the activity.
+  key: the state that was removed
+}
+```
 
 #### ClearActivityState
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
+To remove all the activity states use:
+```
+userjwt.clearActivityState()
+```
+You can subscribe to the clear activity state event using:
+```
+userjwt.emitter.on(Brouser.EVT_ACTIVITYSTATECLEARED, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is:
+```
+{
+  activity: The Activity this participant belongs too.
+  sessionId: The session id of the participant.
+  user: The username of the participant.
+  local: A flag indicating if the participant represents the local user / session.
+  state: The state of this participant within the activity.
+}
+```
+
 #### SetActivityPermissions
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To set activity permissions use:
+```
+// For group
+const perms = { "<GroupName>": ["join", "lurk", "view_state", "set_state"] }
+userjwt.setActivityPermissions("group", perms)
+// for user
+const perms = { "<UserName>": ["join", "lurk", "view_state", "set_state"] }
+userjwt.setActivityPermissions("user", perms)
+// for everyone
+const perms = { "world": ["join", "lurk", "view_state", "set_state"] }
+userjwt.setActivityPermissions("group", perms)
+```
+You can subscribe to the clear activity state event using:
+```
+userjwt.emitter.on(Brouser.EVT_ACTIVITYSTATECLEARED, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is:
+```
+{
+  activity: The Activity this participant belongs too.
+  sessionId: The session id of the participant.
+  user: The username of the participant.
+  local: A flag indicating if the participant represents the local user / session.
+  state: The state of this participant within the activity.
+}
+```
+
 
 #### GetActivityPermissions
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
