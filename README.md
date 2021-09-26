@@ -172,6 +172,44 @@ The ```user``` object returned by the event listener is the following:
 #### Search
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
+To get user info by query use:
+```
+const query = { fields: ['firstName', 'lastName'], term: 'searchterm', offset: 0, limit: 10, orderBy: { field: 'lastName', ascending: true } }
+await userjwt.search(query)
+```
+You can subscribe to the user search event using:
+```
+userjwt.emitter.on(Brouser.EVT_SEARCH, (users: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```users``` returned by the event listener is an array of ```user``` objects:
+```
+[{
+  {"userType":"normal", 
+  "username":"user1@mail.com", 
+  "firstName":"User1 First Name", 
+  "lastName":"User1 Last Name", 
+  "displayName":"User1 Display Name", 
+  "email":"user1@mail.com", 
+  "anonymous":false, 
+  "convergence":false, 
+  "normal":true, 
+  "userId":{"userType":"normal","username":"user1@mail.com","_guid":"normal:user1@mail.comu"}}
+},
+{
+  {"userType":"normal", 
+  "username":"user2@mail.com", 
+  "firstName":"User2 First Name", 
+  "lastName":"User2 Last Name", 
+  "displayName":"User2 Display Name", 
+  "email":"use2r@mail.com", 
+  "anonymous":false, 
+  "convergence":false, 
+  "normal":true, 
+  "userId":{"userType":"normal","username":"user2@mail.com","_guid":"normal:user2@mail.comu"}}
+}]
+```
 
 #### Group
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
