@@ -74,19 +74,19 @@ The API server starts with cofiguration parameters in
   - [Search](#Search): search users by query
   - [Group](#Group): get user group
 - [Presence Service](#Presence): presence service management api
-  - [Subscribe](#Subscribe)
-  - [Unsubscribe](#Unsubscribe)
+  - [Subscribe](#Subscribe): subscribe to get presence event notification
+  - [Unsubscribe](#Unsubscribe): unsubscribe presence event notification
 - [Shared activity](#Activity): api for managing shared activity among users
-  - [Join/Create Avtivity](#JoinActivity)
-  - [Leave Activity](#LeaveActivity)
-  - [Get Participants](#GetParticipants)
-  - [Remove Activity](#RemoveActivity)
-  - [Set Activity State](#SetActivityState)
-  - [Get Activity State](#GetActivityState)
-  - [Remove Activity State](#RemoveActivityState)
-  - [Clear Activity State](#ClearActivityState)
-  - [Set Activity Permissions](#SetActivityPermissions)
-  - [Get Activity Permissions](#GetActivityPermissions)
+  - [Join/Create Avtivity](#JoinActivity): join an activity (create if not existent)
+  - [Leave Activity](#LeaveActivity): leave an activity
+  - [Get Participants](#GetParticipants): get the activity participants
+  - [Remove Activity](#RemoveActivity): remove the activity
+  - [Set Activity State](#SetActivityState): set an activity state
+  - [Get Activity State](#GetActivityState): get the value of an activity state
+  - [Remove Activity State](#RemoveActivityState): remove an activity state
+  - [Clear Activity State](#ClearActivityState): clear all activity states
+  - [Set Activity Permissions](#SetActivityPermissions): set the activity permissions
+  - [Get Activity Permissions](#GetActivityPermissions): get the activity permissions
 - [Shared project](#Project): api for managing shared project artifacts
 - [Chat](#Chat): chat api
 
@@ -247,7 +247,43 @@ The ```group``` object returned by the event listener is the following:
 
 ### Presence
 
+#### Subscribe
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### Unsubscribe
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
 ### Activity
+
+#### JoinActivity
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### LeaveActivity
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### GetParticipants
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### RemoveActivity
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### SetActivityState
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### GetActivityState
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### RemoveActivityState
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### ClearActivityState
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### SetActivityPermissions
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### GetActivityPermissions
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
 ### Project
 
