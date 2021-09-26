@@ -293,6 +293,7 @@ To join an existing activity (or create if it doesn't exists) use:
 ```
 userjwt.joinActivity("<activity-type>", "<activity-id>")
 ```
+***You can join only one activity at time. You need to leave the activity if you want to join another one***
 You can subscribe to the join activity event using:
 ```
 userjwt.emitter.on(Brouser.EVT_ACTIVITYSESSIONJOINED, (res: any) => {
