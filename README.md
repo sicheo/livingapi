@@ -302,21 +302,102 @@ userjwt.emitter.on(Brouser.EVT_ACTIVITYSESSIONJOINED, (res: any) => {
 The ```res``` object returned by the event listerner is the following:
 ```
 {
-  evt: "status_set"
-  state: "offline"|"available"|"dnd"|"away"
+  participant: joined participant object
+}
+```
+The ```participant``` object is as follows:
+```
+{
+  activity: The Activity this participant belongs too.
+  sessionId: The session id of the participant.
+  user: The username of the participant.
+  local: A flag indicating if the participant represents the local user / session.
+  state: The state of this participant within the activity.
 }
 ```
 #### LeaveActivity
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
+To leave an existing activity use:
+```
+userjwt.leaveActivity()
+```
+You can subscribe to the leave activity event using:
+```
+userjwt.emitter.on(Brouser.EVT_ACTIVITYSESSIONLEFT, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is the following:
+```
+{
+  activity: The Activity this participant belongs too.
+  user: The username of the participant.
+  sessionId: The session id of the participant.
+}
+```
 #### GetParticipants
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To get the list of activity participants use:
+```
+userjwt.getParticipants()
+```
+You can subscribe to the get activity participants event using:
+```
+userjwt.emitter.on(Brouser.EVT_ACTIVITYGETPARTICIPANTS, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is the an array of ```participant``` objects:
+```
+[
+  participant1, participant2, participant3
+]
+```
 
 #### RemoveActivity
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
+To remove an activity use (you must have permission to remove):
+```
+userjwt.removeActivity()
+```
+You can subscribe to the remove activity event using:
+```
+userjwt.emitter.on(Brouser.EVT_ACTIVITYDELETED, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is:
+```
+{
+  activity: The Activity deleted.
+  user: The username.
+  sessionId: The session id.
+}
+```
 #### SetActivityState
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To set an activity state use:
+```
+userjwt.setActivityState("<state name>", "<state value>")
+```
+You can subscribe to the set activity state event using:
+```
+userjwt.emitter.on(Brouser.EVT_ACTIVITYSTATESET, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is:
+```
+{
+  activity: The Activity deleted.
+  user: The username.
+  sessionId: The session id.
+}
+```
 
 #### GetActivityState
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
