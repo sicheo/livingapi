@@ -503,7 +503,11 @@ The ```ret``` object returned is an array of string of permissions.
 
 ### Project
 
+TBD
+
 ### Chat
+
+TBD
 
 [//]: # 
 
