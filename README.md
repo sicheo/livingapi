@@ -74,7 +74,19 @@ The API server starts with cofiguration parameters in
   - [Search](#Search): search users by query
   - [Group](#Group): get user group
 - [Presence Service](#Presence): presence service management api
-- [Shared activity](#Activity): api for mananging shared activity among users
+  - [Subscribe](#Subscribe)
+  - [Unsubscribe](#Unsubscribe)
+- [Shared activity](#Activity): api for managing shared activity among users
+  - [Join/Create Avtivity](#JoinActivity)
+  - [Leave Activity](#LeaveActivity)
+  - [Get Participants](#GetParticipants)
+  - [Remove Activity](#RemoveActivity)
+  - [Set Activity State](#SetActivityState)
+  - [Get Activity State](#GetActivityState)
+  - [Remove Activity State](#Remove Activity State)
+  - [Clear Activity State](#ClearActivityState)
+  - [Set Activity Permissions](#SetActivityPermissions)
+  - [Get Activity Permissions](#GetActivityPermissions)
 - [Shared project](#Project): api for managing shared project artifacts
 - [Chat](#Chat): chat api
 
