@@ -472,32 +472,34 @@ To set activity permissions use:
 const perms = { "<GroupName>": ["join", "lurk", "view_state", "set_state"] }
 userjwt.setActivityPermissions("group", perms)
 // for user
-const perms = { "<UserName>": ["join", "lurk", "view_state", "set_state"] }
+const perms = { "<UserName>": ["join", "lurk", "set_state", "view_state", "manage", "remove"] }
 userjwt.setActivityPermissions("user", perms)
 // for everyone
-const perms = { "world": ["join", "lurk", "view_state", "set_state"] }
-userjwt.setActivityPermissions("group", perms)
+const perms = { "world": ["join", "lurk", "view_state"] }
+userjwt.setActivityPermissions("world", perms)
 ```
-You can subscribe to the clear activity state event using:
+You can subscribe to the set activity state permissions event using:
 ```
-userjwt.emitter.on(Brouser.EVT_ACTIVITYSTATECLEARED, (res: any) => {
+userjwt.emitter.on(Brouser.EVT_ACTIVITYSETPERMISSIONS, (res: any) => {
         ...do whatever you need to do...
     })
 ```
 The ```res``` object returned by the event listerner is:
 ```
 {
-  activity: The Activity this participant belongs too.
-  sessionId: The session id of the participant.
-  user: The username of the participant.
-  local: A flag indicating if the participant represents the local user / session.
-  state: The state of this participant within the activity.
+  type: permission type.
+  permissions: permissions setted
 }
 ```
 
-
 #### GetActivityPermissions
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To get activity permissions use:
+```
+const ret = userjwt.getActivityPermissions("<type>")
+```
+The ```ret``` object returned is an array of string of permissions.
 
 ### Project
 
