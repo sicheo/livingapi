@@ -71,7 +71,7 @@ The API server starts with cofiguration parameters in
   - [Connection](#Connection): connect to Convergence Server
   - [Disconnection](#Disconnection): disconnects from Convergence Server
   - [User Search](#UserSearch): search user by name
-  - [Search](#Search): serach users by query
+  - [Search](#Search): search users by query
   - [Group](#Group): get user group
 - [Presence Service](#Presence): presence service management api
 - [Shared activity](#Activity): api for mananging shared activity among users
@@ -214,6 +214,24 @@ The ```users``` returned by the event listener is an array of ```user``` objects
 #### Group
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
+To get group info use:
+```
+userjwt.getGroup()
+```
+You can subscribe to the get group event using:
+```
+userjwt.emitter.on(Brouser.EVT_GETGROUP, (group: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```group``` object returned by the event listener is the following:
+```
+{
+"id":"GroupId",
+"description":"Group Description",
+"members":["user1@mail1.com","user2@mail2.com","user3@mail3.com"]
+}
+```
 
 ### Presence
 
