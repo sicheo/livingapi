@@ -12,7 +12,6 @@ export class LivingBuddiesModel {
         })
     }
 
-    
     public getBuddies(email:string) {
         return new Promise((resolve, reject) => {
             this.db.all(`SELECT * FROM buddylist where user = ?`, email, (err: any, rows: any) => {
