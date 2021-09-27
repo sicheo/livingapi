@@ -11,7 +11,7 @@ function sleep(ms:any) {
 
 const main = async function () {
     const convergenceurl = "http://80.211.35.126:8000/api/realtime/convergence/living"
-    const baseapihurl = "http://127.0.0.1:3132/living/v1/convergence"
+    const baseapihurl = "http://80.211.35.126:3132/living/v1/convergence"
 
     let token: string | undefined
 

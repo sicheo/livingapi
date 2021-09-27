@@ -53,7 +53,7 @@ class Brouser {
      * @private ConvergenceChat _chats: interface to convergence chat service
      */
 
-    // EVENTS
+    // CONNECTION EVENTS
     static EVT_GOTBUDDIES = "buddies"
     static EVT_CONNECTED = "conn_"+Conv.ConnectedEvent.NAME
     static EVT_SUBSCRIBED = "conn_subscribed"
@@ -61,12 +61,12 @@ class Brouser {
     static EVT_UNSUBSCRIBEDALL = "conn_unsubscribedall"
     static EVT_ERROR = "conn_" +Conv.ErrorEvent.NAME
     static EVT_DISCONNECTED = "conn_" +Conv.DisconnectedEvent.NAME
-
+    // PRESENCE EVENTS
     static EVT_PRESENCESTATE = "pres_" +Conv.PresenceStateSetEvent.NAME
     static EVT_PRESENCESTATEREMOVED = "pres_" +Conv.PresenceStateRemovedEvent.NAME
     static EVT_PRESENCESTATECLEARED = "pres_" +Conv.PresenceStateClearedEvent.NAME
     static EVT_PRESENCEAVAILABILITYCHANGED = "pres_" +Conv.PresenceAvailabilityChangedEvent.NAME
-    
+    // ACTIVITY EVENTS
     static EVT_ACTIVITYSESSIONLEFT = "act_" +Conv.ActivitySessionLeftEvent.EVENT_NAME
     static EVT_ACTIVITYSESSIONJOINED = "act_" +Conv.ActivitySessionJoinedEvent.EVENT_NAME
     static EVT_ACTIVITYSTATESET = "act_" +Conv.ActivityStateSetEvent.EVENT_NAME
@@ -75,7 +75,17 @@ class Brouser {
     static EVT_ACTIVITYLEFT = "act_left"
     static EVT_ACTIVITYDELETED = "act_deleted"
     static EVT_ACTIVITYFORCELEAVE = "act_force_leave"
-
+    // CHAT EVENTS
+    static EVT_CHATJOIN = "chat_" + Conv.ChatJoinedEvent.NAME
+    static EVT_CHATLEFT = "chat_" + Conv.ChatLeftEvent.NAME
+    static EVT_CHATMESSAGE = "chat_" + Conv.ChatMessageEvent.NAME
+    static EVT_CHATNAMECHANGED = "chat_" + Conv.ChatNameChangedEvent.NAME
+    static EVT_CHATREMOVED = "chat_" + Conv.ChatRemovedEvent.NAME
+    static EVT_CHATTOPICCHANGED = "chat_" + Conv.ChatTopicChangedEvent.NAME
+    static EVT_CHATUSERADDED = "chat_" + Conv.UserAddedEvent.NAME
+    static EVT_CHATUSERLEFT = "chat_" + Conv.UserLeftEvent.NAME
+    static EVT_CHATUSERREMOVED = "chat_" + Conv.UserRemovedEvent.NAME
+    static EVT_CHATEVENTSMARKEDSEEN = "chat_" + Conv.ChatEventsMarkedSeenEvent.NAME
 
     // ACTION TYPES
     static ACT_TYPE_PROJECT = "project"
@@ -94,7 +104,10 @@ class Brouser {
     private _activities: any | undefined = undefined
     private _activity= { activity: undefined, participants:[]}
     private _models: any
-    private _chats: any
+    private _chatsrv: any
+    private _room: any
+    private _channel: any
+    private _dchat:any
 
 
     /**
@@ -276,7 +289,7 @@ class Brouser {
                     this._identity = d.identity()
                     this._activities = d.activities()
                     this._models = d.models()
-                    this._chats = d.chat()
+                    this._chatsrv = d.chat()
                     this.status = "available"
                     this._evemitter.emit(Brouser.EVT_CONNECTED, res)
                     resolve(this._domain)
@@ -818,79 +831,80 @@ class Brouser {
 
     private subscribeActivityEvents(activity: Conv.Activity) {
         activity.on(Conv.ActivitySessionLeftEvent.EVENT_NAME, (ret: any) => {
-            const res = {
-                evt: unknown, ret: unknown
-            }
-            res.evt = "activity_session_leave";
-            res.ret = ret;
-            this._evemitter.emit(Brouser.EVT_ACTIVITYSESSIONLEFT, res)
+            this._evemitter.emit(Brouser.EVT_ACTIVITYSESSIONLEFT, ret)
         })
 
         activity.on(Conv.ActivitySessionJoinedEvent.EVENT_NAME, (ret: any) => {
-            const res = {
-                evt: unknown, ret: unknown
-            }
-            res.evt = "activity_session_joined";
-            res.ret = ret;
-            this._evemitter.emit(Brouser.EVT_ACTIVITYSESSIONJOINED, res)
+            this._evemitter.emit(Brouser.EVT_ACTIVITYSESSIONJOINED, ret)
         })
 
         activity.on(Conv.ActivityStateSetEvent.EVENT_NAME, (ret: any) => {
-            const res = {
-                evt: unknown, ret: unknown
-            }
-            res.evt = "activity_state_set";
-            res.ret = ret;
-            this._evemitter.emit(Brouser.EVT_ACTIVITYSTATESET, res)
+            this._evemitter.emit(Brouser.EVT_ACTIVITYSTATESET, ret)
         })
 
         activity.on(Conv.ActivityStateRemovedEvent.EVENT_NAME, (ret: any) => {
-            const res = {
-                evt: unknown, ret: unknown
-            }
-            res.evt = "activity_state_removed";
-            res.ret = ret;
-            this._evemitter.emit(Brouser.EVT_ACTIVITYSTATEREMOVED, res)
+            this._evemitter.emit(Brouser.EVT_ACTIVITYSTATEREMOVED, ret)
         })
 
         activity.on(Conv.ActivityStateClearedEvent.EVENT_NAME, (ret: any) => {
-            const res = {
-                evt: unknown, ret: unknown
-            }
-            res.evt = "activity_state_cleared";
-            res.ret = ret;
-            this._evemitter.emit(Brouser.EVT_ACTIVITYSTATECLEARED, res)
+            this._evemitter.emit(Brouser.EVT_ACTIVITYSTATECLEARED, ret)
         })
 
         activity.on("left", (ret: any) => {
-            const res = {
-                evt: unknown, ret: unknown
-            }
-            res.evt = "activity_left";
-            res.ret = ret;
-            this._evemitter.emit(Brouser.EVT_ACTIVITYLEFT, res)
+            this._evemitter.emit(Brouser.EVT_ACTIVITYLEFT, ret)
         })
 
         activity.on("deleted", (ret: any) => {
-            const res = {
-                evt: unknown, ret: unknown
-            }
-            res.evt = "activity_deleted";
-            res.ret = ret;
-            this._evemitter.emit(Brouser.EVT_ACTIVITYDELETED, res)
+            this._evemitter.emit(Brouser.EVT_ACTIVITYDELETED, ret)
         })
 
         activity.on("force_leave", (ret: any) => {
-            const res = {
-                evt: unknown, ret: unknown
-            }
-            res.evt = "activity_force_leave";
-            res.ret = ret;
-            this._evemitter.emit(Brouser.EVT_ACTIVITYFORCELEAVE, res)
+            this._evemitter.emit(Brouser.EVT_ACTIVITYFORCELEAVE, ret)
         })
     }
 
+    private subscribeChatEvents(chat: Conv.Chat) {
+        chat.on(Conv.ChatJoinedEvent.NAME, (ret: any) => {
+            this._evemitter.emit(Brouser.EVT_CHATJOIN, ret)
+        })
 
+        chat.on(Conv.ChatLeftEvent.NAME, (ret: any) => {
+            this._evemitter.emit(Brouser.EVT_CHATLEFT, ret)
+        })
+
+        chat.on(Conv.ChatMessageEvent.NAME, (ret: any) => {
+            this._evemitter.emit(Brouser.EVT_CHATMESSAGE, ret)
+        })
+
+        chat.on(Conv.ChatNameChangedEvent.NAME, (ret: any) => {
+            this._evemitter.emit(Brouser.EVT_CHATNAMECHANGED, ret)
+        })
+
+        chat.on(Conv.ChatRemovedEvent.NAME, (ret: any) => {
+            this._evemitter.emit(Brouser.EVT_CHATREMOVED, ret)
+        })
+
+        chat.on(Conv.UserAddedEvent.NAME, (ret: any) => {
+            this._evemitter.emit(Brouser.EVT_CHATUSERADDED, ret)
+        })
+
+        chat.on(Conv.UserLeftEvent.NAME, (ret: any) => {
+            this._evemitter.emit(Brouser.EVT_CHATUSERLEFT, ret)
+        })
+
+        chat.on(Conv.UserRemovedEvent.NAME, (ret: any) => {
+            this._evemitter.emit(Brouser.EVT_CHATUSERREMOVED, ret)
+        })
+
+        chat.on(Conv.ChatEventsMarkedSeenEvent.NAME, (ret: any) => {
+            this._evemitter.emit(Brouser.EVT_CHATEVENTSMARKEDSEEN, ret)
+        })
+        
+    }
+
+    private unsubscribeChatEvents(chat: Conv.Chat) {
+        chat.removeAllListeners()
+    }
 
 }
 
