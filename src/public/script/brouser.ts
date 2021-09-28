@@ -105,8 +105,6 @@ class Brouser {
     private _activity= { activity: undefined, participants:[]}
     private _models: any
     private _chatsrv: any
-    private _room: any
-    private _channel: any
     private _dchat:any
 
 
@@ -742,7 +740,261 @@ class Brouser {
         })
     }
 
-    
+    /**
+     * @method createRoomChat()
+     * create room chat (do nothing if room exists)
+     * 
+     * @param id string: chat room id
+     * @param topic [optional] string: chat topic
+     * @returns roomId
+     */
+    createRoomChat(id:string, topic?:string) {
+        return new Promise(async (resolve, reject) => {
+            if ((this._chatsrv == undefined)) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Create Chat: Not connected")
+            }
+            this._chatsrv.create({
+                id: id,
+                name: id,
+                topic:topic,
+                type: "room",
+                membership: "public",
+                ignoreExistsError: true
+            }).then((ret: any) => {
+                resolve(ret)
+            }).catch((error: any) => {
+                reject(error)
+            })
+        })
+    }
+
+    /**
+     * @method createDirectChat()
+     * create direct chat 
+     * 
+     * @param users []string: list of users
+     * @returns dicrect channel
+     */
+    createDirectChat(users: string[]) {
+        return new Promise(async (resolve, reject) => {
+            if ((this._chatsrv == undefined)) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Create Chat: Not connected")
+            }
+            this._chatsrv.direct(users)
+            .then((chat: any) => {
+                this.subscribeChatEvents(chat)
+                this._dchat = chat
+                resolve(chat)
+            }).catch((error: any) => {
+                reject(error)
+            })
+        })
+    }
+
+    /**
+    * @method createChannelChat()
+    * create channel chat (do nothing if channel exists)
+    * 
+    * @param id string: chat channel id
+    * @param topic string: chat channel 
+    * @param membres []string: chat channel members
+    * @returns channel id
+    */
+    createChannelChat(id: string, topic:string, members?:any) {
+        return new Promise(async (resolve, reject) => {
+            if ((this._chatsrv == undefined)) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Create Chat: Not connected")
+            }
+            this._chatsrv.create({
+                id: id,
+                name: id,
+                type: "channel",
+                membership: "public",
+                members:members,
+                topic: topic,
+                ignoreExistsError: true
+            }).then((ret: any) => {
+                resolve(ret)
+            }).catch((error: any) => {
+                reject(error)
+            })
+        })
+    }
+
+    /**
+    * @method chatRemove()
+    * remove a chat chat
+    * 
+    * @param id string: chat id
+    */
+    chatRemove(id: string) {
+        return new Promise(async (resolve, reject) => {
+            this._chatsrv.remove(id)
+                .then((ret: any) => {
+                    resolve(ret)
+                }).catch((error: any) => {
+                    reject(error)
+                })
+        })
+    }
+
+    /**
+    * @method chatJoin()
+    * joins chat
+    * 
+    * @param id string: chat id
+    */
+    chatJoin(id: string) {
+        return new Promise(async (resolve, reject) => {
+            if ((this._chatsrv == undefined)) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Create Chat: Not connected")
+            }
+            this._chatsrv.join(id)
+                .then((chat: any) => {
+                this.subscribeChatEvents(chat)
+                resolve(chat)
+            }).catch((error: any) => {
+                reject(error)
+            })
+        })
+    }
+
+    /**
+    * @method chatSend()
+    * send message to chat
+    * 
+    * @param id string: chat id
+    * @param message string: chat message
+    * @param direct boolean: true if direct chat
+    */
+    chatSend(id: string, message:string, direct=false) {
+        return new Promise(async (resolve, reject) => {
+            if ((this._chatsrv == undefined)) {
+                //this._evemitter.emit("error", "Not connected")
+                reject("Create Chat: Not connected")
+            }
+            if (direct) {
+                if ((this._dchat == undefined)) {
+                    reject("Chat Send: Direct Chat not creted")
+                }
+                this._dchat.send(message)
+                .then((ret: any) => {
+                    resolve(ret)
+                })
+                .catch((error: any) => {
+                    reject(error)
+                })
+            }
+            else {
+                this._chatsrv.get(id)
+                    .then((chat: any) => {
+                        chat.send(message)
+                            .then((ret: any) => {
+                                resolve(ret)
+                            })
+                            .catch((error: any) => {
+                                reject(error)
+                            })
+                    }).catch((error: any) => {
+                        reject(error)
+                    })
+            }
+        })
+    }
+
+    /**
+    * @method chatAdd()
+    * add user to private chat
+    * 
+    * @param id string: chat id
+    * @param user string: user to add
+    */
+    chatAdd(id: string, user: string) {
+        return new Promise(async (resolve, reject) => {
+            this._chatsrv.get(id)
+                .then((chat: any) => {
+                    chat.add(user)
+                        .then((ret: any) => {
+                            resolve(ret)
+                        })
+                        .catch((error: any) => {
+                            reject(error)
+                        })
+                }).catch((error: any) => {
+                    reject(error)
+                })
+        })
+    }
+
+    /**
+    * @method chatLeave()
+    * leave a joined chat
+    * 
+    * @param id string: chat id
+    */
+    chatLeave(id: string) {
+        return new Promise(async (resolve, reject) => {
+            this._chatsrv.leave(id)
+                .then((ret: any) => {
+                   resolve(ret)
+                }).catch((error: any) => {
+                    reject(error)
+                })
+        })
+    }
+
+    /**
+    * @method chatChangeName()
+    * leave a joined chat
+    * 
+    * @param id string: chat id
+    * @param newname string: new name
+    */
+    chatChangeName(id: string, newname:string) {
+        return new Promise(async (resolve, reject) => {
+            this._chatsrv.get(id)
+                .then((chat: any) => {
+                    chat.setName(newname)
+                        .then((ret: any) => {
+                            resolve(ret)
+                        })
+                        .catch((error: any) => {
+                            reject(error)
+                        })
+                }).catch((error: any) => {
+                    reject(error)
+                })
+        })
+    }
+
+    /**
+    * @method chatChangeTopic()
+    * leave a joined chat
+    * 
+    * @param id string: chat id
+    * @param newtopic string: new topic
+    */
+    chatChangeTopic(id: string, newtopic: string) {
+        return new Promise(async (resolve, reject) => {
+            this._chatsrv.get(id)
+                .then((chat: any) => {
+                    chat.setTopic(newtopic)
+                        .then((ret: any) => {
+                            resolve(ret)
+                        })
+                        .catch((error: any) => {
+                            reject(error)
+                        })
+                }).catch((error: any) => {
+                    reject(error)
+                })
+        })
+    }
+
 
     /*
      * EVENT SUBSCRIPTION

@@ -54,6 +54,16 @@ declare class Brouser {
     static EVT_ACTIVITYLEFT: string;
     static EVT_ACTIVITYDELETED: string;
     static EVT_ACTIVITYFORCELEAVE: string;
+    static EVT_CHATJOIN: string;
+    static EVT_CHATLEFT: string;
+    static EVT_CHATMESSAGE: string;
+    static EVT_CHATNAMECHANGED: string;
+    static EVT_CHATREMOVED: string;
+    static EVT_CHATTOPICCHANGED: string;
+    static EVT_CHATUSERADDED: string;
+    static EVT_CHATUSERLEFT: string;
+    static EVT_CHATUSERREMOVED: string;
+    static EVT_CHATEVENTSMARKEDSEEN: string;
     static ACT_TYPE_PROJECT: string;
     private _id;
     private _extid;
@@ -69,7 +79,8 @@ declare class Brouser {
     private _activities;
     private _activity;
     private _models;
-    private _chats;
+    private _chatsrv;
+    private _dchat;
     /**
      * @constructor
      *
@@ -287,6 +298,87 @@ declare class Brouser {
      * @returns nothing
      */
     clearActivityState(): Promise<unknown>;
+    /**
+     * @method createRoomChat()
+     * create room chat (do nothing if room exists)
+     *
+     * @param id string: chat room id
+     * @param topic [optional] string: chat topic
+     * @returns roomId
+     */
+    createRoomChat(id: string, topic?: string): Promise<unknown>;
+    /**
+     * @method createDirectChat()
+     * create direct chat
+     *
+     * @param users []string: list of users
+     * @returns dicrect channel
+     */
+    createDirectChat(users: string[]): Promise<unknown>;
+    /**
+    * @method createChannelChat()
+    * create channel chat (do nothing if channel exists)
+    *
+    * @param id string: chat channel id
+    * @param topic string: chat channel
+    * @param membres []string: chat channel members
+    * @returns channel id
+    */
+    createChannelChat(id: string, topic: string, members?: any): Promise<unknown>;
+    /**
+    * @method chatRemove()
+    * remove a chat chat
+    *
+    * @param id string: chat id
+    */
+    chatRemove(id: string): Promise<unknown>;
+    /**
+    * @method chatJoin()
+    * joins chat
+    *
+    * @param id string: chat id
+    */
+    chatJoin(id: string): Promise<unknown>;
+    /**
+    * @method chatSend()
+    * send message to chat
+    *
+    * @param id string: chat id
+    * @param message string: chat message
+    * @param direct boolean: true if direct chat
+    */
+    chatSend(id: string, message: string, direct?: boolean): Promise<unknown>;
+    /**
+    * @method chatAdd()
+    * add user to private chat
+    *
+    * @param id string: chat id
+    * @param user string: user to add
+    */
+    chatAdd(id: string, user: string): Promise<unknown>;
+    /**
+    * @method chatLeave()
+    * leave a joined chat
+    *
+    * @param id string: chat id
+    */
+    chatLeave(id: string): Promise<unknown>;
+    /**
+    * @method chatChangeName()
+    * leave a joined chat
+    *
+    * @param id string: chat id
+    * @param newname string: new name
+    */
+    chatChangeName(id: string, newname: string): Promise<unknown>;
+    /**
+    * @method chatChangeTopic()
+    * leave a joined chat
+    *
+    * @param id string: chat id
+    * @param newtopic string: new topic
+    */
+    chatChangeTopic(id: string, newtopic: string): Promise<unknown>;
     private subscribeDomainEvents;
     private subscribePresenceEvents;
     private subscribeBuddyPresenceEvents;
@@ -295,6 +387,8 @@ declare class Brouser {
     private unsubscribeBuddiesEvents;
     private unsubscribeActivityEvents;
     private subscribeActivityEvents;
+    private subscribeChatEvents;
+    private unsubscribeChatEvents;
 }
 export { Brouser };
 //# sourceMappingURL=brouser.d.ts.map
