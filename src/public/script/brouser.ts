@@ -762,7 +762,13 @@ class Brouser {
                 membership: "public",
                 ignoreExistsError: true
             }).then((ret: any) => {
-                resolve(ret)
+                this._chatsrv.get(ret)
+                    .then((chat: any) => {
+                        this.subscribeChatEvents(chat)
+                        resolve(ret)
+                    }).catch((error: any) => {
+                        reject(error)
+                    })
             }).catch((error: any) => {
                 reject(error)
             })
@@ -817,7 +823,13 @@ class Brouser {
                 topic: topic,
                 ignoreExistsError: true
             }).then((ret: any) => {
-                resolve(ret)
+                this._chatsrv.get(ret)
+                    .then((chat: any) => {
+                        this.subscribeChatEvents(chat)
+                        resolve(ret)
+                    }).catch((error: any) => {
+                        reject(error)
+                    })
             }).catch((error: any) => {
                 reject(error)
             })
@@ -853,13 +865,27 @@ class Brouser {
                 //this._evemitter.emit("error", "Not connected")
                 reject("Create Chat: Not connected")
             }
-            this._chatsrv.join(id)
+            this._chatsrv.get(id)
                 .then((chat: any) => {
-                this.subscribeChatEvents(chat)
-                resolve(chat)
-            }).catch((error: any) => {
-                reject(error)
-            })
+                    if (!chat.isJoined()) {
+                        //console.log("CHAT NOT JOINED YET")
+                        this._chatsrv.join(id)
+                            .then((chat: any) => {
+                                //console.log("CHAT JOINED")
+                                resolve(chat)
+                            }).catch((error: any) => {
+                                //console.log("CHAT JOIN ERROR")
+                                reject(error)
+                            })
+                    }
+                    else {
+                        //console.log("CHAT ALREADY JOINED")
+                        resolve(chat)
+                    }
+                }).catch((error: any) => {
+                    //console.log("CHAT GET ERROR")
+                    reject(error)
+                })
         })
     }
 
@@ -917,14 +943,24 @@ class Brouser {
         return new Promise(async (resolve, reject) => {
             this._chatsrv.get(id)
                 .then((chat: any) => {
-                    chat.add(user)
-                        .then((ret: any) => {
-                            resolve(ret)
-                        })
-                        .catch((error: any) => {
-                            reject(error)
-                        })
+                    const info = chat.info().members
+                    let found = false
+                    for (let i = 0; i < info.length;i++ ) {
+                        if (info[i].user.username == user)
+                            found = true
+                    }
+                    if (!found) {
+                        chat.add(user)
+                            .then((ret: any) => {
+                                resolve(ret)
+                            })
+                            .catch((error: any) => {
+                                //console.log("CHAT ADD ERROR")
+                                reject(error)
+                            })
+                    } else {resolve(user)}
                 }).catch((error: any) => {
+                    //console.log("CHAT GET ERROR")
                     reject(error)
                 })
         })
@@ -1116,8 +1152,12 @@ class Brouser {
     }
 
     private subscribeChatEvents(chat: Conv.Chat) {
-        chat.on(Conv.ChatJoinedEvent.NAME, (ret: any) => {
+        this._chatsrv.on(Conv.ChatJoinedEvent.NAME, (ret: any) => {
             this._evemitter.emit(Brouser.EVT_CHATJOIN, ret)
+        })
+
+        this._chatsrv.on(Conv.ChatLeftEvent.NAME, (ret: any) => {
+            this._evemitter.emit(Brouser.EVT_CHATLEFT, ret)
         })
 
         chat.on(Conv.ChatLeftEvent.NAME, (ret: any) => {
@@ -1134,6 +1174,10 @@ class Brouser {
 
         chat.on(Conv.ChatRemovedEvent.NAME, (ret: any) => {
             this._evemitter.emit(Brouser.EVT_CHATREMOVED, ret)
+        })
+
+        this._chatsrv.on(Conv.UserAddedEvent.NAME, (ret: any) => {
+            this._evemitter.emit(Brouser.EVT_CHATUSERADDED, ret)
         })
 
         chat.on(Conv.UserAddedEvent.NAME, (ret: any) => {

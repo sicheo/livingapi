@@ -257,6 +257,16 @@ describe('UNIT-TEST CONVERGENCE SERVER ACTIVITY', () => {
             } catch (error) { }
         })
 
+        it('userjwt.chatLeave should return defined', async () => {
+            try {
+                await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+                //await sleep(500)
+                await expect(userjwt.chatLeave("TEST_ROOM")).resolves.toBeDefined()
+                //await sleep(500)
+                await userjwt.disconnect()
+            } catch (error) { }
+        })
+
         it('userjwt.createChannelChat should return defined', async () => {
             try {
                 await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
@@ -284,18 +294,48 @@ describe('UNIT-TEST CONVERGENCE SERVER ACTIVITY', () => {
                 await expect(userjwt.chatAdd("TEST_CHAN","carlotta.garlanda@livingnet.eu")).resolves.toBeDefined()
                 //await sleep(500)
                 await userjwt.disconnect()
-            } catch (error) { }
-        },10000)
+            } catch (error) { console.log("Chat Add Error")}
+        },15000)
 
         it('userjwt.chatSend should return defined', async () => {
             try {
                 await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
                 //await sleep(500)
-                await expect(userjwt.chatSend("TEST_CHAN", "This is a message")).resolves.toBeDefined()
+                await expect(userjwt.chatSend("TEST_CHAN", "This is a message from Giulio")).resolves.toBeDefined()
                 //await sleep(500)
                 await userjwt.disconnect()
             } catch (error) { }
         })
+
+        it('userjwt.chatJoin <other user> should return defined', async () => {
+            try {
+                await userjwt.connect({ user: "carlotta.garlanda@livingnet.eu", password: "carlotta" })
+                //await sleep(500)
+                await expect(userjwt.chatJoin("TEST_CHAN")).resolves.toBeDefined()
+                //await sleep(500)
+                await userjwt.disconnect()
+            } catch (error) { }
+        })
+
+        it('userjwt.chatSend <other user> should return defined', async () => {
+            try {
+                await userjwt.connect({ user: "carlotta.garlanda@livingnet.eu", password: "carlotta" })
+                //await sleep(500)
+                await expect(userjwt.chatSend("TEST_CHAN", "This is a message from Carlotta")).resolves.toBeDefined()
+                //await sleep(500)
+                await userjwt.disconnect()
+            } catch (error) { }
+        })
+
+        it('userjwt.chatChangeName should return defined', async () => {
+            try {
+                await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+                //await sleep(500)
+                await expect(userjwt.chatChangeName("TEST_CHAN", "NEW_NAME")).resolves.toBeDefined()
+                //await sleep(500)
+                await userjwt.disconnect()
+            } catch (error) { }
+        },15000)
 
     })
 })

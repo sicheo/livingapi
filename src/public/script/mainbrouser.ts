@@ -11,7 +11,7 @@ function sleep(ms:any) {
 
 const main = async function () {
     const convergenceurl = "http://80.211.35.126:8000/api/realtime/convergence/living"
-    const baseapihurl = "http://80.211.35.126:3132/living/v1/convergence"
+    const baseapihurl = "http://127.0.0.1:3132/living/v1/convergence"
 
     let token: string | undefined
 
@@ -109,6 +109,51 @@ const main = async function () {
         //console.log(res.ret.user)
     })
 
+    userjwt.emitter.on(Brouser.EVT_CHATJOIN, (res: any) => {
+        console.log("Chat Join " + res.chatId)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_CHATLEFT, (res: any) => {
+        console.log("Chat Left " + res.chatId)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_CHATMESSAGE, (res: any) => {
+        console.log("Chat Message " + res.message)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_CHATNAMECHANGED, (res: any) => {
+        console.log("Chat Change Name " + res.chatName)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_CHATREMOVED, (res: any) => {
+        console.log("Chat Removed " + res.chatId)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_CHATTOPICCHANGED, (res: any) => {
+        console.log("Chat Change Topic " + res.topic)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_CHATUSERLEFT, (res: any) => {
+        console.log("Chat User Left " + res.evt)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_CHATUSERADDED, (res: any) => {
+        console.log("Chat Add User " + res.addedUser.username)
+        //console.log(res.ret.user)
+    })
+
+    userjwt.emitter.on(Brouser.EVT_CHATUSERREMOVED, (res: any) => {
+        console.log("Chat Remove User " + res.evt)
+        //console.log(res.ret.user)
+    })
+
     // start test
     console.log("    1)Test anonymous connection")
     try {
@@ -152,15 +197,15 @@ const main = async function () {
 
     try {
         await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
-        await sleep(1000)
+        await sleep(500)
         console.log("session id: " + userjwt.getSessionId())
         prompt('press any key');
         await userjwt.subscribe()
         userjwt.status = "dnd"
-        await sleep(1000)
+        await sleep(500)
         prompt('press any key');
         userjwt.status = "available"
-        await sleep(1000)
+        await sleep(500)
         prompt('press any key');
         await userjwt.unsubscribeAll()
         if (userjwt.isConnected())
@@ -172,39 +217,66 @@ const main = async function () {
     try {
         const perms = { "LivingGroup": ["join", "lurk", "view_state", "set_state"] }
         await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
-        await sleep(1000)
+        await sleep(500)
         console.log("session id: " + userjwt.getSessionId())
         await userjwt.joinActivity("project", "Progetto1")
-        await sleep(1000)
+        await sleep(500)
         await userjwt.setActivityState("workpakg1", "working")
-        await sleep(1000)
+        await sleep(500)
         const ret = await userjwt.getActivityState("workpakg1")
         console.log("activity status: "+ret)
-        await sleep(1000)
+        await sleep(500)
         await userjwt.setActivityPermissions("group", perms)
-        await sleep(1000)
+        await sleep(500)
         const prm = await userjwt.getActivityPermissions("group")
-        await sleep(1000)
+        await sleep(500)
         console.log("activity permissions " + prm)
         await userjwt.removeActivityState("workpakg1")
-        await sleep(1000)
+        await sleep(500)
         await userjwt.setActivityState("workpakg1", "working")
-        await sleep(1000)
+        await sleep(500)
         await userjwt.clearActivityState()
-        await sleep(1000)
+        await sleep(500)
         await userjwt.leaveActivity()
-        await sleep(1000)
+        await sleep(500)
         if (userjwt.isConnected())
             await userjwt.disconnect()
         await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
-        await sleep(1000)
+        await sleep(500)
         console.log("session id: " + userjwt.getSessionId())
         await userjwt.joinActivity("project", "Progetto1")
-        await sleep(1000)
+        await sleep(500)
         await userjwt.joinActivity("project", "Progetto1", false)
-        await sleep(1000)
+        await sleep(500)
         await userjwt.removeActivity()
-        await sleep(1000)
+        await sleep(500)
+        if (userjwt.isConnected())
+            await userjwt.disconnect()
+    } catch (error) { console.log(error) }
+
+    console.log("    8) Test Chat")
+
+    try {
+        const perms = { "LivingGroup": ["join", "lurk", "view_state", "set_state"] }
+        await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
+        await sleep(500)
+        console.log("session id: " + userjwt.getSessionId())
+        await userjwt.createRoomChat("TEST_ROOM", "MY TOPIC")
+        await sleep(500)
+        await userjwt.chatJoin("TEST_ROOM")
+        await sleep(500)
+        await userjwt.chatSend("TEST_ROOM", "This is a message")
+        await sleep(500)
+        await userjwt.chatLeave("TEST_ROOM")
+        await sleep(500)
+        await userjwt.createChannelChat("TEST_CHAN", "MY TOPIC PRIVATE")
+        await sleep(500)
+        await userjwt.chatJoin("TEST_CHAN")
+        await sleep(500)
+        await userjwt.chatAdd("TEST_CHAN", "carlotta.garlanda@livingnet.eu")
+        await sleep(500)
+        await userjwt.chatSend("TEST_CHAN", "This is a message from Giulio")
+        await userjwt.chatLeave("TEST_CHAN")
         if (userjwt.isConnected())
             await userjwt.disconnect()
     } catch (error) { console.log(error) }

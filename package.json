@@ -5,7 +5,7 @@
   "main": "apisrv.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:unit": "jest --forceExit",
+    "test:unit": "jest --forceExit -i",
     "build": "tsc && npm run copy && npx webpack --config webpack.config.js",
     "copy": "npx ncp src/conf lib/src/conf && npx ncp src/data lib/src/data && ncp src/www lib/src/www && ncp src/public lib/src/public",
     "startlocal": "npx node --trace-warnings lib/src/utility/start.js",
