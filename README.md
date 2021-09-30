@@ -90,6 +90,9 @@ The API server starts with cofiguration parameters in
   - [Get Activity Permissions](#GetActivityPermissions): get the activity permissions
 - [Shared project](#Project): api for managing shared project artifacts
 - [Chat](#Chat): chat api
+  - [Create Chat Room](#CreateChatRoom): create a chat room
+  - [Create Chat Channel](#CreateChatChannel): create a chat channel
+  - [Create Chat Direct](#CreateChatDirect): create a chat direct
 
 To use the library in your webapp import the script:
 ```
@@ -507,7 +510,29 @@ TBD
 
 ### Chat
 
-TBD
+#### CreateChatRoom
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To create a chat room use:
+```
+userjwt.createRoomChat("ROOM_NAME", "ROOM_TOPIC")
+```
+
+#### CreateChatChannel
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To create a chat channel use:
+```
+userjwt.createChannelChat("ROOM_NAME", "ROOM_TOPIC")
+```
+
+#### CreateChatDirect
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To create a chat Direct with *user1*, *user2*, use:
+```
+userjwt.createDirectChat(["user1", "user2"])
+```
 
 [//]: # 
 
