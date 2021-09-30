@@ -523,7 +523,7 @@ userjwt.createRoomChat("ROOM_NAME", "ROOM_TOPIC")
 
 To create a chat channel use:
 ```
-userjwt.createChannelChat("ROOM_NAME", "ROOM_TOPIC")
+userjwt.createChannelChat("CHANNEL_NAME", "CHANNEL_TOPIC")
 ```
 
 #### CreateChatDirect
