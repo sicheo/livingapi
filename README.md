@@ -93,6 +93,14 @@ The API server starts with cofiguration parameters in
   - [Create Chat Room](#CreateChatRoom): create a chat room
   - [Create Chat Channel](#CreateChatChannel): create a chat channel
   - [Create Chat Direct](#CreateChatDirect): create a chat direct
+  - [Remove Chat](#ChatRemove): remove a chat
+  - [Join Chat](#ChatJoin): join a chat
+  - [Send a Message](#ChatSend): send a message to the chat
+  - [Add Users to a Channel](#ChatAdd): add users to a chat channel
+  - [Leave Chat](#ChatLeave): leave a chat
+  - [Change Chat Name](#ChatChangeName): change chat name
+  - [Change Chat Topic](#ChatChangeTopic): change chat topic
+  - [Get Chat Info](#ChatGetInfo): get chat info
 
 To use the library in your webapp import the script:
 ```
@@ -533,6 +541,30 @@ To create a chat Direct with *user1*, *user2*, use:
 ```
 userjwt.createDirectChat(["user1", "user2"])
 ```
+#### ChatRemove
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### ChatJoin
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### ChatSend
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### ChatAdd
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### ChatLeave
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### ChatChangeName
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### ChatChangeTopic
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+#### ChatGetInfo
+[![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
 
 [//]: # 
 
