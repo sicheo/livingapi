@@ -163,6 +163,12 @@ declare class Brouser {
      */
     getSessionId(): string;
     /**
+     * @method getDirectChat()
+     *
+     * @returns chat: direct chat
+     */
+    getDirectChat(): any;
+    /**
      * @method connect(opts)
      *  connescts to Convergenge Server and Api Server
      *
@@ -379,6 +385,14 @@ declare class Brouser {
     * @param newtopic string: new topic
     */
     chatChangeTopic(id: string, newtopic: string): Promise<unknown>;
+    /**
+    * @method chatGetInfo()
+    * gets chat info
+    *
+    * @param id string: chat id
+    * @returns chat info
+    */
+    chatGetInfo(id: string): Promise<unknown>;
     private subscribeDomainEvents;
     private subscribePresenceEvents;
     private subscribeBuddyPresenceEvents;

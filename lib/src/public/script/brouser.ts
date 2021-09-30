@@ -265,6 +265,15 @@ class Brouser {
     }
 
     /**
+     * @method getDirectChat()
+     *
+     * @returns chat: direct chat
+     */
+    getDirectChat(): any {
+            return this._dchat
+    }
+
+    /**
      * @method connect(opts)
      *  connescts to Convergenge Server and Api Server
      * 
@@ -950,6 +959,7 @@ class Brouser {
                             found = true
                     }
                     if (!found) {
+                        console.log("CHAT ADD")
                         chat.add(user)
                             .then((ret: any) => {
                                 resolve(ret)
@@ -1025,6 +1035,24 @@ class Brouser {
                         .catch((error: any) => {
                             reject(error)
                         })
+                }).catch((error: any) => {
+                    reject(error)
+                })
+        })
+    }
+
+    /**
+    * @method chatGetInfo()
+    * gets chat info
+    * 
+    * @param id string: chat id
+    * @returns chat info
+    */
+    chatGetInfo(id: string) {
+        return new Promise(async (resolve, reject) => {
+            this._chatsrv.get(id)
+                .then((chat: any) => {
+                    resolve(chat.info())
                 }).catch((error: any) => {
                     reject(error)
                 })
@@ -1160,9 +1188,9 @@ class Brouser {
             this._evemitter.emit(Brouser.EVT_CHATLEFT, ret)
         })
 
-        chat.on(Conv.ChatLeftEvent.NAME, (ret: any) => {
+        /*chat.on(Conv.ChatLeftEvent.NAME, (ret: any) => {
             this._evemitter.emit(Brouser.EVT_CHATLEFT, ret)
-        })
+        })*/
 
         chat.on(Conv.ChatMessageEvent.NAME, (ret: any) => {
             this._evemitter.emit(Brouser.EVT_CHATMESSAGE, ret)

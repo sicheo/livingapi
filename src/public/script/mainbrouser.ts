@@ -10,7 +10,7 @@ function sleep(ms:any) {
 }
 
 const main = async function () {
-    const convergenceurl = "http://80.211.35.126:8000/api/realtime/convergence/living"
+    const convergenceurl = "ws://80.211.35.126:8000/api/realtime/convergence/living"
     const baseapihurl = "http://127.0.0.1:3132/living/v1/convergence"
 
     let token: string | undefined
@@ -31,6 +31,7 @@ const main = async function () {
     const useranon = new Brouser("Anonymous Connection", anonconn)
     const userpwd = new Brouser("Password Connection", pwconn)
     const userjwt = new Brouser("giulio.stumpo@gmail.com", jwtconn)
+    const userjwt2 = new Brouser("carlotta.garlanda@livingnet.eu", jwtconn)
 
     // set event listeners
     useranon.emitter.on(Brouser.EVT_CONNECTED, async (ret: any) => {
@@ -62,6 +63,14 @@ const main = async function () {
     })
 
     userjwt.emitter.on(Brouser.EVT_DISCONNECTED, (id: any) => {
+        console.log("EVENT: " + id + " disconnected")
+    })
+
+    userjwt2.emitter.on(Brouser.EVT_CONNECTED, async (res: any) => {
+        console.log("EVENT: " + userjwt.id + " connected: " + JSON.stringify(res))
+    })
+
+    userjwt2.emitter.on(Brouser.EVT_DISCONNECTED, (id: any) => {
         console.log("EVENT: " + id + " disconnected")
     })
 
@@ -109,8 +118,10 @@ const main = async function () {
         //console.log(res.ret.user)
     })
 
-    userjwt.emitter.on(Brouser.EVT_CHATJOIN, (res: any) => {
+    userjwt.emitter.on(Brouser.EVT_CHATJOIN, async (res: any) => {
         console.log("Chat Join " + res.chatId)
+        const info = await userjwt.chatGetInfo(res.chatId)
+        console.log(info)
         //console.log(res.ret.user)
     })
 
@@ -140,12 +151,17 @@ const main = async function () {
     })
 
     userjwt.emitter.on(Brouser.EVT_CHATUSERLEFT, (res: any) => {
-        console.log("Chat User Left " + res.evt)
-        //console.log(res.ret.user)
+        console.log("Chat User Left ")
+        console.log(res.ret)
     })
 
     userjwt.emitter.on(Brouser.EVT_CHATUSERADDED, (res: any) => {
         console.log("Chat Add User " + res.addedUser.username)
+        //console.log(res.ret.user)
+    })
+
+    userjwt2.emitter.on(Brouser.EVT_CHATUSERADDED, (res: any) => {
+        console.log("CG --> Chat Add User " + res.addedUser.username)
         //console.log(res.ret.user)
     })
 
@@ -260,7 +276,8 @@ const main = async function () {
         const perms = { "LivingGroup": ["join", "lurk", "view_state", "set_state"] }
         await userjwt.connect({ user: "giulio.stumpo@gmail.com", password: "giulio2" })
         await sleep(500)
-        console.log("session id: " + userjwt.getSessionId())
+        await userjwt2.connect({ user: "carlotta.garlanda@livingnet.eu", password: "carlotta" })
+        await sleep(500)
         await userjwt.createRoomChat("TEST_ROOM", "MY TOPIC")
         await sleep(500)
         await userjwt.chatJoin("TEST_ROOM")
@@ -271,15 +288,28 @@ const main = async function () {
         await sleep(500)
         await userjwt.createChannelChat("TEST_CHAN", "MY TOPIC PRIVATE")
         await sleep(500)
-        await userjwt.chatJoin("TEST_CHAN")
-        await sleep(500)
+        //await userjwt.chatJoin("TEST_CHAN")
         await userjwt.chatAdd("TEST_CHAN", "carlotta.garlanda@livingnet.eu")
         await sleep(500)
+        //await userjwt2.chatJoin("TEST_CHAN")
+        //await sleep(500)
         await userjwt.chatSend("TEST_CHAN", "This is a message from Giulio")
+        await userjwt2.chatSend("TEST_CHAN", "This is a message from Carlotta")
+        //await userjwt.chatChangeName("TEST_CHAN", "NEW_NAME")
+        await userjwt.chatChangeTopic("TEST_CHAN", "NEW_TOPIC")
         await userjwt.chatLeave("TEST_CHAN")
         if (userjwt.isConnected())
             await userjwt.disconnect()
-    } catch (error) { console.log(error) }
+        if (userjwt2.isConnected())
+            await userjwt2.disconnect()
+    } catch (error) {
+        console.log(error)
+        console.log(error._details)
+        if (userjwt.isConnected())
+            await userjwt.disconnect()
+        if (userjwt2.isConnected())
+            await userjwt2.disconnect()
+    }
 
 }
 

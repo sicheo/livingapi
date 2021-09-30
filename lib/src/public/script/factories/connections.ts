@@ -155,6 +155,9 @@ export class JwtConnection implements UserConnection {
                             webSocket: {
                                 factory: (u: any) => new WebSocket(u),
                                 class: WebSocket
+                            },
+                            protocol: {
+                                defaultRequestTimeout: 20000
                             }
                         }).then((domain: any) => {
                                 this._connected = true
