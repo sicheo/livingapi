@@ -64,6 +64,20 @@ The API server starts with cofiguration parameters in
 }
 ```
 
+## Usage
+
+To use the library in your webapp import the script:
+```
+<head>
+    <meta charset="utf-8" />
+    <title>Some title </title>
+    <script src="script/dist/brouser.bundle.js"></script>
+</head>
+```
+The API is accessible through the global object:
+```
+window.ConvApp
+```
 ## Features
 
 - [Create new user digital twin](#Create): create new digital user and connect to Convergence Platform
@@ -102,18 +116,6 @@ The API server starts with cofiguration parameters in
   - [Change Chat Topic](#ChatChangeTopic): change chat topic
   - [Get Chat Info](#ChatGetInfo): get chat info
 
-To use the library in your webapp import the script:
-```
-<head>
-    <meta charset="utf-8" />
-    <title>Some title </title>
-    <script src="script/dist/brouser.bundle.js"></script>
-</head>
-```
-The API is accessible through the global object:
-```
-window.ConvApp
-```
 
 ### Create
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
