@@ -537,33 +537,77 @@ userjwt.createChannelChat("CHANNEL_NAME", "CHANNEL_TOPIC")
 #### CreateChatDirect
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
-To create a chat Direct with *user1*, *user2*, use:
+To create a chat Direct with *user1@mail.com*, *user2@mail2.com*, use:
 ```
-userjwt.createDirectChat(["user1", "user2"])
+userjwt.createDirectChat(["user1@mail.com", "user2@mail2.com"])
 ```
 #### ChatRemove
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
+To remove a chat  use:
+```
+userjwt.chatRemove("CHAT_NAME")
+```
+
 #### ChatJoin
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To join a chat  use:
+```
+userjwt.chatJoin("CHAT_NAME")
+```
 
 #### ChatSend
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
+To send a message to a chat room or a chat channel  use:
+```
+userjwt.chatSend("CHAT_NAME","This is my message")
+```
+To send a message to a direct chat room   use:
+```
+userjwt.chatSend("CHAT_NAME","This is my message", true)
+```
+
 #### ChatAdd
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To add a user to a chat channel  use:
+```
+userjwt.chatSend("CHAT_NAME","user1@mail.com")
+```
 
 #### ChatLeave
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
+To leave a chat use:
+```
+userjwt.chatLeave("CHAT_NAME")
+```
+
 #### ChatChangeName
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To change tha chat name use:
+```
+userjwt.chatChangeName("CHAT_NAME","NEW_CHAT_NAME")
+```
 
 #### ChatChangeTopic
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
 
+To change tha chat name use:
+```
+userjwt.chatChangeTopic("CHAT_TOPIC","NEW_CHAT_TOPIC")
+```
+
 #### ChatGetInfo
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
+
+To get tha chat info use:
+```
+userjwt.chatGetInfo("CHAT_NAME")
+```
 
 
 [//]: # 
