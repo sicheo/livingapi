@@ -550,6 +550,18 @@ To remove a chat  use:
 ```
 userjwt.chatRemove("CHAT_NAME")
 ```
+You can subscribe to the chat remove event using:
+```
+userjwt.emitter.on(Brouser.EVT_CHATREMOVED, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is:
+```
+{
+  cahtId: chat Id
+}
+```
 
 #### ChatJoin
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
@@ -557,6 +569,18 @@ userjwt.chatRemove("CHAT_NAME")
 To join a chat  use:
 ```
 userjwt.chatJoin("CHAT_NAME")
+```
+You can subscribe to the chat join event using:
+```
+userjwt.emitter.on(Brouser.EVT_CHATJOIN, async (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is:
+```
+{
+  cahtId: chat Id
+}
 ```
 
 #### ChatSend
@@ -570,6 +594,18 @@ To send a message to a direct chat room   use:
 ```
 userjwt.chatSend("CHAT_NAME","This is my message", true)
 ```
+You can subscribe to the chat send event using:
+```
+userjwt.emitter.on(Brouser.EVT_CHATMESSAGE, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is:
+```
+{
+  message: message sent to the chat
+}
+```
 
 #### ChatAdd
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
@@ -577,6 +613,18 @@ userjwt.chatSend("CHAT_NAME","This is my message", true)
 To add a user to a chat channel  use:
 ```
 userjwt.chatSend("CHAT_NAME","user1@mail.com")
+```
+You can subscribe to the chat user add event using:
+```
+userjwt.emitter.on(Brouser.EVT_CHATUSERADDED, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is:
+```
+{
+  user: user added to the chat
+}
 ```
 
 #### ChatLeave
@@ -586,6 +634,19 @@ To leave a chat use:
 ```
 userjwt.chatLeave("CHAT_NAME")
 ```
+You can subscribe to the chat leave event using:
+```
+userjwt.emitter.on(Brouser.EVT_CHATLEFT, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is:
+```
+{
+  cahtId: chat Id
+}
+```
+
 
 #### ChatChangeName
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
@@ -594,6 +655,18 @@ To change tha chat name use:
 ```
 userjwt.chatChangeName("CHAT_NAME","NEW_CHAT_NAME")
 ```
+You can subscribe to the chat change name event using:
+```
+userjwt.emitter.on(Brouser.EVT_CHATNAMECHANGED, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is:
+```
+{
+  cahtName: new chat name
+}
+```
 
 #### ChatChangeTopic
 [![codecov](https://img.shields.io/static/v1?label=navigation&message=up&color=yellow)](#Features)
@@ -601,6 +674,18 @@ userjwt.chatChangeName("CHAT_NAME","NEW_CHAT_NAME")
 To change tha chat name use:
 ```
 userjwt.chatChangeTopic("CHAT_TOPIC","NEW_CHAT_TOPIC")
+```
+You can subscribe to the chat change topic event using:
+```
+userjwt.emitter.on(Brouser.EVT_CHATTOPICCHANGED, (res: any) => {
+        ...do whatever you need to do...
+    })
+```
+The ```res``` object returned by the event listerner is:
+```
+{
+  topic: new chat topic
+}
 ```
 
 #### ChatGetInfo
