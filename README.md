@@ -5,7 +5,7 @@
 
 Real time server API for collaboration webapps based on 
 
-[<h2>Convergence Server</h2>][convserv] 
+[<h3>Convergence Server</h3>][convserv] 
 
 [<img alt="Convergence Logo" height="80" src="https://convergence.io/assets/img/convergence-logo.png" >][convserv] 
 
