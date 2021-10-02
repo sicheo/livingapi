@@ -3,7 +3,9 @@
 ## Living API server
 [![Repo](https://img.shields.io/badge/Repo-livingapi-blue)](https://github.com/sicheo/livingapi)
 
-Real time server API for collaboration webapps based on [Convergence Server][convserv] [https://camo.githubusercontent.com/2af25140f02ae04c71b22c0bbaa39b1e7a07474cf780e0e3383d2bf1350b7ae7/68747470733a2f2f636f6e76657267656e63652e696f2f6173736574732f696d672f636f6e76657267656e63652d6c6f676f2e706e67]
+Real time server API for collaboration webapps based on [Convergence Server][convserv] 
+
+[! (https://camo.githubusercontent.com/2af25140f02ae04c71b22c0bbaa39b1e7a07474cf780e0e3383d2bf1350b7ae7/68747470733a2f2f636f6e76657267656e63652e696f2f6173736574732f696d672f636f6e76657267656e63652d6c6f676f2e706e67]
 
 ## Architecture
 
