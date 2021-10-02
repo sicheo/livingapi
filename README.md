@@ -3,8 +3,9 @@
 ## Living API server
 [![Repo](https://img.shields.io/badge/Repo-livingapi-blue)](https://github.com/sicheo/livingapi)
 
-Real time server API for collaboration webapps based on [<img alt="Convergence Logo" height="80" src="https://convergence.io/assets/img/convergence-logo.png" >][convserv] 
-<img alt="Convergence Logo" height="80" src="https://convergence.io/assets/img/convergence-logo.png" >
+Real time server API for collaboration webapps based on 
+
+[<img alt="Convergence Logo" height="80" src="https://convergence.io/assets/img/convergence-logo.png" >][convserv] 
 
 ## Architecture
 
